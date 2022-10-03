@@ -12,7 +12,12 @@ body {
 }
 
 body {
-  /* background-color: ; */
+  background-color: #f4f5fa;
+}
+
+ul,
+ol {
+  list-style-type: none;
 }
 
 a {

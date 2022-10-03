@@ -6,13 +6,15 @@ import fontWeights from './fontWeights';
 import breakpoints from './breakpoints';
 import fontSizes from './fontSizes';
 import colors from './colors';
+import fonts from './fonts';
 
 interface IThemeProviderWrapper {
   children: React.ReactElement;
-  theme: DefaultTheme;
+  theme?: DefaultTheme;
 }
 
 const defaultTheme: DefaultTheme = {
+  fonts,
   colors,
   fontWeights,
   fontSizes,

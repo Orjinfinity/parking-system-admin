@@ -1,25 +1,27 @@
-import { IBreakpointAlias, IBreakpointSizes } from '../interfaces';
+const breakpoints = [
+  '320px',
+  '576px',
+  '768px',
+  '992px',
+  '1200px',
+  '1400px',
+] as any;
 
-const breakpointSizes: IBreakpointSizes = {
-  xsmallBreakpoint: '320px',
-  smallBreakpoint: '576px',
-  mediumBreakpoint: '768px',
-  largeBreakpoint: '992px',
-  xlargeBreakpoint: '1200px',
-  xxlargeBreakpoint: '1400px',
-};
+const [
+  xsmallBreakpoint,
+  smallBreakpoint,
+  mediumBreakpoint,
+  largeBreakpoint,
+  xlargeBreakpoint,
+  xxlargeBreakpoint,
+] = breakpoints;
 
 // allias
-const breakpoints: IBreakpointSizes & IBreakpointAlias = Object.assign(
-  breakpointSizes,
-  {
-    xs: breakpointSizes.xsmallBreakpoint,
-    sm: breakpointSizes.smallBreakpoint,
-    md: breakpointSizes.mediumBreakpoint,
-    lg: breakpointSizes.largeBreakpoint,
-    xl: breakpointSizes.xlargeBreakpoint,
-    xxl: breakpointSizes.xxlargeBreakpoint,
-  }
-);
+breakpoints.xs = xsmallBreakpoint;
+breakpoints.sm = smallBreakpoint;
+breakpoints.md = mediumBreakpoint;
+breakpoints.lg = largeBreakpoint;
+breakpoints.xl = xlargeBreakpoint;
+breakpoints.xxl = xxlargeBreakpoint;
 
 export default breakpoints;

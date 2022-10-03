@@ -14,7 +14,24 @@ declare module 'styled-components' {
     colors: {
       white: string;
       black: string;
-      textColors: string;
+      textColor: string;
+      primary: string;
+      secondary: string;
+      info: string;
+      success: string;
+      warning: string;
+      error: string;
+      textColor: string;
+      textSecondaryColor: string;
+      textDisabled: string;
+      bgPrimary: string;
+      bgSecondary: string;
+      bgInfo: string;
+      bgSuccess: string;
+      bgError: string;
+      activeLink: string;
+    };
+    fonts: {
       primary: string;
       secondary: string;
     };
