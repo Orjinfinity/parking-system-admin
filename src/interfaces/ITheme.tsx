@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import {
   SpaceProps,
   ColorProps,
@@ -10,7 +11,7 @@ import {
   BackgroundColorProps,
   GridProps,
 } from 'styled-system';
-export interface IBreakpointAlias {
+interface IBreakpointAlias {
   xs: string;
   sm: string;
   md: string;
@@ -19,7 +20,7 @@ export interface IBreakpointAlias {
   xxl: string;
 }
 
-export interface IBreakpointSizes {
+interface IBreakpointSizes {
   xsmallBreakpoint: string;
   smallBreakpoint: string;
   mediumBreakpoint: string;
@@ -28,11 +29,11 @@ export interface IBreakpointSizes {
   xxlargeBreakpoint: string;
 }
 
-export interface IDefaultStyleProp {
+interface IDefaultStyleProp {
   [key: string]: string;
 }
 
-export interface ViewProps
+interface ViewProps
   extends SpaceProps,
     ColorProps,
     TypographyProps,
@@ -46,10 +47,26 @@ export interface ViewProps
   boxSizing?: string;
 }
 
-export interface TitleProps
+interface TitleProps
   extends SpaceProps,
     TypographyProps,
     ColorProps,
     PositionProps {
   size?: string;
 }
+
+interface TextProps extends SpaceProps, TypographyProps, ColorProps, FlexboxProps {
+  size?: any;
+}
+
+interface ButtonProps extends SpaceProps, TypographyProps, ColorProps, FlexboxProps, BorderProps, LayoutProps {
+  to?: string;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'text' | 'icon' | 'contained' | 'outline';
+    onClick?: () => void;
+    color?: string;
+    children: ReactNode;
+    size?: 'sm' | 'md' | 'lg' | 'xl' | 'auto';
+}
+
+export type {IBreakpointAlias, IBreakpointSizes, IDefaultStyleProp, ViewProps, TitleProps, TextProps, ButtonProps}
