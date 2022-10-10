@@ -1,14 +1,15 @@
 import React from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
-  Button,
-  ErrorMessage,
-  LinkButton,
-  Text,
-  TextField,
   Title,
   View,
+  Text,
+  TextField,
+  ErrorMessage,
+  Button,
+  LeftArrowIcon,
 } from '../components';
 
 const StyledView = styled(View)`
@@ -18,31 +19,30 @@ const StyledView = styled(View)`
   padding: 48px 28px 36px 28px;
   border-radius: 6px;
   max-width: 448px;
-  width: 100%;
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-interface ILoginForm extends FieldValues {
+interface IForgotPassword extends FieldValues {
   username: string;
   email: string;
-  password: string;
 }
 
-const Login = () => {
+const ForgotPassword = () => {
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<ILoginForm>({
+  } = useForm<IForgotPassword>({
     defaultValues: {
       username: '',
       email: '',
-      password: '',
     },
   });
 
-  const onSubmit = (form: ILoginForm) => {
-    console.log(form);
+  const navigate = useNavigate();
+
+  const onSubmit = (form: IForgotPassword) => {
+    console.log('form', form);
   };
 
   return (
@@ -59,7 +59,7 @@ const Login = () => {
           Plaka Tanıma Sistemi
         </Title>
         <Title mb="6px" color="textColor" fontSize={['1em', '1em', '1.6em']}>
-          Admin Paneline Hoşgeldiniz! 👋🏻
+          Şifremi Unuttum 🔒
         </Title>
         <Text
           mb="24px"
@@ -68,7 +68,8 @@ const Login = () => {
           lineHeight="20px"
           color="textSecondaryColor"
         >
-          Lütfen giriş bilgilerinizi giriniz
+          E-posta adresinizi girin, size şifrenizi sıfırlamak için mail
+          gönderelim.
         </Text>
         <View>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -105,66 +106,36 @@ const Login = () => {
                 <ErrorMessage> {errors.email?.message}</ErrorMessage>
               )}
             </View>
-            <View display="flex" flexDirection="column" mb="18px">
-              <TextField
-                name="password"
-                type="password"
-                control={control}
-                rules={{
-                  required: {
-                    value: true,
-                    message: 'Lütfen şifrenizi giriniz',
-                  },
-                }}
-                placeholder="Şifre"
-              />
-              {errors.password && (
-                <ErrorMessage> {errors.password?.message}</ErrorMessage>
-              )}
-            </View>
-            <View display="flex" flexDirection="column">
-              <LinkButton
-                to="/forgot-password"
-                fontSize="small"
-                color="primary"
-                ml="auto"
-                mb="27px"
-              >
-                Parolanızı mı unuttunuz ?
-              </LinkButton>
-              <Button
-                fontSize="medium"
-                padding="12px"
-                letterSpacing=".46px"
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="md"
-              >
-                GİRİŞ YAP
-              </Button>
-            </View>
-          </form>
-          <Text
-            mt="28px"
-            textAlign="center"
-            fontSize="medium"
-            color="textSecondaryColor"
-          >
-            Hesabınız yok mu ?{' '}
-            <LinkButton
-              ml="2px"
-              to="/register"
+            <Button
+              block
               fontSize="medium"
+              letterSpacing=".46px"
+              padding="12px"
+              type="submit"
+              variant="contained"
               color="primary"
+              size="md"
             >
-              Kayıt ol
-            </LinkButton>
-          </Text>
+              ŞİFRE YOLLA
+            </Button>
+          </form>
+          <Button
+            type="button"
+            variant="icon"
+            fontSize="medium"
+            mt="20px"
+            fontWeight="regular"
+            color="iconPrimary"
+            onClick={() => navigate('/login')}
+            block
+          >
+            <LeftArrowIcon mr="10px" size="24px" />
+            Giriş ekranına dön
+          </Button>
         </View>
       </View>
     </StyledView>
   );
 };
 
-export default Login;
+export default ForgotPassword;

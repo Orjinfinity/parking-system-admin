@@ -25,9 +25,10 @@ export const buttonVariants = variant({
     icon: {
       backgroundColor: 'transparent',
       borderColor: 'transparent',
-      '&:hover': {
-        color: 'var(--bg)',
-      },
+      color: 'var(--color)',
+      // '&:hover': {
+      //   color: 'var(--bg)',
+      // },
     },
     contained: {
       backgroundColor: 'var(--bg)',
@@ -72,13 +73,12 @@ export const buttonColors = ({ theme }: { theme: DefaultTheme }) =>
         '--color': theme.colors.black,
         '--bg': theme.colors.white,
       },
-      purple: {
-        '--color': theme.colors.white,
-        '--bg': theme.colors.primary,
-      },
-      green: {
+      success: {
         '--color': theme.colors.white,
         '--bg': theme.colors.success,
+      },
+      iconPrimary: {
+        '--color': theme.colors.primary,
       },
     },
   });
@@ -106,10 +106,16 @@ export const buttonSizes = variant({
 });
 
 const Button = styled('button')<ButtonProps>`
-    border-radius: 5px;
-    border: none;
-    ${({ size }) => size && buttonSizes}
-    ${({ color }) => color && buttonColors}
+  border-radius: 5px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: ${({ block }) => (block ? '100%' : 'auto')};
+  letter-spacing: 0.15px;
+  ${({ size }) => size && buttonSizes}
+  ${({ color }) => color && buttonColors}
     ${({ variant }) => variant && buttonVariants}
     ${space}
     ${position}
@@ -117,18 +123,18 @@ const Button = styled('button')<ButtonProps>`
     ${typography}
     ${flexbox}
     ${layout}
-  `;
+`;
 
 Button.defaultProps = {
-    color: 'black',
-    type: 'button',
-    variant: 'contained',
-    children: '',
-    size: 'md',
-}
+  color: 'black',
+  type: 'button',
+  variant: 'contained',
+  block: false,
+  children: '',
+  size: 'md',
+};
 
 export default Button;
-
 
 // const Button = styled(({ to, type, color, onClick, children, size }: IButton) => {
 //   if (to) return <Link to={to}> {children}</Link>;
@@ -146,4 +152,3 @@ export default Button;
 //   ${flexbox}
 //   ${layout}
 // `;
-

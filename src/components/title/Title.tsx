@@ -24,6 +24,7 @@ const sizeVariant = variant({
 });
 
 const Title = styled('h1')<TitleProps>`
+  letter-spacing: 0.18px;
   ${space}
   ${typography}
     ${color}

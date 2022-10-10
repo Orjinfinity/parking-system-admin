@@ -11,6 +11,7 @@ const colors = {
   success: '#56CA00', // green
   warning: '#FFB400', // yellow
   error: '#FF4C51', // red
+  lightError: '#FF6166', // light red
   textColor: '#3A3541DE',
   textSecondaryColor: '#3A3541AD',
   textDisabled: '#3A354161',

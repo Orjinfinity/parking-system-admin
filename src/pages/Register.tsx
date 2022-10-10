@@ -2,13 +2,14 @@ import React from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import {
-  Button,
-  ErrorMessage,
-  LinkButton,
-  Text,
-  TextField,
   Title,
   View,
+  Text,
+  TextField,
+  ErrorMessage,
+  Button,
+  LinkButton,
+  PhoneInput,
 } from '../components';
 
 const StyledView = styled(View)`
@@ -22,26 +23,32 @@ const StyledView = styled(View)`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-interface ILoginForm extends FieldValues {
+interface IRegisterForm extends FieldValues {
   username: string;
+  name: string;
+  surname: string;
+  phone: string;
   email: string;
   password: string;
 }
 
-const Login = () => {
+const Register = () => {
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<ILoginForm>({
+  } = useForm<IRegisterForm>({
     defaultValues: {
       username: '',
+      name: '',
+      surname: '',
+      phone: '',
       email: '',
       password: '',
     },
   });
 
-  const onSubmit = (form: ILoginForm) => {
+  const onSubmit = (form: IRegisterForm) => {
     console.log(form);
   };
 
@@ -59,7 +66,7 @@ const Login = () => {
           Plaka Tanıma Sistemi
         </Title>
         <Title mb="6px" color="textColor" fontSize={['1em', '1em', '1.6em']}>
-          Admin Paneline Hoşgeldiniz! 👋🏻
+          Giriş yapabilmek için kayıt olabilirsiniz 🚀
         </Title>
         <Text
           mb="24px"
@@ -68,7 +75,7 @@ const Login = () => {
           lineHeight="20px"
           color="textSecondaryColor"
         >
-          Lütfen giriş bilgilerinizi giriniz
+          Lütfen bütün alanları eksikiz doldurunuz.
         </Text>
         <View>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -86,6 +93,68 @@ const Login = () => {
               />
               {errors.username && (
                 <ErrorMessage> {errors.username?.message}</ErrorMessage>
+              )}
+            </View>
+            <View display="flex" flexDirection="column" mb="18px">
+              <TextField
+                name="name"
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Lütfen isminizi giriniz',
+                  },
+                }}
+                placeholder="Adınız"
+              />
+              {errors.name && (
+                <ErrorMessage> {errors.name?.message}</ErrorMessage>
+              )}
+            </View>
+            <View display="flex" flexDirection="column" mb="18px">
+              <TextField
+                name="surname"
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Lütfen soyadınızı giriniz',
+                  },
+                }}
+                placeholder="Soyadınız"
+              />
+              {errors.surname && (
+                <ErrorMessage> {errors.surname?.message}</ErrorMessage>
+              )}
+            </View>
+            <View display="flex" flexDirection="column" mb="18px">
+              {/* <TextField
+                name="phone"
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Lütfen telefon numaranızı giriniz',
+                  },
+                }}
+                placeholder="Telefon numaranız"
+              />
+              {errors.phone && (
+                <ErrorMessage> {errors.phone?.message}</ErrorMessage>
+              )} */}
+              <PhoneInput
+                name="phone"
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Lütfen telefon numaranızı giriniz',
+                  },
+                }}
+                placeholder="Telefon numarnız"
+              />
+              {errors.phone && (
+                <ErrorMessage> {errors.phone?.message}</ErrorMessage>
               )}
             </View>
             <View display="flex" flexDirection="column" mb="18px">
@@ -123,15 +192,6 @@ const Login = () => {
               )}
             </View>
             <View display="flex" flexDirection="column">
-              <LinkButton
-                to="/forgot-password"
-                fontSize="small"
-                color="primary"
-                ml="auto"
-                mb="27px"
-              >
-                Parolanızı mı unuttunuz ?
-              </LinkButton>
               <Button
                 fontSize="medium"
                 padding="12px"
@@ -141,7 +201,7 @@ const Login = () => {
                 color="primary"
                 size="md"
               >
-                GİRİŞ YAP
+                KAYIT OL
               </Button>
             </View>
           </form>
@@ -151,14 +211,9 @@ const Login = () => {
             fontSize="medium"
             color="textSecondaryColor"
           >
-            Hesabınız yok mu ?{' '}
-            <LinkButton
-              ml="2px"
-              to="/register"
-              fontSize="medium"
-              color="primary"
-            >
-              Kayıt ol
+            Hesabınız var mı ?
+            <LinkButton ml="2px" to="/login" fontSize="medium" color="primary">
+              Giriş Yap
             </LinkButton>
           </Text>
         </View>
@@ -167,4 +222,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

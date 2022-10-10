@@ -54,9 +54,12 @@ declare module 'styled-components' {
       xl: string;
       xxl: string;
     };
+    shadows: {
+      primary: string;
+      secondary: string;
+    };
     borders: IDefaultStyleProp;
     space: IDefaultStyleProp;
     sizes: IDefaultStyleProp;
-    shadows: IDefaultStyleProp;
   }
 }

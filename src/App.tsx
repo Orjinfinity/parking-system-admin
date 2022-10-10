@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Dashboard, ForgotPassword, Login, Register } from './pages';
 import PrivateLayout from './layout/PrivateLayout';
 import PublicLayout from './layout/PublicLayout';
 import ThemeProviderWrapper from './theme';
-import { Dashboard, Login } from './pages';
 
 function App() {
   return (
@@ -14,6 +14,8 @@ function App() {
           </Route>
           <Route path="" element={<PublicLayout />}>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
           </Route>
         </Routes>
       </BrowserRouter>

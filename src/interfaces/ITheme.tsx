@@ -55,18 +55,40 @@ interface TitleProps
   size?: string;
 }
 
-interface TextProps extends SpaceProps, TypographyProps, ColorProps, FlexboxProps {
+interface TextProps
+  extends SpaceProps,
+    TypographyProps,
+    ColorProps,
+    FlexboxProps {
   size?: any;
 }
 
-interface ButtonProps extends SpaceProps, TypographyProps, ColorProps, FlexboxProps, BorderProps, LayoutProps {
+interface ButtonProps
+  extends SpaceProps,
+    TypographyProps,
+    ColorProps,
+    FlexboxProps,
+    BorderProps,
+    LayoutProps {
   to?: string;
-    type?: 'button' | 'submit' | 'reset';
-    variant?: 'text' | 'icon' | 'contained' | 'outline';
-    onClick?: () => void;
-    color?: string;
-    children: ReactNode;
-    size?: 'sm' | 'md' | 'lg' | 'xl' | 'auto';
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'text' | 'icon' | 'contained' | 'outline';
+  onClick?: () => void;
+  color?: string;
+  children: ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'auto';
+  block?: boolean;
 }
 
-export type {IBreakpointAlias, IBreakpointSizes, IDefaultStyleProp, ViewProps, TitleProps, TextProps, ButtonProps}
+interface IconProps extends SpaceProps {}
+
+export type {
+  IBreakpointAlias,
+  IBreakpointSizes,
+  IDefaultStyleProp,
+  ViewProps,
+  TitleProps,
+  TextProps,
+  ButtonProps,
+  IconProps,
+};

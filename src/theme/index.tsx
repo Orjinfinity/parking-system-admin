@@ -7,6 +7,7 @@ import breakpoints from './breakpoints';
 import fontSizes from './fontSizes';
 import colors from './colors';
 import fonts from './fonts';
+import boxShadows from './boxShadows';
 
 interface IThemeProviderWrapper {
   children: React.ReactElement;
@@ -20,10 +21,10 @@ const defaultTheme: DefaultTheme = {
   fontSizes,
   breakpoints,
   mediaQueries,
+  shadows: boxShadows,
   borders: {} as IDefaultStyleProp,
   space: {} as IDefaultStyleProp,
   sizes: {} as IDefaultStyleProp,
-  shadows: {} as IDefaultStyleProp,
 };
 
 const ThemeProviderWrapper = ({

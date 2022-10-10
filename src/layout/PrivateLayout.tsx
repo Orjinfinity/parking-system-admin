@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { View } from '../components';
 import Footer from './Footer';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -12,14 +13,14 @@ const PrivateLayout = () => {
     return <Navigate to="/login" replace state={{ from: location }} />;
 
   return (
-    <div>
+    <View>
       <Header />
       <section>
         <Sidebar />
         <Outlet />
       </section>
       <Footer />
-    </div>
+    </View>
   );
 };
 

@@ -7,7 +7,7 @@ interface IErrorMessage {
 
 const ErrorMessage = ({ children }: IErrorMessage) => {
   return (
-    <Text size="sm" mt="3px" color="red">
+    <Text size="sm" mt="4px" color="lightError">
       {children}
     </Text>
   );
