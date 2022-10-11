@@ -11,6 +11,7 @@ import {
   LinkButton,
   PhoneInput,
 } from '../components';
+import { Regex } from '../utils';
 
 const StyledView = styled(View)`
   display: flex;
@@ -88,6 +89,10 @@ const Register = () => {
                     value: true,
                     message: 'Lütfen kullanıcı adınızı giriniz',
                   },
+                  pattern: {
+                    value: Regex.PHONE_NUMBER,
+                    message: 'Lütfen doğru formatta telefon numaranızı giriniz'
+                  }
                 }}
                 placeholder="Kullanıcı adı"
               />
@@ -128,20 +133,6 @@ const Register = () => {
               )}
             </View>
             <View display="flex" flexDirection="column" mb="18px">
-              {/* <TextField
-                name="phone"
-                control={control}
-                rules={{
-                  required: {
-                    value: true,
-                    message: 'Lütfen telefon numaranızı giriniz',
-                  },
-                }}
-                placeholder="Telefon numaranız"
-              />
-              {errors.phone && (
-                <ErrorMessage> {errors.phone?.message}</ErrorMessage>
-              )} */}
               <PhoneInput
                 name="phone"
                 control={control}

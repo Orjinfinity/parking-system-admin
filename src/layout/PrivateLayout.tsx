@@ -1,9 +1,9 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { View } from '../components';
+import Sidebar from './Sidebar';
 import Footer from './Footer';
 import Header from './Header';
-import Sidebar from './Sidebar';
 
 const PrivateLayout = () => {
   const location = useLocation();
