@@ -12,9 +12,10 @@ const colors = {
   warning: '#FFB400', // yellow
   error: '#FF4C51', // red
   lightError: '#FF6166', // light red
-  textColor: '#3A3541DE',
+  textColor: '#3A3541DE', // default text color
   textSecondaryColor: '#3A3541AD',
   textDisabled: '#3A354161',
+  bgLayout: '#F4F5FA',
   bgPrimary:
     'linear-gradient(0deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)), #9155FD',
   bgSecondary:

@@ -50,6 +50,24 @@ export const buttonVariants = variant({
         color: 'var(--color)',
       },
     },
+    link: {
+      backgroundColor: 'var(--bg)',
+      borderColor: 'var(--bg)',
+      color: 'var(--color)',
+      '&:hover': {
+        backgroundColor: 'var(--bg-hover)',
+        // borderColor: 'var(--bg)',
+        // color: '#fff',
+        opacity: '0.8',
+      },
+      '&.active': {
+        backgroundColor: 'var(--bg-active)',
+        color: 'var(--color-active)',
+        'svg' : {
+          color: 'var(--color-active)',
+        }
+      }
+    }
   },
 });
 
@@ -80,6 +98,13 @@ export const buttonColors = ({ theme }: { theme: DefaultTheme }) =>
       iconPrimary: {
         '--color': theme.colors.primary,
       },
+      linkPrimary : {
+        '--color': theme.colors.textColor,
+        '--bg': 'transparent',
+        '--bg-hover': "rgb(226 226 226)",
+        '--bg-active': theme.colors.primary,
+        '--color-active' : theme.colors.white
+      }
     },
   });
 

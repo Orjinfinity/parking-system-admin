@@ -24,6 +24,7 @@ declare module 'styled-components' {
       textColor: string;
       textSecondaryColor: string;
       textDisabled: string;
+      bgLayout: string;
       bgPrimary: string;
       bgSecondary: string;
       bgInfo: string;

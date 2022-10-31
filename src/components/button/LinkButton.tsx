@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   border,
@@ -12,9 +12,10 @@ import {
 import { ButtonProps } from '../../interfaces';
 import { buttonColors, buttonSizes, buttonVariants } from './Button';
 
-const LinkButton = styled(Link)<ButtonProps>`
+const LinkButton = styled(NavLink)<ButtonProps>`
   letter-spacing: 0.15px;
   line-height: 20px;
+  border-radius: 5px;
   ${color}
   ${space}
   ${position}

@@ -25,6 +25,7 @@ const sizeVariant = variant({
 
 const Text = styled('p')<TitleProps>`
   letter-spacing: 0.5px;
+  color: #3A3541DE;
   ${space}
   ${typography}
     ${color}

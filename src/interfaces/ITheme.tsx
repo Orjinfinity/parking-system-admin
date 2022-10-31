@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+// import { DefaultTheme, StyledComponent } from 'styled-components';
 import {
   SpaceProps,
   ColorProps,
@@ -72,7 +73,7 @@ interface ButtonProps
     LayoutProps {
   to?: string;
   type?: 'button' | 'submit' | 'reset';
-  variant?: 'text' | 'icon' | 'contained' | 'outline';
+  variant?: 'text' | 'icon' | 'contained' | 'outline' | 'link';
   onClick?: () => void;
   color?: string;
   children: ReactNode;
@@ -80,12 +81,25 @@ interface ButtonProps
   block?: boolean;
 }
 
+interface ImageProps extends SpaceProps {
+  width?: string;
+  height?: string;
+}
+
+interface ListProps extends SpaceProps, LayoutProps, ColorProps {
+}
+
+interface ListItemProps extends ListProps, PositionProps, BorderProps {}
+
 interface IconProps extends SpaceProps {}
 
 export type {
   IBreakpointAlias,
   IBreakpointSizes,
   IDefaultStyleProp,
+  ListProps,
+  ListItemProps,
+  ImageProps,
   ViewProps,
   TitleProps,
   TextProps,
