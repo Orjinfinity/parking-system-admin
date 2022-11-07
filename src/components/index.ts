@@ -10,6 +10,8 @@ export { default as Image } from "./image/Image";
 export { default as List } from "./list/List";
 export { default as ListItem } from "./list/ListItem";
 export { default as IconLink } from "./link/IconLink";
+export { default as RequireAuth } from './routes/RequireAuth';
+export { default as Role } from './role/Role';
 // Icons
 export { default as NotificationIcon } from './icons/NotificationIcon';
 export { default as LeftArrowIcon } from './icons/LeftArrowIcon';
@@ -19,4 +21,5 @@ export { default as SearchIcon } from './icons/SearchIcon';
 export { default as UsersIcon } from './icons/UsersIcon';
 export { default as GateIcon } from './icons/GateIcon';
 export { default as FlatIcon } from './icons/FlatIcon';
+export { default as CopyIcon } from './icons/CopyIcon';
 export { default as CarIcon } from './icons/CarIcon';

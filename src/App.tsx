@@ -15,13 +15,21 @@ import {
 import PrivateLayout from './layout/PrivateLayout';
 import PublicLayout from './layout/PublicLayout';
 import ThemeProviderWrapper from './theme';
+import { RequireAuth } from './components';
 
 function App() {
   return (
     <ThemeProviderWrapper>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<PrivateLayout />}>
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <PrivateLayout />
+              </RequireAuth>
+            }
+          >
             <Route index element={<Dashboard />} />
             <Route path="/users" element={<Users />} />
             <Route path="/sites" element={<Sites />} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { View } from '../components';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
@@ -15,12 +15,6 @@ const SectionStyled = styled('section')`
 `
 
 const PrivateLayout = () => {
-  const location = useLocation();
-  const isAuthenticated = true;
-
-  if (!isAuthenticated)
-    return <Navigate to="/login" replace state={{ from: location }} />;
-
   return (
     <View
       display="flex"
@@ -34,7 +28,9 @@ const PrivateLayout = () => {
         <Sidebar />
         <SectionStyled>
           <Header />
-          <Outlet />
+          <View flex="1" p={[12, 12, 12, 16, 16]}>
+            <Outlet />
+          </View>
           <Footer />
         </SectionStyled>
       </View>

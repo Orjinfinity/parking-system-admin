@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { TrafficBarrier } from "@styled-icons/boxicons-solid/TrafficBarrier";
+import { ContentCopy } from "@styled-icons/material/ContentCopy";
 import { color, space } from "styled-system";
 import { IconProps } from "../../interfaces";
 
-const GateIcon = styled(TrafficBarrier)<IconProps>`
+const CopyIcon = styled(ContentCopy)<IconProps>`
     ${space}
     ${color}
 `
-export default GateIcon;
+export default CopyIcon;
