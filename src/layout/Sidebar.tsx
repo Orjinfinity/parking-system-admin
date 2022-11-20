@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   View,
   Image,
-  Title,
   List,
   ListItem,
   DashboardIcon,
@@ -29,11 +28,11 @@ const Sidebar = () => {
       p={[12, 12, 12, 16, 16]}
       borderRight="1px solid #e4e4e4"
     >
-      <View display="flex" alignItems="center" p="12px" onClick={() => navigate('/')}>
-        <Image width="auto" height="auto" src={imagePath('logo.png')} alt="Dasboard Logo" />
-        <Title fontSize="1.1rem" ml="12px">
-          PANEL YÖNETİMİ
-        </Title>
+      <View display="flex" alignItems="center" p="5px" onClick={() => navigate('/')}>
+        <Image  height="36px" src={imagePath('logo.png')} alt="logo" />
+        {/* <Title fontSize="1.1rem" ml="12px">
+          PANEL
+        </Title> */}
       </View>
       <View width="100%">
         <List mt="20px">
@@ -49,7 +48,7 @@ const Sidebar = () => {
               width="100%"
 
             >
-              <DashboardIcon mr="12px" size="20px" color="#3A3541DE" />
+              <DashboardIcon mr="12px" size="20px" color="textColor" />
               Dashboard
             </LinkButton>
           </ListItem>
@@ -64,7 +63,7 @@ const Sidebar = () => {
               alignItems="center"
               width="100%"
             >
-              <UsersIcon mr="12px" size="20px" color="#3A3541DE" />
+              <UsersIcon mr="12px" size="20px" color="textColor" />
               Kullanıcılar
             </LinkButton>
           </ListItem>
@@ -79,7 +78,7 @@ const Sidebar = () => {
               alignItems="center"
               width="100%"
             >
-              <BuildingIcon mr="12px" size="20px" color="#3A3541DE" />
+              <BuildingIcon mr="12px" size="20px" color="textColor" />
               Siteler
             </LinkButton>
           </ListItem>
@@ -94,7 +93,7 @@ const Sidebar = () => {
               alignItems="center"
               width="100%"
             >
-              <ApartmentIcon mr="12px" size="20px" color="#3A3541DE" />
+              <ApartmentIcon mr="12px" size="20px" color="textColor" />
               Apartmanlar
             </LinkButton>
           </ListItem>
@@ -109,7 +108,7 @@ const Sidebar = () => {
               alignItems="center"
               width="100%"
             >
-              <FlatIcon mr="12px" size="20px" color="#3A3541DE" />
+              <FlatIcon mr="12px" size="20px" color="textColor" />
               Daireler
             </LinkButton>
           </ListItem>
@@ -124,7 +123,7 @@ const Sidebar = () => {
               alignItems="center"
               width="100%"
             >
-              <GateIcon mr="12px" size="20px" color="#3A3541DE" />
+              <GateIcon mr="12px" size="20px" color="textColor" />
               Giriş Kapıları
             </LinkButton>
           </ListItem>
@@ -139,7 +138,7 @@ const Sidebar = () => {
               alignItems="center"
               width="100%"
             >
-              <CarIcon mr="12px" size="20px" color="#3A3541DE" />
+              <CarIcon mr="12px" size="20px" color="textColor" />
               Araçlar
             </LinkButton>
           </ListItem>

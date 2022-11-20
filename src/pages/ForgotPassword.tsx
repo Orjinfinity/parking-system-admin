@@ -10,7 +10,9 @@ import {
   ErrorMessage,
   Button,
   LeftArrowIcon,
+  Image,
 } from '../components';
+import imagePath from '../utils/assetHelper';
 
 const StyledView = styled(View)`
   display: flex;
@@ -46,14 +48,17 @@ const ForgotPassword = () => {
   };
 
   return (
-    <StyledView boxShadow="primary">
+    <StyledView boxShadow="primary" height={['100vh', '100vh', 'auto']}>
       <View width="100%">
+        <View display="flex" justifyContent="center" mb="32px">
+          <Image height="42px" src={imagePath('logo.png')} alt="logo" />
+        </View>
         <Title
           mb="32px"
           color="textColor"
           fontWeight="large"
           lineHeight="32px"
-          fontSize={['1em', '1em', '2em']}
+          fontSize={['1em', '1.6em', '2em']}
           textAlign="center"
         >
           Plaka Tanıma Sistemi

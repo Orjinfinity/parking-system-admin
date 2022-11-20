@@ -10,8 +10,10 @@ import {
   Button,
   LinkButton,
   PhoneInput,
+  Image
 } from '../components';
 import { Regex } from '../utils';
+import imagePath from '../utils/assetHelper';
 
 const StyledView = styled(View)`
   display: flex;
@@ -56,17 +58,20 @@ const Register = () => {
   return (
     <StyledView boxShadow="primary">
       <View width="100%">
+         <View display="flex" justifyContent="center" mb="32px">
+          <Image height="42px" src={imagePath('logo.png')} alt="logo" />
+        </View>
         <Title
           mb="32px"
           color="textColor"
           fontWeight="large"
           lineHeight="32px"
-          fontSize={['1em', '1em', '2em']}
+          fontSize={['1.6em', '1.6em', '2em']}
           textAlign="center"
         >
           Plaka Tanıma Sistemi
         </Title>
-        <Title mb="6px" color="textColor" fontSize={['1em', '1em', '1.6em']}>
+        <Title mb="6px" color="textColor" fontSize={['1.1em', '1.1em', '1.6em']}>
           Giriş yapabilmek için kayıt olabilirsiniz 🚀
         </Title>
         <Text

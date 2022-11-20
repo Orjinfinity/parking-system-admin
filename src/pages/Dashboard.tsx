@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Title, View, Text, Role } from '../components';
+import { roles } from '../consts';
 
 const CardContainer = styled(View)`
   display: grid;
@@ -32,10 +33,9 @@ const Dashboard = () => {
         need.
       </Text>
       <CardContainer>
-        <Role/>
-        <Role/>
-        <Role/>
-        <Role/>
+        {roles.map((roleProps, index) => (
+          <Role key={index} { ...roleProps }/>
+        ))}
         <Role/>
       </CardContainer>
     </View>

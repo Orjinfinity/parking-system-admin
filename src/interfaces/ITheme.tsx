@@ -52,6 +52,7 @@ interface TitleProps
   extends SpaceProps,
     TypographyProps,
     ColorProps,
+    LayoutProps,
     PositionProps {
   size?: string;
 }

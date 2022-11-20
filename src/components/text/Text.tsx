@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { color, position, space, typography, variant } from 'styled-system';
+import { color, layout, position, space, typography, variant } from 'styled-system';
 import { TitleProps } from '../../interfaces';
 
 const sizeVariant = variant({
@@ -30,6 +30,7 @@ const Text = styled('p')<TitleProps>`
   ${typography}
     ${color}
     ${position}
+    ${layout}
     ${({ size }) => size && sizeVariant}
 `;
 

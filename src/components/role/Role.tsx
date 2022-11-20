@@ -1,12 +1,13 @@
-import React from 'react';
 import View from '../view/View';
 import Text from '../text/Text';
 import Image from '../image/Image';
-import imagePath from '../../utils/assetHelper';
 import styled from 'styled-components';
 import Title from '../title/Title';
 import Button from '../button/Button';
 import CopyIcon from '../icons/CopyIcon';
+import { IRoleCard } from '../../interfaces';
+import imagePath from '../../utils/assetHelper';
+import { errorMessage, successMessage } from '../../services';
 
 const ContentStyled = styled(View)`
   width: 360px;
@@ -48,48 +49,98 @@ const ImageContainer = styled(View)`
   }
 `;
 
-const Role = () => {
+const Role = ({ role = '', count = null }: IRoleCard) => {
+  const isRoleCard = Boolean(role && count);
+
+  const copyToClipboard = async (role: string) => {
+    try {
+      await navigator.clipboard.writeText(role).then(() => {
+        successMessage(`${role} başarıyla kopyalandı.`, { autoClose: 2000 });
+      });
+    } catch {
+      errorMessage('Kopyalama başarısız.', { autoClose: 2000 });
+    }
+  };
+
   return (
     <ContentStyled>
-      <View
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb="24px"
-      >
-        <Text fontSize="small" color="textSecondaryColor">
-          Total 4 users
-        </Text>
-        <ImageContainer height="40px">
-          <Image src={imagePath('Avatar3.png')} alt="avatar_1" />
-          <Image src={imagePath('Avatar2.png')} alt="avatar_2" />
-          <Image src={imagePath('AvatarGirl.png')} alt="avatar_3" />
-          <RoleCountStyled>+3</RoleCountStyled>
-        </ImageContainer>
-      </View>
-      <Title
-        fontSize="20px"
-        fontWeight="500"
-        color="textSecondaryColor"
-        mb="8px"
-      >
-        Administrator
-      </Title>
-      <View display="flex" justifyContent="space-between" alignItems="center">
-        <Button
-          fontSize="small"
-          fontWeight="400"
-          lineHeight="20px"
-          variant="text"
-          color="primary"
-          padding="0"
-        >
-          Edit Role
-        </Button>
-        <Button variant="icon" padding="0">
-          <CopyIcon size="20px" color="textColor" />
-        </Button>
-      </View>
+      {isRoleCard ? (
+        <>
+          <View
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb="24px"
+          >
+            <Text fontSize="small" color="textSecondaryColor">
+              Total {count} users
+            </Text>
+            <ImageContainer height="40px">
+              <Image src={imagePath('Avatar3.png')} alt="avatar_1" />
+              <Image src={imagePath('Avatar2.png')} alt="avatar_2" />
+              <Image src={imagePath('AvatarGirl.png')} alt="avatar_3" />
+              <RoleCountStyled>+ 3</RoleCountStyled>
+            </ImageContainer>
+          </View>
+          <Title
+            fontSize="20px"
+            fontWeight="500"
+            color="textSecondaryColor"
+            mb="8px"
+          >
+            {role}
+          </Title>
+          <View
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Button
+              fontSize="small"
+              fontWeight="400"
+              lineHeight="20px"
+              variant="text"
+              color="primary"
+              padding="0"
+            >
+              Edit Role
+            </Button>
+            <Button
+              variant="icon"
+              padding="0"
+              onClick={() => copyToClipboard(role)}
+            >
+              <CopyIcon size="20px" color="textColor" />
+            </Button>
+          </View>
+        </>
+      ) : (
+        <View display="flex" justifyContent="space-between">
+          <Image src={imagePath('illustration.png')} />
+          <View display="flex" flexDirection="column" alignItems="flex-end">
+            <Button
+              fontSize="medium"
+              padding="10px 20px"
+              width="112px"
+              letterSpacing=".46px"
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="md"
+            >
+              Yeni Role
+            </Button>
+            <Text
+              maxWidth="200px"
+              mt="16px"
+              textAlign="right"
+              color="textSecondaryColor"
+            >
+              Add new role, if it doesn't exist.
+            </Text>
+          </View>
+        </View>
+      )}
     </ContentStyled>
   );
 };
