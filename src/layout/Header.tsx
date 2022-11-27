@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Image,
@@ -13,6 +12,9 @@ import {
   QuestionIcon,
   LogoutIcon,
 } from '../components';
+import { Types, UserTypes } from '../interfaces';
+import { logout } from '../store/auth';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import imagePath from '../utils/assetHelper';
 
 const ImageContainerStyled = styled(View)`
@@ -34,10 +36,14 @@ const ProfileCardStyled = styled(View)`
   border-radius: 6px;
 `;
 
+
 const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-
-  const navigate = useNavigate();
+  
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.auth.user);
+  const type = user.roles[0] || 'ROLE_USER';
+  const userRole = UserTypes[type as keyof typeof Types];
 
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -93,10 +99,15 @@ const Header = () => {
               ml="10px"
             >
               <Title mb="4px" fontSize="0.8rem">
-                Serkan Sayhan
+                {`${user.username.charAt(0).toUpperCase()}${user.username.slice(1)}`}
+              </Title>
+              <Title mb="4px" fontSize="0.8rem">
+                {/* Administrator */}
+                {userRole}
               </Title>
               <Text color="textSecondaryColor" fontSize="12px">
-                Administrator
+                {/* Administrator */}
+                {user.email}
               </Text>
             </View>
           </View>
@@ -131,7 +142,7 @@ const Header = () => {
             fontWeight="regular"
             color="linkPrimary"
             mr="auto"
-            onClick={() => navigate('/login')}
+            onClick={() => dispatch(logout())}
           >
             <LogoutIcon mr="14px" size="24px" />
             Çıkış Yap

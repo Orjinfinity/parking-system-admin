@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { LocalStorageKeys } from "../../interfaces";
+import { errorMessage } from "../Toast/Toast";
 
 
 export const axiosInstance = axios.create({
@@ -30,11 +31,10 @@ axiosInstance.interceptors.response.use(
     },
     (error) => {
         const status = error?.response?.status || error?.status;
-        const errorMessage = error?.response?.data?.messages?.[0] ?? error.message;
-        if(status === 401) {
-            // unauthorized
-        }
-        console.error(errorMessage);
+        const message = error?.response?.data?.message ?? error.message;
+        
+        if(message) errorMessage(message);
+        if(status === 401 && !message) errorMessage(`${error?.response?.status}: ${error?.response?.statusText}`);
 
         return Promise.reject(error)
     }

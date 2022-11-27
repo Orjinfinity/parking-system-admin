@@ -29,3 +29,8 @@ button:not(:disabled),
 [role='button']:not(:disabled) {
   cursor: pointer;
 }
+
+.table {
+  border-top-left-radius: 6px !important;
+  border-top-right-radius: 6px !important;
+}

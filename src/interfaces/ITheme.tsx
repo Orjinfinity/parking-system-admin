@@ -74,7 +74,7 @@ interface ButtonProps
     LayoutProps {
   to?: string;
   type?: 'button' | 'submit' | 'reset';
-  variant?: 'text' | 'icon' | 'contained' | 'outline' | 'link';
+  variant?: 'text' | 'icon' | 'contained' | 'outline' | 'dashed' | 'link';
   onClick?: () => void;
   color?: string;
   children: ReactNode;

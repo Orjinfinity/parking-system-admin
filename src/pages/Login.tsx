@@ -1,5 +1,6 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Button,
@@ -11,7 +12,8 @@ import {
   View,
   Image,
 } from '../components';
-import { login } from '../services';
+import { loginAction } from '../store/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import imagePath from '../utils/assetHelper';
 
 const StyledView = styled(View)`
@@ -45,9 +47,27 @@ const Login = () => {
     },
   });
 
+  const navigate = useNavigate();
+
+  const authState = useAppSelector((state) => state.auth);
+  const isAuthenticated = authState.isAuthenticated;
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (isAuthenticated) navigate('/');
+  }, [isAuthenticated, navigate]);
+
   const onSubmit = (form: ILoginForm) => {
-    login(form).then((res) => console.log('res', res));
+    dispatch(loginAction(form));
   };
+
+  if (authState.loading) {
+    return (
+      <View height={['100vh', '100vh', 'auto']}>
+        Loading...
+      </View>
+    );
+  }
 
   return (
     <StyledView boxShadow="primary" height={['100vh', '100vh', 'auto']}>

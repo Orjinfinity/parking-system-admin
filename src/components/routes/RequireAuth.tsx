@@ -1,13 +1,14 @@
 import React, { ReactElement } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { useAppSelector } from '../../store/hooks';
 
-interface IRequireAuth {
+export interface IRequireAuth {
   children: ReactElement;
 }
 
 const RequireAuth = ({ children }: IRequireAuth): ReactElement => {
   const location = useLocation();
-  const isAuthenticated = true;
+  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
 
   return isAuthenticated ? (
     children

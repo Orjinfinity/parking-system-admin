@@ -62,7 +62,7 @@ const PhoneInput = React.forwardRef<
     return (
       <StyledPhoneInput
         placeholder={placeholder}
-        format="+90 (###) #### ###"
+        format="+90 (###) ### ####"
         allowEmptyFormatting
         mask="_"
         type="tel"

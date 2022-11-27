@@ -24,7 +24,7 @@ const NotFound = () => {
       </View>
       <Image height="70%" src={assetHelper('404.jpg')} alt="404_not_found" />
       <LinkButton variant="contained" size="md" to="login" color="primary">
-        Back to login
+        Sayfaya geri dön
       </LinkButton>
     </View>
   );

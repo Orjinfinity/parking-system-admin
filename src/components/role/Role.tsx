@@ -10,7 +10,6 @@ import imagePath from '../../utils/assetHelper';
 import { errorMessage, successMessage } from '../../services';
 
 const ContentStyled = styled(View)`
-  width: 360px;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 6px;
   padding: 20px;

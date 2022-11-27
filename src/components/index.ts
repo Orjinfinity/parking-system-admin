@@ -12,6 +12,7 @@ export { default as ListItem } from "./list/ListItem";
 export { default as IconLink } from "./link/IconLink";
 export { default as RequireAuth } from './routes/RequireAuth';
 export { default as Role } from './role/Role';
+export { default as UserTableHeader } from './userTable/UserTableHeader';
 // Icons
 export { default as NotificationIcon } from './icons/NotificationIcon';
 export { default as LeftArrowIcon } from './icons/LeftArrowIcon';
@@ -26,3 +27,6 @@ export { default as FlatIcon } from './icons/FlatIcon';
 export { default as CopyIcon } from './icons/CopyIcon';
 export { default as UserIcon } from './icons/UserIcon';
 export { default as CarIcon } from './icons/CarIcon';
+export { default as EditIcon } from './icons/EditIcon';
+export { default as DeleteIcon } from './icons/DeleteIcon';
+export { default as ExportIcon } from './icons/ExportIcon';

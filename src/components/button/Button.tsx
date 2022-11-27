@@ -26,9 +26,6 @@ export const buttonVariants = variant({
       backgroundColor: 'transparent',
       borderColor: 'transparent',
       color: 'var(--color)',
-      // '&:hover': {
-      //   color: 'var(--bg)',
-      // },
     },
     contained: {
       backgroundColor: 'var(--bg)',
@@ -47,6 +44,16 @@ export const buttonVariants = variant({
       color: 'var(--bg)',
       '&:hover': {
         backgroundColor: 'var(--bg)',
+        color: 'var(--color)',
+      },
+    },
+    dashed: {
+      backgroundColor: 'transparent',
+      border:'1px solid var(--bg)',
+      color: 'var(--bg)',
+      '&:hover': {
+        backgroundColor: 'var(--bg)',
+        borderColor:'var(--color)',
         color: 'var(--color)',
       },
     },
@@ -95,6 +102,14 @@ export const buttonColors = ({ theme }: { theme: DefaultTheme }) =>
         '--color': theme.colors.white,
         '--bg': theme.colors.success,
       },
+      info: {
+        '--color': theme.colors.white,
+        '--bg': theme.colors.info,
+      },
+      gray: {
+        '--color': theme.colors.white,
+        '--bg': theme.colors.textSecondaryColor,
+      },
       iconPrimary: {
         '--color': theme.colors.primary,
       },
@@ -113,7 +128,7 @@ export const buttonSizes = variant({
   variants: {
     sm: {
       padding: '8px 16px',
-      fontSize: '.9em',
+      fontSize: '.9em !important',
     },
     md: {
       padding: '10px 20px',

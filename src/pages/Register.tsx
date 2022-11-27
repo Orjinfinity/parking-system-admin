@@ -12,6 +12,7 @@ import {
   PhoneInput,
   Image
 } from '../components';
+import { register } from '../services';
 import { Regex } from '../utils';
 import imagePath from '../utils/assetHelper';
 
@@ -52,7 +53,7 @@ const Register = () => {
   });
 
   const onSubmit = (form: IRegisterForm) => {
-    console.log(form);
+    register(form).then((res) => console.log('res', res));
   };
 
   return (
@@ -94,10 +95,6 @@ const Register = () => {
                     value: true,
                     message: 'Lütfen kullanıcı adınızı giriniz',
                   },
-                  pattern: {
-                    value: Regex.PHONE_NUMBER,
-                    message: 'Lütfen doğru formatta telefon numaranızı giriniz'
-                  }
                 }}
                 placeholder="Kullanıcı adı"
               />
@@ -146,6 +143,10 @@ const Register = () => {
                     value: true,
                     message: 'Lütfen telefon numaranızı giriniz',
                   },
+                  pattern: {
+                    value: Regex.PHONE_NUMBER,
+                    message: 'Lütfen doğru formatta telefon numaranızı giriniz'
+                  }
                 }}
                 placeholder="Telefon numarnız"
               />

@@ -24,9 +24,34 @@ interface InputProps<
   control: Control<any>;
 }
 
+interface BasicInputProps {
+  name: string;
+  type?: 'text' | 'email' | 'password';
+  defaultValue?: string | number | readonly string[] | undefined;
+  placeholder?: string;
+}
+
 interface StyledProps extends SpaceProps {
   error: boolean;
 }
+
+export const BasicTextField = ({
+  name,
+  type,
+  defaultValue,
+  placeholder,
+}: BasicInputProps) => {
+  return (
+    <TextFieldRef
+      id={name}
+      type={type}
+      placeholder={placeholder}
+      defaultValue={defaultValue}
+      autoComplete="off"
+      error={false}
+    />
+  );
+};
 
 const TextField = <
   TFieldValues extends FieldValues = FieldValues,
