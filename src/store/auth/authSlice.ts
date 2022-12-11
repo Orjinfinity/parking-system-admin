@@ -28,12 +28,10 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = ''
         },
-        logout: state => {
-            state.user = {} as IUser;
-            state.isAuthenticated = false;
-            state.loading = false;
+        logout: () => {
             localStorage.removeItem(LocalStorageKeys.AuthToken)
             localStorage.removeItem(LocalStorageKeys.User)
+            return initialState;
         }
     },
     extraReducers(builder) {

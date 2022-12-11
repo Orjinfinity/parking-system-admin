@@ -1,10 +1,15 @@
 import React from 'react';
 import Button from '../button/Button';
 import ExportIcon from '../icons/ExportIcon';
+import UserPlusIcon from '../icons/UserPlusIcon';
 import { BasicTextField } from '../textfield/TextField';
 import View from '../view/View';
 
-const UserTableHeader = () => {
+interface IUserTableHeader {
+  handleUserFunctions: (type: string) => void;
+}
+
+const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
   return (
     <View
       display="flex"
@@ -24,7 +29,7 @@ const UserTableHeader = () => {
         size="md"
         ml="-5px"
       >
-        <ExportIcon size="20px" mr="8px" mb="3px"/>
+        <ExportIcon size="20px" mr="8px" mb="4px"/>
         Export
       </Button>
       <View display="flex">
@@ -38,7 +43,9 @@ const UserTableHeader = () => {
           color="primary"
           ml="16px"
           size="md"
+          onClick={() => handleUserFunctions("add")}
         >
+          <UserPlusIcon size="24px" mr="8px" mb="2px"/>
           Yeni Kullanıcı
         </Button>
       </View>

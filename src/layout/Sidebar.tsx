@@ -26,16 +26,16 @@ const Sidebar = () => {
       flexDirection="column"
       alignItems="flex-start"
       p={[12, 12, 12, 16, 16]}
-      borderRight="1px solid #e4e4e4"
+      // borderRight="1px solid #e4e4e4"
     >
-      <View display="flex" alignItems="center" p="5px" onClick={() => navigate('/')}>
+      <View display="flex" alignItems="center" onClick={() => navigate('/')}>
         <Image  height="36px" src={imagePath('logo.png')} alt="logo" />
         {/* <Title fontSize="1.1rem" ml="12px">
           PANEL
         </Title> */}
       </View>
       <View width="100%">
-        <List mt="20px">
+        <List mt="25px">
           <ListItem height="42px" borderRadius="6px" mb="10px">
             <LinkButton
               to="/"

@@ -11,6 +11,7 @@ import {
   Title,
   View,
   Image,
+  Loader,
 } from '../components';
 import { loginAction } from '../store/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -64,7 +65,7 @@ const Login = () => {
   if (authState.loading) {
     return (
       <View height={['100vh', '100vh', 'auto']}>
-        Loading...
+        <Loader/>
       </View>
     );
   }

@@ -106,6 +106,10 @@ export const buttonColors = ({ theme }: { theme: DefaultTheme }) =>
         '--color': theme.colors.white,
         '--bg': theme.colors.info,
       },
+      error: {
+        '--color': theme.colors.white,
+        '--bg': theme.colors.error,
+      },
       gray: {
         '--color': theme.colors.white,
         '--bg': theme.colors.textSecondaryColor,
@@ -127,11 +131,11 @@ export const buttonSizes = variant({
   prop: 'size',
   variants: {
     sm: {
-      padding: '8px 16px',
+      padding: ['5px 10px', '6px 12px','8px 16px'],
       fontSize: '.9em !important',
     },
     md: {
-      padding: '10px 20px',
+      padding: ['5px 10px', '6px 12px','8px 16px','10px 20px'],
     },
     lg: {
       padding: '15px 30px',

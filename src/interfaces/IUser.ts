@@ -5,6 +5,16 @@ export interface IUser {
     username: string;
 }
 
+export interface IUserFormFields {
+    username: string;
+    name: string;
+    surname: string;
+    brand: string;
+    phone: string;
+    email: string;
+    password: string;
+}
+
 export enum Types {
     ROLE_USER = "ROLE_USER"
 }

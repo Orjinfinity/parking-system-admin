@@ -41,7 +41,12 @@ const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   
   const dispatch = useAppDispatch();
-  const user = useAppSelector(state => state.auth.user);
+  const user = { // useAppSelector(state => state.auth.user)
+    id: 1,
+    email: "syhnserkan@gmail.com",
+    roles: ["ROLE_USER"],
+    username: "syhnserkan"
+  }
   const type = user.roles[0] || 'ROLE_USER';
   const userRole = UserTypes[type as keyof typeof Types];
 

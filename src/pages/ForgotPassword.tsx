@@ -12,6 +12,7 @@ import {
   LeftArrowIcon,
   Image,
 } from '../components';
+// import { resetPassword } from '../services';
 import imagePath from '../utils/assetHelper';
 
 const StyledView = styled(View)`

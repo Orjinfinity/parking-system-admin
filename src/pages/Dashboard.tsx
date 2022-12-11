@@ -1,23 +1,6 @@
-import React from 'react';
-import DataTable from 'react-data-table-component';
 import styled from 'styled-components';
-import {
-  Title,
-  View,
-  Text,
-  Role,
-  Button,
-  UserTableHeader,
-  EditIcon,
-  DeleteIcon,
-} from '../components';
-import {
-  customUserTableStyles,
-  IUserRow,
-  roles,
-  userColumns,
-  userRows,
-} from '../consts';
+import { Title, View, Text, Role, UserTable } from '../components';
+import { roles } from '../consts';
 
 const CardContainer = styled(View)`
   display: grid;
@@ -39,18 +22,6 @@ const CardContainer = styled(View)`
 `;
 
 const Dashboard = () => {
-  const handleUpdateUser = (user: IUserRow) => {
-    console.log('update', user);
-  };
-  const handleDeleteUser = (user: IUserRow) => {
-    console.log('delete', user);
-  };
-
-  const handleRowSelected = React.useCallback((state: any) => {
-    console.log('rowselected', state);
-    // setSelectedRows(state.selectedRows);
-  }, []);
-
   return (
     <View>
       <Title
@@ -91,69 +62,7 @@ const Dashboard = () => {
           Find all of your company’s administrator accounts and their associate
           roles.
         </Text>
-        <View boxShadow="primary">
-          <DataTable
-            // title="Kullanıcı Listesi"
-            selectableRows
-            responsive
-            className="table"
-            // fixedHeader
-            // fixedHeaderScrollHeight="300px"
-            columns={[
-              ...userColumns,
-              {
-                cell: (row) => (
-                  <View
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Button
-                      fontSize="small"
-                      padding="8px"
-                      letterSpacing=".46px"
-                      variant="icon"
-                      size="sm"
-                      onClick={() => handleUpdateUser(row)}
-                    >
-                      <EditIcon size="20px" color="success" />
-                    </Button>
-                    <Button
-                      fontSize="small"
-                      padding="8px"
-                      letterSpacing=".46px"
-                      variant="icon"
-                      size="sm"
-                      onClick={() => handleDeleteUser(row)}
-                    >
-                      <DeleteIcon size="20px" color="error" />
-                    </Button>
-                  </View>
-                ),
-                ignoreRowClick: true,
-                allowOverflow: true,
-                button: true,
-              },
-            ]}
-            subHeader
-            subHeaderComponent={<UserTableHeader />}
-            data={userRows}
-            pagination
-            customStyles={customUserTableStyles}
-            contextActions={
-              <Button
-              fontSize="small"
-              padding="8px"
-              letterSpacing=".46px"
-              variant="icon"
-              size="sm"
-            >
-              <DeleteIcon size="20px" color="error" />
-            </Button>
-            }
-            onSelectedRowsChange={handleRowSelected}
-          />
-        </View>
+        <UserTable/>
       </View>
     </View>
   );

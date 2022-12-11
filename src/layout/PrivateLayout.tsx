@@ -10,7 +10,6 @@ const SectionStyled = styled('section')`
   width: 100%;
   display: flex;
   flex-direction: column;
-  alignItems: center;
   justify-content: space-between;
 `
 
@@ -21,7 +20,7 @@ const PrivateLayout = () => {
       flexDirection="column"
       width="100%"
       height="100%"
-      alignItems="space-between"
+      // alignItems="space-between"
       backgroundColor="bgLayout"
     >
       <View display="flex" justifyContent="space-between">
