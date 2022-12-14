@@ -5,6 +5,8 @@ export const END_POINTS = {
       /** Post */
       register: '/auth/signup',
       /** Post */
+      forgotPassword: 'auth/forgotPassword',
+      /** Post */
       resetPassword: 'auth/resetPassword',
     },
     FLATS: {

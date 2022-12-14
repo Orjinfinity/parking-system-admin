@@ -11,7 +11,8 @@ import ErrorMessage from '../text/ErrorMessage';
 import PhoneInput from '../phone/PhoneInput';
 import { Regex } from '../../utils';
 import Modal from '../modal/Modal';
-import { getApartments } from '../../services';
+import { addUser, getApartments, register, successMessage } from '../../services';
+import Select, { ISelectOption } from '../select/Select';
 
 const StyledForm = styled('form')`
   display: grid;
@@ -37,51 +38,55 @@ interface ICreateUser {
 const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
   const dataFetchRef = useRef<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
-  const [apartments, setApartments] = useState<Array<IApartment>>(null);
-
+  const [apartments, setApartments] = useState<Array<ISelectOption>>(null);
+  const defaultValues = {
+    username: '',
+    name: '',
+    surname: '',
+    phone: '',
+    brand: '',
+    email: '',
+    password: '',
+  }
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm<IUserFormFields>({
-    defaultValues: {
-      username: '',
-      name: '',
-      surname: '',
-      phone: '',
-      brand: '',
-      email: '',
-      password: '',
-    },
+    defaultValues: { ...defaultValues }
   });
 
   useEffect(() => {
-    if(dataFetchRef.current) {
+    if (dataFetchRef.current) {
       dataFetchRef.current = false;
       const fetchApartments = async () => {
         const response = await getApartments(0);
         const apartments = await response.data.resultData;
-        const updatedApartments = apartments.map((apartment) => ({
-          ...apartment,
-          created_at: new Date(apartment?.created_at).toLocaleString(),
-          updated_at: new Date(apartment?.updated_at).toLocaleString(),
+        const updatedApartments = apartments.map(({ name }: IApartment) => ({
+          label: name,
+          value: name,
         }));
         setApartments(updatedApartments);
         setLoading(false);
       };
       fetchApartments().catch((_) => setLoading(false));
     }
-  }, [])
+  }, []);
 
-  const onSubmit = (form: IUserFormFields) => {
+  const onSubmit = async (form: IUserFormFields) => {
     console.log('form', form);
+    // const {brand, ...formOptions} = form
+    const response = await register(form)
+    if(response.status === 200) {
+      successMessage(response.data?.message || "Kullanıcı başarıyla eklendi.");
+      reset(defaultValues)
+    }
+    console.log('response', response)
   };
 
   return (
-    <Modal
-      modalIsOpen={modalIsOpen}
-      setModalIsOpen={setModalIsOpen}
-    >
+    <Modal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen}>
       <View
         display="flex"
         justifyContent="flex-start"
@@ -166,16 +171,18 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
               )}
             </View>
             <View className="column-3" display="flex" flexDirection="column">
-              <TextField
+              <Select
                 name="brand"
                 control={control}
+                options={apartments}
+                isLoading={loading}
                 rules={{
                   required: {
                     value: true,
                     message: 'Lütfen hangi siteye eklemek istediğinizi giriniz',
                   },
                 }}
-                placeholder="Site"
+                placeholder="Kullanıcının sitesini seçiniz"
               />
               {errors.brand && (
                 <ErrorMessage> {errors.brand?.message}</ErrorMessage>
@@ -215,10 +222,14 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
                 <ErrorMessage> {errors.password?.message}</ErrorMessage>
               )}
             </View>
-            <View display="flex" justifyContent="center" gridColumn="1/5" marginTop="20px">
+            <View
+              display="flex"
+              justifyContent="center"
+              gridColumn="1/5"
+              marginTop="20px"
+            >
               <Button
                 fontSize="medium"
-                // padding="10px 20px"
                 letterSpacing=".46px"
                 type="submit"
                 variant="contained"
@@ -229,7 +240,6 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
               </Button>
               <Button
                 fontSize="medium"
-                // padding="10px 20px"
                 width="112px"
                 letterSpacing=".46px"
                 variant="dashed"

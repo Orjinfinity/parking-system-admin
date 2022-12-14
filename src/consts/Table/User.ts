@@ -10,6 +10,7 @@ interface IUserRow {
   surname: string;
   phone: string;
   email: string;
+  password?: string;
   // brand: string;
 }
 

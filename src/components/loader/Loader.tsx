@@ -1,12 +1,18 @@
 import styled from 'styled-components'
 import View from '../view/View'
 
-interface ILoader { position?: "relative" | "absolute" }
+interface ILoader { position?: "relative" | "absolute" | "fixed" }
 
 const StyledView = styled(View)`
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 999;
+    backdrop-filter: blur(1px);
 `
 const Loader = ({ position = "absolute" }: ILoader) => {
   return (

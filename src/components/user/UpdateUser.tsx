@@ -1,4 +1,4 @@
-import { Dispatch, useEffect } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../button/Button';
 import Title from '../title/Title';
@@ -12,6 +12,8 @@ import PhoneInput from '../phone/PhoneInput';
 import { Regex } from '../../utils';
 import Modal from '../modal/Modal';
 import { IUserRow } from '../../consts';
+import { successMessage, updateUser } from '../../services';
+import Loader from '../loader/Loader';
 
 const StyledForm = styled('form')`
   display: grid;
@@ -38,8 +40,9 @@ interface IUpdateUser {
 const UpdateUser = ({
   modalIsOpen,
   setModalIsOpen,
-  selectedUser
+  selectedUser,
 }: IUpdateUser) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const {
     handleSubmit,
     control,
@@ -51,19 +54,28 @@ const UpdateUser = ({
       name: selectedUser.name || '',
       surname: selectedUser.surname || '',
       phone: selectedUser.phone || '',
-      brand: '',
       email: selectedUser.email || '',
-      password: '',
+      password: selectedUser?.password || '',
     },
   });
 
-  const onSubmit = (form: IUserFormFields) => {
-    console.log('form', form);
+  const onSubmit = async (form: IUserFormFields) => {
+    setLoading(true);
+    const response = await updateUser(selectedUser.id, {
+      id: selectedUser.id,
+      ...form,
+    });
+    if (response.status === 200)
+      successMessage(
+        response.data?.message || 'Kullanıcı başarıyla güncellendi.'
+      );
+    setLoading(false);
   };
 
   useEffect(() => {
-    reset(selectedUser)
-  }, [reset, selectedUser])
+    const { name, surname, username, phone, email, password } = selectedUser;
+    reset({ name, surname, username, phone, email, password });
+  }, [reset, selectedUser]);
 
   return (
     <Modal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen}>
@@ -73,6 +85,7 @@ const UpdateUser = ({
         alignItems="center"
         flexDirection="column"
         padding={['10px', '10px', '14px', '20px', '30px']}
+        position="relative"
       >
         <Title fontWeight="medium" fontSize="24px" color="textColor">
           Kullanıcı Bilgilerini Güncelle
@@ -217,6 +230,7 @@ const UpdateUser = ({
             </View>
           </StyledForm>
         </View>
+        <Loader position='fixed'/>
       </View>
     </Modal>
   );

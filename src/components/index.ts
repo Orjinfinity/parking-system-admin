@@ -4,6 +4,7 @@ export { default as Text } from './text/Text';
 export { default as Button } from './button/Button';
 export { default as LinkButton } from './button/LinkButton';
 export { default as TextField } from './textfield/TextField';
+export { default as Select } from './select/Select';
 export { default as ErrorMessage } from './text/ErrorMessage';
 export { default as PhoneInput } from "./phone/PhoneInput";
 export { default as Image } from "./image/Image";

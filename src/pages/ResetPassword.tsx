@@ -1,6 +1,6 @@
 import React from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Title,
@@ -12,7 +12,7 @@ import {
   LeftArrowIcon,
   Image,
 } from '../components';
-import { forgotPassword } from '../services';
+import { resetPassword } from '../services';
 import imagePath from '../utils/assetHelper';
 
 const StyledView = styled(View)`
@@ -25,29 +25,32 @@ const StyledView = styled(View)`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-interface IForgotPassword extends FieldValues {
-  username: string;
+interface IResetPassword extends FieldValues {
   email: string;
+  password: string;
 }
 
-const ForgotPassword = () => {
+const ResetPassword = () => {
+  const [searchParams] = useSearchParams();
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<IForgotPassword>({
+  } = useForm<IResetPassword>({
     defaultValues: {
-      username: '',
       email: '',
+      password: '',
     },
   });
 
   const navigate = useNavigate();
 
-  const onSubmit = async (form: IForgotPassword) => {
+  const onSubmit = async (form: IResetPassword) => {
     console.log('form', form);
-    const response = await forgotPassword(form);
-    console.log(response)
+    const token = searchParams.get('token') || '';
+    const response = await resetPassword({ ...form, token });
+    // const response = await resetPassword({email:"syhnserkan@gmail.com", password:"betbet123", token:"073215103ce55dff8815a23e2d4faaa8c1ff6e8d01cc13de3d163ac6d26fdfe9f015b48d3c52d2b7 email=syhnserkan@gmail.com"})
+    console.log(response);
   };
 
   return (
@@ -67,7 +70,7 @@ const ForgotPassword = () => {
           Plaka Tanıma Sistemi
         </Title>
         <Title mb="6px" color="textColor" fontSize={['1em', '1em', '1.6em']}>
-          Şifremi Unuttum 🔒
+          Şifremi Sıfırla 🔒
         </Title>
         <Text
           mb="24px"
@@ -76,27 +79,10 @@ const ForgotPassword = () => {
           lineHeight="20px"
           color="textSecondaryColor"
         >
-          E-posta adresinizi girin, size şifrenizi sıfırlamak için mail
-          gönderelim.
+          Yeni şifreniz bir önceki şifrenizden farklı olmalıdır.
         </Text>
         <View>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <View display="flex" flexDirection="column" mb="18px">
-              <TextField
-                name="username"
-                control={control}
-                rules={{
-                  required: {
-                    value: true,
-                    message: 'Lütfen kullanıcı adınızı giriniz',
-                  },
-                }}
-                placeholder="Kullanıcı adı"
-              />
-              {errors.username && (
-                <ErrorMessage> {errors.username?.message}</ErrorMessage>
-              )}
-            </View>
             <View display="flex" flexDirection="column" mb="18px">
               <TextField
                 name="email"
@@ -114,6 +100,23 @@ const ForgotPassword = () => {
                 <ErrorMessage> {errors.email?.message}</ErrorMessage>
               )}
             </View>
+            <View display="flex" flexDirection="column" mb="18px">
+              <TextField
+                name="password"
+                type="password"
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Lütfen şifrenizi giriniz',
+                  },
+                }}
+                placeholder="Şifre"
+              />
+              {errors.password && (
+                <ErrorMessage> {errors.password?.message}</ErrorMessage>
+              )}
+            </View>
             <Button
               block
               fontSize="medium"
@@ -124,7 +127,7 @@ const ForgotPassword = () => {
               color="primary"
               size="md"
             >
-              ŞİFRE YOLLA
+              ŞİFRE SIFIRLA
             </Button>
           </form>
           <Button
@@ -146,4 +149,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;
