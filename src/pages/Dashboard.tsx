@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Title, View, Text, Role, UserTable } from '../components';
 import { roles } from '../consts';
+import { UserContextProvider } from '../contexts';
 
 const CardContainer = styled(View)`
   display: grid;
@@ -62,7 +63,9 @@ const Dashboard = () => {
           Find all of your company’s administrator accounts and their associate
           roles.
         </Text>
-        <UserTable/>
+        <UserContextProvider>
+          <UserTable/>
+        </UserContextProvider>
       </View>
     </View>
   );

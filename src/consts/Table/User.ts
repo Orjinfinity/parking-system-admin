@@ -3,15 +3,14 @@ import colors from "../../theme/colors";
 
 // Brand need to be send it with user. 
 interface IUserRow {
-  id: number;
-  created_at: string;
+  id?: number;
+  created_at?: string;
   username: string;
   name: string;
   surname: string;
   phone: string;
   email: string;
   password?: string;
-  // brand: string;
 }
 
 export const DummyUsers: IUserRow[] = [

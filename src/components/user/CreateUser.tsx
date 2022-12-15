@@ -1,18 +1,20 @@
-import { Dispatch, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
-import Button from '../button/Button';
-import Title from '../title/Title';
-import View from '../view/View';
-import Text from '../text/Text';
+import { Dispatch, useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
+import { getApartments, register, successMessage } from '../../services';
 import { IApartment, IUserFormFields } from '../../interfaces';
+import { UserActionTypes, UserContext } from '../../contexts';
+import Select, { ISelectOption } from '../select/Select';
 import TextField from '../textfield/TextField';
 import ErrorMessage from '../text/ErrorMessage';
 import PhoneInput from '../phone/PhoneInput';
-import { Regex } from '../../utils';
+import Button from '../button/Button';
+import Loader from '../loader/Loader';
+import Title from '../title/Title';
 import Modal from '../modal/Modal';
-import { addUser, getApartments, register, successMessage } from '../../services';
-import Select, { ISelectOption } from '../select/Select';
+import View from '../view/View';
+import Text from '../text/Text';
+import { Regex } from '../../utils';
 
 const StyledForm = styled('form')`
   display: grid;
@@ -37,7 +39,13 @@ interface ICreateUser {
 
 const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
   const dataFetchRef = useRef<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<{
+    apartments: boolean;
+    createUser: boolean;
+  }>({
+    apartments: true,
+    createUser: false,
+  });
   const [apartments, setApartments] = useState<Array<ISelectOption>>(null);
   const defaultValues = {
     username: '',
@@ -47,15 +55,16 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
     brand: '',
     email: '',
     password: '',
-  }
+  };
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
   } = useForm<IUserFormFields>({
-    defaultValues: { ...defaultValues }
+    defaultValues: { ...defaultValues },
   });
+  const { state, dispatch } = useContext(UserContext);
 
   useEffect(() => {
     if (dataFetchRef.current) {
@@ -68,21 +77,28 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
           value: name,
         }));
         setApartments(updatedApartments);
-        setLoading(false);
+        setLoading((loading) => ({ ...loading, apartments: false }));
       };
-      fetchApartments().catch((_) => setLoading(false));
+      fetchApartments().catch((_) =>
+        setLoading((loading) => ({ ...loading, apartments: false }))
+      );
     }
   }, []);
 
   const onSubmit = async (form: IUserFormFields) => {
-    console.log('form', form);
-    // const {brand, ...formOptions} = form
-    const response = await register(form)
-    if(response.status === 200) {
-      successMessage(response.data?.message || "Kullanıcı başarıyla eklendi.");
-      reset(defaultValues)
+    setLoading((loading) => ({ ...loading, createUser: true }));
+    const response = await register(form);
+    if (response.status === 200) {
+      successMessage(response.data?.message || 'Kullanıcı başarıyla eklendi.');
+      const id = state.users[state.users.length - 1].id + 1 || 1;
+      const created_at = new Date().toLocaleString();
+      dispatch({
+        type: UserActionTypes.ADD_USER,
+        user: { ...form, created_at, id },
+      });
+      reset(defaultValues);
     }
-    console.log('response', response)
+    setLoading((loading) => ({ ...loading, createUser: false }));
   };
 
   return (
@@ -175,7 +191,7 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
                 name="brand"
                 control={control}
                 options={apartments}
-                isLoading={loading}
+                isLoading={loading.apartments}
                 rules={{
                   required: {
                     value: true,
@@ -254,6 +270,7 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
           </StyledForm>
         </View>
       </View>
+      {loading.createUser && <Loader />}
     </Modal>
   );
 };

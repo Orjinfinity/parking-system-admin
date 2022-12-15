@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState } from 'react';
+import { Dispatch, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../button/Button';
 import Title from '../title/Title';
@@ -14,6 +14,7 @@ import Modal from '../modal/Modal';
 import { IUserRow } from '../../consts';
 import { successMessage, updateUser } from '../../services';
 import Loader from '../loader/Loader';
+import { UserActionTypes, UserContext } from '../../contexts';
 
 const StyledForm = styled('form')`
   display: grid;
@@ -59,16 +60,23 @@ const UpdateUser = ({
     },
   });
 
+  const { dispatch } = useContext(UserContext);
+
   const onSubmit = async (form: IUserFormFields) => {
     setLoading(true);
     const response = await updateUser(selectedUser.id, {
       id: selectedUser.id,
       ...form,
     });
-    if (response.status === 200)
+    if (response.status === 200) {
       successMessage(
         response.data?.message || 'Kullanıcı başarıyla güncellendi.'
       );
+      dispatch({
+        type: UserActionTypes.UPDATE_USER,
+        user: { id: selectedUser.id, created_at: selectedUser.created_at, ...form },
+      });
+    }
     setLoading(false);
   };
 
@@ -230,7 +238,7 @@ const UpdateUser = ({
             </View>
           </StyledForm>
         </View>
-        <Loader position='fixed'/>
+        {loading && <Loader position='fixed'/>}
       </View>
     </Modal>
   );

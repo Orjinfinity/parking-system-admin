@@ -1,10 +1,12 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useContext } from 'react';
 import Button from '../button/Button';
 import Modal from '../modal/Modal';
 import Title from '../title/Title';
 import Text from '../text/Text';
 import View from '../view/View';
 import { IUserRow } from '../../consts';
+import { deleteUser, successMessage } from '../../services';
+import { UserActionTypes, UserContext } from '../../contexts';
 
 interface IDeleteUser {
   modalIsOpen: boolean;
@@ -13,6 +15,20 @@ interface IDeleteUser {
 }
 
 const DeleteUser = ({ modalIsOpen, setModalIsOpen, selectedUser }: IDeleteUser) => {
+
+  const { dispatch } = useContext(UserContext);
+
+  const handleDeleteUser = async () => {
+    const response = await deleteUser(selectedUser.id)
+    if(response.status === 200) {
+      successMessage(
+        response.data?.message || 'Kullanıcı başarıyla silindi.'
+      );
+      dispatch({ type: UserActionTypes.DELETE_USER, user: selectedUser });
+      setModalIsOpen(false);
+    }
+  }
+
   return (
     <Modal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} maxWidth="400px">
       <View
@@ -41,6 +57,7 @@ const DeleteUser = ({ modalIsOpen, setModalIsOpen, selectedUser }: IDeleteUser) 
             variant="contained"
             color="error"
             size="sm"
+            onClick={handleDeleteUser}
           >
             Kullanıcıyı Sil
           </Button>
