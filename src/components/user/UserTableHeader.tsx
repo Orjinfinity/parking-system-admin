@@ -19,7 +19,7 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
     const response = await getUsers(0, state.totalUsers || 200);
     const users: IUserRow[] = await response.data.resultData;
     const filteredUsers = users.filter(({ name, surname, email, username }) =>
-      [name, surname, email, username].some((field) => field.includes(key))
+      [name, surname, email, username].some((field) => field.toLowerCase().includes(key))
     ).map(user => ({...user, created_at: new Date(user.created_at).toLocaleString()}));
 
     dispatch({ type: UserActionTypes.SET_FILTERED_USERS, filter: { key, result: filteredUsers } });

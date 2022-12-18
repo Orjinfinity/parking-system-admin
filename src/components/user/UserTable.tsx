@@ -1,7 +1,7 @@
 import { memo, useCallback, useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import {
-  customUserTableStyles,
+  customTableStyles,
   IUserRow,
   userColumns,
 } from '../../consts';
@@ -121,7 +121,7 @@ const UserTable = () => {
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handlePerRowsChange}
           paginationTotalRows={state.totalUsers}
-          customStyles={customUserTableStyles}
+          customStyles={customTableStyles}
           progressPending={state.loading}
           progressComponent={
             <View mb="20px">

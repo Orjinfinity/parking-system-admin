@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, PropsWithChildren } from 'react';
+import React, { Dispatch, PropsWithChildren } from 'react';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import { customStyles } from '../../consts';
