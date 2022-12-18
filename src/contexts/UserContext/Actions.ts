@@ -1,6 +1,6 @@
 import { Dispatch } from 'react';
 import { IUserRow } from '../../consts';
-import { IUserAction, UserActionTypes } from './UserContext';
+import { IUserAction, UserActionTypes } from './Types';
 
 const setUsers = (dispatch: Dispatch<IUserAction>, users: Array<IUserRow>) =>
   dispatch({ type: UserActionTypes.SET_USERS, users });

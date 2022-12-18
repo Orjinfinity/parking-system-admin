@@ -29,6 +29,7 @@ interface BasicInputProps {
   type?: 'text' | 'email' | 'password';
   defaultValue?: string | number | readonly string[] | undefined;
   placeholder?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface StyledProps extends SpaceProps {
@@ -40,6 +41,7 @@ export const BasicTextField = ({
   type,
   defaultValue,
   placeholder,
+  onChange
 }: BasicInputProps) => {
   return (
     <TextFieldRef
@@ -47,6 +49,7 @@ export const BasicTextField = ({
       type={type}
       placeholder={placeholder}
       defaultValue={defaultValue}
+      onChange={onChange}
       autoComplete="off"
       error={false}
     />

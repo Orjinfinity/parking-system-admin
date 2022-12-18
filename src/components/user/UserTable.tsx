@@ -5,7 +5,7 @@ import {
   IUserRow,
   userColumns,
 } from '../../consts';
-import { UserContext } from '../../contexts';
+import { UserActionTypes, UserContext } from '../../contexts';
 import UserTableHeader from './UserTableHeader';
 import DeleteIcon from '../icons/DeleteIcon';
 import EditIcon from '../icons/EditIcon';
@@ -22,10 +22,8 @@ enum UserTableModalTypes {
   DELETE = 'delete',
 }
 
-type ModalType = 'add' | 'update' | 'delete';
-
 interface ISelectedUser {
-  type: ModalType;
+  type: UserTableModalTypes;
   user: IUserRow;
 }
 
@@ -34,12 +32,11 @@ const UserTable = () => {
   const [selectedUser, setSelectedUser] = useState<ISelectedUser>(null);
   const [selectedRows, setSelectedRows] = useState<Array<IUserRow>>([]);
 
-  const { state, loading } = useContext(UserContext);;
+  const { state, dispatch } = useContext(UserContext);;
 
-  const handleUserFunctions = (type: ModalType, user = {} as IUserRow) => {
+  const handleUserFunctions = (type: UserTableModalTypes, user = {} as IUserRow) => {
     setModalIsOpen(!modalIsOpen);
     setSelectedUser({ type, user });
-    console.log(type, user);
   };
 
   const getModalComponent = () => {
@@ -63,6 +60,9 @@ const UserTable = () => {
     setSelectedRows(selectedRows);
     console.log('rowselected', state);
   }, []);
+
+  const handlePageChange = (page: number) => dispatch({ type: UserActionTypes.UPDATE_PAGE_COUNT, page: page - 1 })
+  const handlePerRowsChange = (perPageRows: number) => dispatch({ type: UserActionTypes.UPDATE_PER_PAGE_ROWS, perPageRows})
 
   return (
       <View boxShadow="primary">
@@ -115,10 +115,14 @@ const UserTable = () => {
           subHeaderComponent={
             <UserTableHeader handleUserFunctions={handleUserFunctions} />
           }
-          data={state.users}
+          data={state.filter.key.length ? state.filter.result : state.users}
           pagination
+          paginationServer
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handlePerRowsChange}
+          paginationTotalRows={state.totalUsers}
           customStyles={customUserTableStyles}
-          progressPending={loading}
+          progressPending={state.loading}
           progressComponent={
             <View mb="20px">
               <Loader position="relative" />

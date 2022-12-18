@@ -16,7 +16,7 @@ interface IDeleteUser {
 
 const DeleteUser = ({ modalIsOpen, setModalIsOpen, selectedUser }: IDeleteUser) => {
 
-  const { dispatch } = useContext(UserContext);
+  const { state, dispatch } = useContext(UserContext);
 
   const handleDeleteUser = async () => {
     const response = await deleteUser(selectedUser.id)
@@ -24,7 +24,11 @@ const DeleteUser = ({ modalIsOpen, setModalIsOpen, selectedUser }: IDeleteUser) 
       successMessage(
         response.data?.message || 'Kullanıcı başarıyla silindi.'
       );
-      dispatch({ type: UserActionTypes.DELETE_USER, user: selectedUser });
+      
+      const goToPrevPage = state.totalUsers !== 1 && (state.totalUsers - 1) % 10 === 0;
+      if (goToPrevPage) dispatch({ type: UserActionTypes.UPDATE_PAGE_COUNT, page: state.page - 1 });
+      else dispatch({ type: UserActionTypes.DELETE_USER, user: selectedUser });
+
       setModalIsOpen(false);
     }
   }
@@ -41,7 +45,7 @@ const DeleteUser = ({ modalIsOpen, setModalIsOpen, selectedUser }: IDeleteUser) 
         <Title fontWeight="medium" fontSize="24px" color="textColor" mt="12px">
           Kullanıcı Sil
         </Title>
-        <Text margin="12px 0" fontSize="12px" textAlign="center" color="textSecondaryColor">
+        <Text margin="12px 0" fontSize="12px" color="textSecondaryColor">
           <strong>{`${selectedUser.name} ${selectedUser.surname}`}</strong> adlı kullanıcıyı silmek istediğinizden emin misiniz ?
         </Text>
         <View
