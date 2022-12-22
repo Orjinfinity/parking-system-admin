@@ -1,32 +1,32 @@
 import React, { Dispatch, useContext } from 'react'
-import { IApartmentRow } from '../../consts';
-import { ApartmentActionTypes, ApartmentContext } from '../../contexts/ApartmentsContext';
-import { deleteApartment, successMessage } from '../../services';
+import { IBlockRow } from '../../consts';
+import { BlockActionTypes, BlockContext } from '../../contexts/BlockContext';
+import { deleteBlock, successMessage } from '../../services';
+import Button from '../button/Button';
 import Modal from '../modal/Modal';
 import Title from '../title/Title';
-import View from '../view/View';
 import Text from '../text/Text';
-import Button from '../button/Button';
+import View from '../view/View';
 
-interface IDeleteApartment {
-  modalIsOpen: boolean;
-  setModalIsOpen: Dispatch<React.SetStateAction<boolean>>;
-  selectedApartment: IApartmentRow;
+interface IDeleteBlock {
+    modalIsOpen: boolean;
+    setModalIsOpen: Dispatch<React.SetStateAction<boolean>>;
+    selectedBlock: IBlockRow;
 }
 
-const DeleteApartment = ({ modalIsOpen, setModalIsOpen, selectedApartment}: IDeleteApartment) => {
-  const { state, dispatch } = useContext(ApartmentContext);
+const DeleteBlock = ({ modalIsOpen, setModalIsOpen, selectedBlock } : IDeleteBlock) => {
+  const { state, dispatch } = useContext(BlockContext);
 
   const handleDeleteApartment = async () => {
-    const response = await deleteApartment(selectedApartment.id)
+    const response = await deleteBlock(selectedBlock.id)
     if(response.status === 200) {
       successMessage(
-        response.data?.message || 'Apartman başarıyla silindi.'
+        response.data?.message || 'Blok başarıyla silindi.'
       );
       
-      const goToPrevPage = state.totalApartments !== 1 && (state.totalApartments - 1) % 10 === 0;
-      if (goToPrevPage) dispatch({ type: ApartmentActionTypes.UPDATE_PAGE_COUNT, page: state.page - 1 });
-      else dispatch({ type: ApartmentActionTypes.DELETE_APARTMENT, apartment: selectedApartment });
+      const goToPrevPage = state.totalBlocks !== 1 && (state.totalBlocks - 1) % 10 === 0;
+      if (goToPrevPage) dispatch({ type: BlockActionTypes.UPDATE_PAGE_COUNT, page: state.page - 1 });
+      else dispatch({ type: BlockActionTypes.DELETE_BLOCK, block: selectedBlock });
 
       setModalIsOpen(false);
     }
@@ -42,10 +42,10 @@ const DeleteApartment = ({ modalIsOpen, setModalIsOpen, selectedApartment}: IDel
         padding="12px"
       >
         <Title fontWeight="medium" fontSize="24px" color="textColor" mt="12px">
-          Apartman Sil
+          Blok Sil
         </Title>
         <Text margin="12px 0" fontSize="12px" color="textSecondaryColor">
-          <strong>{selectedApartment.name}</strong> adlı apartmanı silmek istediğinizden emin misiniz ?
+          <strong>{selectedBlock.name}</strong> adlı blok'u silmek istediğinizden emin misiniz ?
         </Text>
         <View
           display="flex"
@@ -62,7 +62,7 @@ const DeleteApartment = ({ modalIsOpen, setModalIsOpen, selectedApartment}: IDel
             size="sm"
             onClick={handleDeleteApartment}
           >
-            Apartmanı Sil
+            Blok Sil
           </Button>
           <Button
             fontSize="medium"
@@ -83,4 +83,4 @@ const DeleteApartment = ({ modalIsOpen, setModalIsOpen, selectedApartment}: IDel
   );
 }
 
-export default DeleteApartment
+export default DeleteBlock

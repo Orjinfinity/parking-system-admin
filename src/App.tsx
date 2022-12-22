@@ -10,7 +10,7 @@ import {
   Login,
   NotFound,
   Register,
-  Sites,
+  Blocks,
   Users,
 } from './pages';
 import ProtectedRoute from './components/routes/ProtectedRoute';
@@ -47,8 +47,8 @@ function App() {
           >
             <Route index element={<Dashboard />} />
             <Route path="/users" element={<Users />} />
-            <Route path="/sites" element={<Sites />} />
             <Route path="/apartments" element={<Apartments />} />
+            <Route path="/blocks" element={<Blocks />} />
             <Route path="/flats" element={<Flats />} />
             <Route path="/gates" element={<Gates />} />
             <Route path="/cars" element={<Cars />} />

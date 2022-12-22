@@ -49,6 +49,7 @@ const apartmentColumns: TableColumn<IApartmentRow>[] = [
   {
     name: 'City',
     selector: (row) => row.city,
+    sortable: true
   },
   {
     name: 'Country',

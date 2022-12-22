@@ -1,7 +1,7 @@
 import { Dispatch, useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
-import { getApartments, register, successMessage } from '../../services';
+import { getApartments, getRoles, register, successMessage } from '../../services';
 import { IApartment, IUserFormFields } from '../../interfaces';
 import { UserActionTypes, UserContext } from '../../contexts';
 import Select, { ISelectOption } from '../select/Select';
@@ -37,16 +37,24 @@ interface ICreateUser {
   setModalIsOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface IFormRequiredFields {
+  apartments: Array<ISelectOption>;
+  roles: Array<ISelectOption>;
+}
+
 const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
   const dataFetchRef = useRef<boolean>(true);
   const [loading, setLoading] = useState<{
-    apartments: boolean;
+    formFields: boolean;
     createUser: boolean;
   }>({
-    apartments: true,
+    formFields: true,
     createUser: false,
   });
-  const [apartments, setApartments] = useState<Array<ISelectOption>>(null);
+  const [formRequiredValues, setFormRequiredValues] = useState<IFormRequiredFields>({
+    apartments: [] as Array<ISelectOption>,
+    roles: [] as Array<ISelectOption>
+  });
   const defaultValues = {
     username: '',
     name: '',
@@ -54,6 +62,7 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
     phone: '',
     brand: '',
     email: '',
+    roles: '',
     password: '',
   };
   const {
@@ -69,17 +78,26 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
   useEffect(() => {
     if (dataFetchRef.current) {
       dataFetchRef.current = false;
-      const fetchApartments = async () => {
-        const response = await getApartments(0);
-        const apartments = await response.data.resultData;
-        const updatedApartments = apartments.map(({ name }: IApartment) => ({
-          label: name,
-          value: name,
-        }));
-        setApartments(updatedApartments);
-        setLoading((loading) => ({ ...loading, apartments: false }));
+      const fetchData = async () => {
+        try {
+          const [resApartments, resRoles] = await Promise.all([getApartments(0), getRoles(0)])
+          const [apartments, roles] = await [resApartments.data.resultData, resRoles.data.resultData];
+          const updatedApartments = apartments.map(({ name }: IApartment) => ({
+            label: name,
+            value: name,
+          }));
+          const updatedRoles = roles.map(({ name }) => ({
+            label: name,
+            value: name
+          }))
+          console.log('roles', roles)
+          setFormRequiredValues({ apartments: updatedApartments, roles: updatedRoles });
+          setLoading((loading) => ({ ...loading, formFields: false }));
+        } catch (error) {
+          setLoading((loading) => ({ ...loading, formFields: false }));
+        }
       };
-      fetchApartments().catch((_) =>
+      fetchData().catch((_) =>
         setLoading((loading) => ({ ...loading, apartments: false }))
       );
     }
@@ -87,7 +105,8 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
 
   const onSubmit = async (form: IUserFormFields) => {
     setLoading((loading) => ({ ...loading, createUser: true }));
-    const response = await register(form);
+    const payload = { ...form, roles: [(form.roles as any).value] }
+    const response = await register(payload);
     if (response.status === 200) {
       successMessage(response.data?.message || 'Kullanıcı başarıyla eklendi.');
       const id = state.users[state.users.length - 1].id + 1 || 1;
@@ -190,8 +209,8 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
               <Select
                 name="brand"
                 control={control}
-                options={apartments}
-                isLoading={loading.apartments}
+                options={formRequiredValues.apartments}
+                isLoading={loading.formFields}
                 rules={{
                   required: {
                     value: true,
@@ -202,6 +221,24 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
               />
               {errors.brand && (
                 <ErrorMessage> {errors.brand?.message}</ErrorMessage>
+              )}
+            </View>
+            <View className="column-3" display="flex" flexDirection="column">
+              <Select
+                name="roles"
+                control={control}
+                options={formRequiredValues.roles}
+                isLoading={loading.formFields}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Lütfen hangi kullanıcının rolünü seçiniz',
+                  },
+                }}
+                placeholder="Kullanıcının rolünü seçiniz"
+              />
+              {errors.roles && (
+                <ErrorMessage> {errors.roles?.message}</ErrorMessage>
               )}
             </View>
             <View display="flex" flexDirection="column" gridColumn="1/5">

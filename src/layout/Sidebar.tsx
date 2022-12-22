@@ -69,21 +69,6 @@ const Sidebar = () => {
           </ListItem>
           <ListItem height="42px" borderRadius="6px" mb="10px">
             <LinkButton
-              to="/sites"
-              color="linkPrimary"
-              fontSize="medium"
-              padding="12px"
-              variant="link"
-              display="flex"
-              alignItems="center"
-              width="100%"
-            >
-              <BuildingIcon mr="12px" size="20px" color="textColor" />
-              Siteler
-            </LinkButton>
-          </ListItem>
-          <ListItem height="42px" borderRadius="6px" mb="10px">
-            <LinkButton
               to="/apartments"
               color="linkPrimary"
               fontSize="medium"
@@ -95,6 +80,21 @@ const Sidebar = () => {
             >
               <ApartmentIcon mr="12px" size="20px" color="textColor" />
               Apartmanlar
+            </LinkButton>
+          </ListItem>
+          <ListItem height="42px" borderRadius="6px" mb="10px">
+            <LinkButton
+              to="/blocks"
+              color="linkPrimary"
+              fontSize="medium"
+              padding="12px"
+              variant="link"
+              display="flex"
+              alignItems="center"
+              width="100%"
+            >
+              <BuildingIcon mr="12px" size="20px" color="textColor" />
+              Bloklar
             </LinkButton>
           </ListItem>
           <ListItem height="42px" borderRadius="6px" mb="10px">

@@ -10,6 +10,7 @@ export interface IUserFormFields {
     name: string;
     surname: string;
     brand: string;
+    roles: string;
     phone: string;
     email: string;
     password: string;

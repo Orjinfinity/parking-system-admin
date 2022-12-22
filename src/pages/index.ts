@@ -1,6 +1,6 @@
 export { default as Dashboard } from './Dashboard';
 export { default as Users} from './Users';
-export { default as Sites} from './Sites';
+export { default as Blocks} from './Blocks';
 export { default as Apartments} from './Apartments';
 export { default as Flats} from './Flats';
 export { default as Gates} from './Gates';

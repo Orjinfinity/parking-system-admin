@@ -1,6 +1,4 @@
-import { useCallback, useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Button,
@@ -29,16 +27,6 @@ const StyledView = styled(View)`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-interface ILocationState {
-  from?: {
-    pathname: string;
-    hash: string;
-    key: string;
-    search: string;
-    state: ILocationState;
-  };
-}
-
 interface ILoginForm extends FieldValues {
   username: string;
   email: string;
@@ -59,24 +47,11 @@ const Login = () => {
   });
 
   const authState = useAppSelector((state) => state.auth);
-  const location = useLocation();
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const navigationCallback = useCallback(() => {
-    const state = location.state as ILocationState;
-    navigate(`${state?.from?.pathname || '/'}${state?.from?.search ?? ''}`, {
-      state: location
-    });
-  }, [location, navigate]);
 
   const onSubmit = (form: ILoginForm) => {
     dispatch(loginAction(form));
   };
-
-  useEffect(() => {
-    navigationCallback();
-  }, [authState.isAuthenticated, navigationCallback])
 
   if (authState.loading) {
     return (

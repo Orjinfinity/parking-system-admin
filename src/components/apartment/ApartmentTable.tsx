@@ -119,6 +119,7 @@ const ApartmentTable = () => {
             paginationTotalRows={state.totalApartments}
             customStyles={customTableStyles}
             progressPending={state.loading}
+            noDataComponent={<View padding="40px">Görüntülenecek Kayıt Yok</View>}
             progressComponent={
               <View mb="20px">
                 <Loader position="relative" />

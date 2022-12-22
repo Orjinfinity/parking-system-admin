@@ -14,16 +14,18 @@ export { default as IconLink } from "./link/IconLink";
 export { default as RequireAuth } from './routes/RequireAuth';
 export { default as Role } from './role/Role';
 export { default as Loader } from './loader/Loader';
-export { default as UserTableHeader } from './user/UserTableHeader';
 export { default as UserTable } from './user/UserTable';
 export { default as CreateUser } from './user/CreateUser';
 export { default as UpdateUser } from './user/UpdateUser';
 export { default as DeleteUser } from './user/DeleteUser';
 export { default as ApartmentTable } from './apartment/ApartmentTable';
-export { default as ApartmentTableHeader } from './apartment/ApartmentTableHeader';
 export { default as CreateApartment } from './apartment/CreateApartment';
 export { default as UpdateApartment } from './apartment/UpdateApartment';
 export { default as DeleteApartment } from './apartment/DeleteApartment';
+export { default as Block } from './block/Block';
+export { default as CreateBlock } from './block/CreateBlock';
+export { default as UpdateBlock } from './block/UpdateBlock';
+export { default as DeleteBlock } from './block/DeleteBlock';
 export { default as Modal } from './modal/Modal';
 
 // Icons
