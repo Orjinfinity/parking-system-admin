@@ -56,7 +56,7 @@ const ApartmentTableHeader = ({ handleApartmentFunctions }: IApartmentTableHeade
       <View display="flex">
         <BasicTextField
           name="search"
-          placeholder="Apartman Ara"
+          placeholder="Site Ara"
           onChange={handleSearchInput}
         />
         <Button
@@ -69,7 +69,7 @@ const ApartmentTableHeader = ({ handleApartmentFunctions }: IApartmentTableHeade
           onClick={() => handleApartmentFunctions('add')}
         >
           <ApartmentIcon size="24px" mb="2px" /><View mr="8px">+</View>
-          Yeni Apartman
+          Yeni Site
         </Button>
       </View>
     </View>

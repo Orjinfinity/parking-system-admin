@@ -4,3 +4,4 @@ export * from './apartments';
 export * from './blocks';
 export * from './roles';
 export * from './flats';
+export * from './cars';

@@ -26,6 +26,14 @@ export { default as Block } from './block/Block';
 export { default as CreateBlock } from './block/CreateBlock';
 export { default as UpdateBlock } from './block/UpdateBlock';
 export { default as DeleteBlock } from './block/DeleteBlock';
+export { default as Flat } from './flat/Flat';
+export { default as CreateFlat } from './flat/CreateFlat';
+export { default as UpdateFlat } from './flat/UpdateFlat';
+export { default as DeleteFlat } from './flat/DeleteFlat';
+export { default as Car } from './car/Car';
+export { default as CreateCar } from './car/CreateCar';
+export { default as UpdateCar } from './car/UpdateCar';
+export { default as DeleteCar } from './car/DeleteCar';
 export { default as Modal } from './modal/Modal';
 
 // Icons
@@ -47,3 +55,4 @@ export { default as EditIcon } from './icons/EditIcon';
 export { default as DeleteIcon } from './icons/DeleteIcon';
 export { default as ExportIcon } from './icons/ExportIcon';
 export { default as CloseIcon } from './icons/CloseIcon';
+export { default as UrgentIcon } from './icons/UrgentIcon';

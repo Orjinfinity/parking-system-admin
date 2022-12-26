@@ -17,7 +17,7 @@ interface InputProps<
     RegisterOptions,
     'valueAsNumber' | 'valueAsDate' | 'setValueAs'
   >;
-  type?: 'text' | 'email' | 'password';
+  type?: 'text' | 'email' | 'password' | 'number';
   onFocus?: () => void;
   defaultValue?: string | number | readonly string[] | undefined;
   placeholder?: string;
@@ -26,7 +26,7 @@ interface InputProps<
 
 interface BasicInputProps {
   name: string;
-  type?: 'text' | 'email' | 'password';
+  type?: 'text' | 'email' | 'password' | 'number';
   defaultValue?: string | number | readonly string[] | undefined;
   placeholder?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;

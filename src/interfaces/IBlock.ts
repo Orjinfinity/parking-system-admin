@@ -1,4 +1,5 @@
 export interface IBlock {
+    id?: number;
     apartmentId: number;
     name: string;
     created_at?: string;

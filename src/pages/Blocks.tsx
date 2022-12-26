@@ -1,6 +1,6 @@
 import React from 'react';
 import { Title, View, Text, Block } from '../components';
-import { BlockContextProvider } from '../contexts/BlockContext';
+import { BlockContextProvider } from '../contexts';
 
 const Blocks = () => {
   return (

@@ -12,6 +12,7 @@ import {
   FlatIcon,
   CarIcon,
   GateIcon,
+  UrgentIcon,
 } from '../components';
 import ApartmentIcon from '../components/icons/ApartmentIcon';
 import imagePath from '../utils/assetHelper';
@@ -79,7 +80,7 @@ const Sidebar = () => {
               width="100%"
             >
               <ApartmentIcon mr="12px" size="20px" color="textColor" />
-              Apartmanlar
+              Siteler
             </LinkButton>
           </ListItem>
           <ListItem height="42px" borderRadius="6px" mb="10px">
@@ -140,6 +141,21 @@ const Sidebar = () => {
             >
               <CarIcon mr="12px" size="20px" color="textColor" />
               Araçlar
+            </LinkButton>
+          </ListItem>
+          <ListItem height="42px" borderRadius="6px" mb="10px">
+            <LinkButton
+              to="/request-calls"
+              color="linkPrimary"
+              fontSize="medium"
+              padding="12px"
+              variant="link"
+              display="flex"
+              alignItems="center"
+              width="100%"
+            >
+              <UrgentIcon mr="12px" size="20px" color="textColor" />
+              Acil Durum Çağrıları
             </LinkButton>
           </ListItem>
         </List>

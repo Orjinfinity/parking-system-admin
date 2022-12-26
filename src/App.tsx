@@ -22,6 +22,7 @@ import ThemeProviderWrapper from './theme';
 import { RequireAuth } from './components';
 import { checkUser } from './store/auth';
 import ResetPassword from './pages/ResetPassword';
+import RequestCalls from './pages/RequestCalls';
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
             <Route path="/flats" element={<Flats />} />
             <Route path="/gates" element={<Gates />} />
             <Route path="/cars" element={<Cars />} />
+            <Route path="/request-calls" element={<RequestCalls />} />
           </Route>
           <Route element={
             <ProtectedRoute>

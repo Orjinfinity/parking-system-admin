@@ -5,3 +5,4 @@ export * from './IUser';
 export * from './IApartment';
 export * from './IBlock';
 export * from './IFlat';
+export * from './ICar';

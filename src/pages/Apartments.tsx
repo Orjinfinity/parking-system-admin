@@ -1,6 +1,6 @@
 import React from 'react';
 import { Title, View, Text, ApartmentTable } from '../components';
-import { ApartmentsContextProvider } from '../contexts/ApartmentsContext';
+import { ApartmentsContextProvider } from '../contexts';
 
 const Apartments = () => {
   return (
@@ -10,7 +10,7 @@ const Apartments = () => {
         color="textColor"
         fontSize={['1rem', '1rem', '1.2rem', '1.5rem']}
       >
-        Apartman Listesi
+        Site Listesi
       </Title>
       <Text
         fontSize="small"

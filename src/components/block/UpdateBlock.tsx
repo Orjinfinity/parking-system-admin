@@ -43,7 +43,7 @@ const UpdateBlock = ({
   } = useForm<IBlock>({
     defaultValues: { ...defaultValues },
   });
-  const { state, dispatch } = useContext(BlockContext);
+  const { dispatch } = useContext(BlockContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,12 +86,11 @@ const UpdateBlock = ({
     });
     if (response.status === 200) {
       successMessage(response.data?.message || 'Blok başarıyla eklendi.');
-      const id = state.blocks[state.blocks.length - 1].id + 1 || 1;
       dispatch({
         type: BlockActionTypes.UPDATE_BLOCK,
         block: {
           ...form,
-          id,
+          id: selectedBlock.id,
           created_at: selectedBlock?.created_at,
           apartmentId: (form.apartmentId as any).value,
         },
