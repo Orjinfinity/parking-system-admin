@@ -1,12 +1,8 @@
 import React, { useContext } from 'react';
-import { ICarRow } from '../../consts';
+import { View, Button, ExportIcon, BasicTextField, CarIcon } from '..';
 import { CarActionTypes, CarContext } from '../../contexts';
 import { getCars } from '../../services';
-import Button from '../button/Button';
-import CarIcon from '../icons/CarIcon';
-import ExportIcon from '../icons/ExportIcon';
-import { BasicTextField } from '../textfield/TextField';
-import View from '../view/View';
+import { ICarRow } from '../../consts';
 
 interface ICarTableHeader {
   handleCarFunctions: (type: string) => void;

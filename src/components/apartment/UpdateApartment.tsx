@@ -1,22 +1,21 @@
 import React, { Dispatch, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Countrys, IApartmentRow } from '../../consts';
-import {
-  ApartmentActionTypes,
-  ApartmentContext,
-} from '../../contexts/ApartmentsContext';
-import { IApartment } from '../../interfaces';
-import { successMessage, updateApartment } from '../../services';
-import Modal from '../modal/Modal';
-import Title from '../title/Title';
-import View from '../view/View';
-import Text from '../text/Text';
 import styled from 'styled-components';
-import TextField from '../textfield/TextField';
-import ErrorMessage from '../text/ErrorMessage';
-import Select from '../select/Select';
-import Button from '../button/Button';
-import Loader from '../loader/Loader';
+import {
+  Modal,
+  Title,
+  View,
+  Text,
+  TextField,
+  ErrorMessage,
+  Button,
+  Loader,
+  Select,
+} from '..';
+import { ApartmentActionTypes, ApartmentContext } from '../../contexts';
+import { successMessage, updateApartment } from '../../services';
+import { Countrys, IApartmentRow } from '../../consts';
+import { IApartment } from '../../interfaces';
 
 const StyledForm = styled('form')`
   display: grid;
@@ -77,7 +76,12 @@ const UpdateApartment = ({
 
   useEffect(() => {
     const { name, country, city, address } = selectedApartment;
-    reset({ name, country: {label: country, value: country} as any, city, address });
+    reset({
+      name,
+      country: { label: country, value: country } as any,
+      city,
+      address,
+    });
   }, [selectedApartment, reset]);
 
   return (

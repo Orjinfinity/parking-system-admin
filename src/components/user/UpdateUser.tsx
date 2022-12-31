@@ -1,20 +1,22 @@
 import { Dispatch, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Button from '../button/Button';
-import Title from '../title/Title';
-import View from '../view/View';
-import Text from '../text/Text';
 import { useForm } from 'react-hook-form';
-import { IUserFormFields } from '../../interfaces';
-import TextField from '../textfield/TextField';
-import ErrorMessage from '../text/ErrorMessage';
-import PhoneInput from '../phone/PhoneInput';
-import { Regex } from '../../utils';
-import Modal from '../modal/Modal';
-import { IUserRow } from '../../consts';
-import { successMessage, updateUser } from '../../services';
-import Loader from '../loader/Loader';
+import {
+  Modal,
+  Title,
+  View,
+  Text,
+  TextField,
+  ErrorMessage,
+  Button,
+  Loader,
+  PhoneInput,
+} from '..';
 import { UserActionTypes, UserContext } from '../../contexts';
+import { successMessage, updateUser } from '../../services';
+import { IUserFormFields } from '../../interfaces';
+import { IUserRow } from '../../consts';
+import { Regex } from '../../utils';
 
 const StyledForm = styled('form')`
   display: grid;
@@ -74,7 +76,11 @@ const UpdateUser = ({
       );
       dispatch({
         type: UserActionTypes.UPDATE_USER,
-        user: { id: selectedUser.id, created_at: selectedUser.created_at, ...form },
+        user: {
+          id: selectedUser.id,
+          created_at: selectedUser.created_at,
+          ...form,
+        },
       });
     }
     setLoading(false);
@@ -238,7 +244,7 @@ const UpdateUser = ({
             </View>
           </StyledForm>
         </View>
-        {loading && <Loader position='fixed'/>}
+        {loading && <Loader position="fixed" />}
       </View>
     </Modal>
   );

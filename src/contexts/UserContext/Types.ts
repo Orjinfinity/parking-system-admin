@@ -7,7 +7,7 @@ interface IUserActionPayload {
   filter: {
     key: string;
     result: Array<IUserRow>;
-  }
+  };
   totalUsers: number;
   deleteUsers: Array<IUserRow>;
   perPageRows: number;

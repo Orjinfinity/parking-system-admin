@@ -1,5 +1,12 @@
 import styled from 'styled-components';
-import { color, layout, position, space, typography, variant } from 'styled-system';
+import {
+  color,
+  layout,
+  position,
+  space,
+  typography,
+  variant,
+} from 'styled-system';
 import { TitleProps } from '../../interfaces';
 
 const sizeVariant = variant({
@@ -25,7 +32,7 @@ const sizeVariant = variant({
 
 const Text = styled('p')<TitleProps>`
   letter-spacing: 0.5px;
-  color: #3A3541DE;
+  color: #3a3541de;
   ${space}
   ${typography}
     ${color}

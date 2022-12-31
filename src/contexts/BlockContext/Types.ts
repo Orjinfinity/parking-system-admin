@@ -1,4 +1,4 @@
-import { IBlockRow } from "../../consts";
+import { IBlockRow } from '../../consts';
 
 interface IBlockActionPayload {
   page: number;
@@ -7,7 +7,7 @@ interface IBlockActionPayload {
   filter: {
     key: string;
     result: Array<IBlockRow>;
-  }
+  };
   totalBlocks: number;
   deleteBlocks: Array<IBlockRow>;
   perPageRows: number;

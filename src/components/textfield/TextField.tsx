@@ -41,7 +41,7 @@ export const BasicTextField = ({
   type,
   defaultValue,
   placeholder,
-  onChange
+  onChange,
 }: BasicInputProps) => {
   return (
     <TextFieldRef

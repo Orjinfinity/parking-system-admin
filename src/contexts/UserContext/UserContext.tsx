@@ -1,9 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  useEffect,
-  useReducer,
-} from 'react';
+import { createContext, Dispatch, useEffect, useReducer } from 'react';
 import { IUserRow } from '../../consts';
 import { getUsers } from '../../services';
 import { userReducer } from './Reducer';
@@ -12,9 +7,9 @@ import { IUserAction, UserActionTypes } from './Types';
 export interface IUserState {
   users: IUserRow[];
   filter: {
-    key: string,
-    result: IUserRow[],
-  },
+    key: string;
+    result: IUserRow[];
+  };
   page: number;
   totalUsers: number;
   perPageRows: number;
@@ -30,7 +25,7 @@ export const initialState: IUserState = {
   page: 0,
   totalUsers: 0,
   perPageRows: 10,
-  loading: false
+  loading: false,
 };
 
 interface IUserContext {
@@ -48,7 +43,7 @@ const UserContext = createContext<IUserContext>({
     page: 0,
     totalUsers: 0,
     perPageRows: 10,
-    loading: false
+    loading: false,
   },
   dispatch: () => {},
 });
@@ -58,7 +53,7 @@ const UserContextProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      dispatch({ type: UserActionTypes.SET_LOADING, loading: true })
+      dispatch({ type: UserActionTypes.SET_LOADING, loading: true });
       const response = await getUsers(state.page, state.perPageRows);
       const data = await response.data;
       const totalUsers = data.totalItems as number;
@@ -69,7 +64,9 @@ const UserContextProvider = ({ children }) => {
       }));
       dispatch({ type: UserActionTypes.SET_USERS, users, totalUsers });
     };
-    fetchUsers().catch((_) => dispatch({ type: UserActionTypes.SET_LOADING, loading: false }));
+    fetchUsers().catch((_) =>
+      dispatch({ type: UserActionTypes.SET_LOADING, loading: false })
+    );
   }, [state.page, state.perPageRows]);
 
   return (

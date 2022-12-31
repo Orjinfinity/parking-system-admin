@@ -1,4 +1,4 @@
-import { IApartmentRow } from "../../consts";
+import { IApartmentRow } from '../../consts';
 
 interface IApartmentActionPayload {
   page: number;
@@ -7,7 +7,7 @@ interface IApartmentActionPayload {
   filter: {
     key: string;
     result: Array<IApartmentRow>;
-  }
+  };
   totalApartments: number;
   deleteApartments: Array<IApartmentRow>;
   perPageRows: number;

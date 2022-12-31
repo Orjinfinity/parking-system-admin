@@ -41,7 +41,6 @@ const StyledPhoneInput = styled(PatternFormat)<StyledProps>`
   border-radius: 6px;
 `;
 
-
 const PhoneInput = React.forwardRef<
   HTMLInputElement,
   PhoneProps<FieldValues, FieldPath<FieldValues>>

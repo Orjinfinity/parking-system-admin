@@ -1,4 +1,7 @@
-import { ApartmentActionTypes } from './Types'
-import { ApartmentContext, ApartmentsContextProvider } from './ApartmentsContext'
+import { ApartmentActionTypes } from './Types';
+import {
+  ApartmentContext,
+  ApartmentsContextProvider,
+} from './ApartmentsContext';
 
-export { ApartmentActionTypes, ApartmentContext, ApartmentsContextProvider }
+export { ApartmentActionTypes, ApartmentContext, ApartmentsContextProvider };

@@ -1,12 +1,8 @@
-import React, { Dispatch, useContext } from 'react'
-import { IApartmentRow } from '../../consts';
-import { ApartmentActionTypes, ApartmentContext } from '../../contexts/ApartmentsContext';
+import React, { Dispatch, useContext } from 'react';
+import { Modal, Title, View, Text, Button } from '..';
+import { ApartmentActionTypes, ApartmentContext } from '../../contexts';
 import { deleteApartment, successMessage } from '../../services';
-import Modal from '../modal/Modal';
-import Title from '../title/Title';
-import View from '../view/View';
-import Text from '../text/Text';
-import Button from '../button/Button';
+import { IApartmentRow } from '../../consts';
 
 interface IDeleteApartment {
   modalIsOpen: boolean;
@@ -14,26 +10,41 @@ interface IDeleteApartment {
   selectedApartment: IApartmentRow;
 }
 
-const DeleteApartment = ({ modalIsOpen, setModalIsOpen, selectedApartment}: IDeleteApartment) => {
+const DeleteApartment = ({
+  modalIsOpen,
+  setModalIsOpen,
+  selectedApartment,
+}: IDeleteApartment) => {
   const { state, dispatch } = useContext(ApartmentContext);
 
   const handleDeleteApartment = async () => {
-    const response = await deleteApartment(selectedApartment.id)
-    if(response.status === 200) {
-      successMessage(
-        response.data?.message || 'Apartman başarıyla silindi.'
-      );
-      
-      const goToPrevPage = state.totalApartments !== 1 && (state.totalApartments - 1) % 10 === 0;
-      if (goToPrevPage) dispatch({ type: ApartmentActionTypes.UPDATE_PAGE_COUNT, page: state.page - 1 });
-      else dispatch({ type: ApartmentActionTypes.DELETE_APARTMENT, apartment: selectedApartment });
+    const response = await deleteApartment(selectedApartment.id);
+    if (response.status === 200) {
+      successMessage(response.data?.message || 'Apartman başarıyla silindi.');
+
+      const goToPrevPage =
+        state.totalApartments !== 1 && (state.totalApartments - 1) % 10 === 0;
+      if (goToPrevPage)
+        dispatch({
+          type: ApartmentActionTypes.UPDATE_PAGE_COUNT,
+          page: state.page - 1,
+        });
+      else
+        dispatch({
+          type: ApartmentActionTypes.DELETE_APARTMENT,
+          apartment: selectedApartment,
+        });
 
       setModalIsOpen(false);
     }
-  }
+  };
 
   return (
-    <Modal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} maxWidth="400px">
+    <Modal
+      modalIsOpen={modalIsOpen}
+      setModalIsOpen={setModalIsOpen}
+      maxWidth="400px"
+    >
       <View
         display="flex"
         justifyContent="flex-start"
@@ -45,13 +56,10 @@ const DeleteApartment = ({ modalIsOpen, setModalIsOpen, selectedApartment}: IDel
           Apartman Sil
         </Title>
         <Text margin="12px 0" fontSize="12px" color="textSecondaryColor">
-          <strong>{selectedApartment.name}</strong> adlı apartmanı silmek istediğinizden emin misiniz ?
+          <strong>{selectedApartment.name}</strong> adlı apartmanı silmek
+          istediğinizden emin misiniz ?
         </Text>
-        <View
-          display="flex"
-          justifyContent="center"
-          marginTop="20px"
-        >
+        <View display="flex" justifyContent="center" marginTop="20px">
           <Button
             fontSize="medium"
             padding="10px 20px"
@@ -81,6 +89,6 @@ const DeleteApartment = ({ modalIsOpen, setModalIsOpen, selectedApartment}: IDel
       </View>
     </Modal>
   );
-}
+};
 
-export default DeleteApartment
+export default DeleteApartment;

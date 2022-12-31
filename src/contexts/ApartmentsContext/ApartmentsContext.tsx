@@ -62,7 +62,11 @@ const ApartmentsContextProvider = ({ children }) => {
         ...apartment,
         created_at: new Date(apartment.created_at).toLocaleString(),
       }));
-      dispatch({ type: ApartmentActionTypes.SET_APARTMENTS, apartments, totalApartments });
+      dispatch({
+        type: ApartmentActionTypes.SET_APARTMENTS,
+        apartments,
+        totalApartments,
+      });
     };
 
     fetchApartments().catch((_) =>

@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const RequestCalls = () => {
-  return (
-    <div>RequestCalls</div>
-  )
-}
+  return <div>RequestCalls</div>;
+};
 
-export default RequestCalls
+export default RequestCalls;

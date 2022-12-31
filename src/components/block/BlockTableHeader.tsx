@@ -1,12 +1,8 @@
 import React, { useContext } from 'react';
-import { IBlockRow } from '../../consts';
-import { BlockActionTypes, BlockContext } from '../../contexts/BlockContext';
+import { View, Button, ExportIcon, BasicTextField, BuildingIcon } from '..';
+import { BlockActionTypes, BlockContext } from '../../contexts';
 import { getBlocks } from '../../services';
-import Button from '../button/Button';
-import BuildingIcon from '../icons/BuildingIcon';
-import ExportIcon from '../icons/ExportIcon';
-import { BasicTextField } from '../textfield/TextField';
-import View from '../view/View';
+import { IBlockRow } from '../../consts';
 
 interface IBlockTableHeader {
   handleBlockFunctions: (type: string) => void;

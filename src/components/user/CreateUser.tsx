@@ -1,19 +1,26 @@
 import { Dispatch, useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
-import { getApartments, getRoles, register, successMessage } from '../../services';
-import { IApartment, IUserFormFields } from '../../interfaces';
+import {
+  Modal,
+  Title,
+  View,
+  Text,
+  TextField,
+  ErrorMessage,
+  Button,
+  Loader,
+  Select,
+  PhoneInput,
+} from '..';
+import {
+  getApartments,
+  getRoles,
+  register,
+  successMessage,
+} from '../../services';
+import { IApartment, ISelectOption, IUserFormFields } from '../../interfaces';
 import { UserActionTypes, UserContext } from '../../contexts';
-import Select, { ISelectOption } from '../select/Select';
-import TextField from '../textfield/TextField';
-import ErrorMessage from '../text/ErrorMessage';
-import PhoneInput from '../phone/PhoneInput';
-import Button from '../button/Button';
-import Loader from '../loader/Loader';
-import Title from '../title/Title';
-import Modal from '../modal/Modal';
-import View from '../view/View';
-import Text from '../text/Text';
 import { Regex } from '../../utils';
 
 const StyledForm = styled('form')`
@@ -51,10 +58,11 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
     formFields: true,
     createUser: false,
   });
-  const [formRequiredValues, setFormRequiredValues] = useState<IFormRequiredFields>({
-    apartments: [] as Array<ISelectOption>,
-    roles: [] as Array<ISelectOption>
-  });
+  const [formRequiredValues, setFormRequiredValues] =
+    useState<IFormRequiredFields>({
+      apartments: [] as Array<ISelectOption>,
+      roles: [] as Array<ISelectOption>,
+    });
   const defaultValues = {
     username: '',
     name: '',
@@ -80,18 +88,27 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
       dataFetchRef.current = false;
       const fetchData = async () => {
         try {
-          const [resApartments, resRoles] = await Promise.all([getApartments(0), getRoles(0)])
-          const [apartments, roles] = await [resApartments.data.resultData, resRoles.data.resultData];
+          const [resApartments, resRoles] = await Promise.all([
+            getApartments(0),
+            getRoles(0),
+          ]);
+          const [apartments, roles] = await [
+            resApartments.data.resultData,
+            resRoles.data.resultData,
+          ];
           const updatedApartments = apartments.map(({ name }: IApartment) => ({
             label: name,
             value: name,
           }));
           const updatedRoles = roles.map(({ name }) => ({
             label: name,
-            value: name
-          }))
-          console.log('roles', roles)
-          setFormRequiredValues({ apartments: updatedApartments, roles: updatedRoles });
+            value: name,
+          }));
+          console.log('roles', roles);
+          setFormRequiredValues({
+            apartments: updatedApartments,
+            roles: updatedRoles,
+          });
           setLoading((loading) => ({ ...loading, formFields: false }));
         } catch (error) {
           setLoading((loading) => ({ ...loading, formFields: false }));
@@ -105,7 +122,7 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
 
   const onSubmit = async (form: IUserFormFields) => {
     setLoading((loading) => ({ ...loading, createUser: true }));
-    const payload = { ...form, roles: [(form.roles as any).value] }
+    const payload = { ...form, roles: [(form.roles as any).value] };
     const response = await register(payload);
     if (response.status === 200) {
       successMessage(response.data?.message || 'Kullanıcı başarıyla eklendi.');

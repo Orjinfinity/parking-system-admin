@@ -1,18 +1,20 @@
-import React, { Dispatch, useContext, useState } from 'react'
-import { useForm } from 'react-hook-form';
-import { ApartmentActionTypes, ApartmentContext } from '../../contexts/ApartmentsContext';
-import { IApartment } from '../../interfaces';
-import { addApartment, successMessage } from '../../services';
-import Modal from '../modal/Modal';
-import Title from '../title/Title';
-import View from '../view/View';
-import Text from '../text/Text';
+import React, { Dispatch, useContext, useState } from 'react';
 import styled from 'styled-components';
-import TextField from '../textfield/TextField';
-import ErrorMessage from '../text/ErrorMessage';
-import Select from '../select/Select';
-import Button from '../button/Button';
-import Loader from '../loader/Loader';
+import { useForm } from 'react-hook-form';
+import {
+  Modal,
+  Title,
+  View,
+  Text,
+  TextField,
+  ErrorMessage,
+  Button,
+  Loader,
+  Select,
+} from '..';
+import { ApartmentActionTypes, ApartmentContext } from '../../contexts';
+import { addApartment, successMessage } from '../../services';
+import { IApartment } from '../../interfaces';
 import { Countrys } from '../../consts';
 
 const StyledForm = styled('form')`
@@ -20,7 +22,6 @@ const StyledForm = styled('form')`
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 24px;
 `;
-
 
 interface ICreateApartment {
   modalIsOpen: boolean;
@@ -33,7 +34,7 @@ const CreateApartment = ({ modalIsOpen, setModalIsOpen }: ICreateApartment) => {
     name: '',
     address: '',
     city: '',
-    country: ''
+    country: '',
   };
   const {
     handleSubmit,
@@ -47,14 +48,22 @@ const CreateApartment = ({ modalIsOpen, setModalIsOpen }: ICreateApartment) => {
 
   const onSubmit = async (form: IApartment) => {
     setLoading(true);
-    const response = await addApartment({ ...form, country: (form.country as any).value });
+    const response = await addApartment({
+      ...form,
+      country: (form.country as any).value,
+    });
     if (response.status === 200) {
       successMessage(response.data?.message || 'Apartman başarıyla eklendi.');
       const id = state.apartments[state.apartments.length - 1].id + 1 || 1;
       const created_at = new Date().toLocaleString();
       dispatch({
         type: ApartmentActionTypes.ADD_APARTMENT,
-        apartment: { ...form, country: (form.country as any).value, created_at, id },
+        apartment: {
+          ...form,
+          country: (form.country as any).value,
+          created_at,
+          id,
+        },
       });
       reset(defaultValues);
     }
@@ -178,6 +187,6 @@ const CreateApartment = ({ modalIsOpen, setModalIsOpen }: ICreateApartment) => {
       {loading && <Loader />}
     </Modal>
   );
-}
+};
 
-export default CreateApartment
+export default CreateApartment;

@@ -1,19 +1,21 @@
 import React, { Dispatch, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IBlockRow } from '../../consts';
-import { BlockActionTypes, BlockContext } from '../../contexts/BlockContext';
-import { IApartment, IBlock } from '../../interfaces';
+import {
+  Modal,
+  Title,
+  View,
+  Text,
+  TextField,
+  ErrorMessage,
+  Button,
+  Loader,
+  Select,
+} from '..';
 import { getApartments, successMessage, updateBlock } from '../../services';
+import { BlockActionTypes, BlockContext } from '../../contexts';
 import { IFormRequiredData, StyledForm } from './CreateBlock';
-import ErrorMessage from '../text/ErrorMessage';
-import TextField from '../textfield/TextField';
-import Button from '../button/Button';
-import Loader from '../loader/Loader';
-import Select from '../select/Select';
-import Modal from '../modal/Modal';
-import Title from '../title/Title';
-import View from '../view/View';
-import Text from '../text/Text';
+import { IApartment, IBlock } from '../../interfaces';
+import { IBlockRow } from '../../consts';
 
 interface IUpdateBlock {
   modalIsOpen: boolean;

@@ -27,9 +27,7 @@ export const flatReducer = (
     }
     case FlatActionTypes.ADD_FLAT: {
       const flats =
-        state.flats.length === 10
-          ? state.flats
-          : [...state.flats, action.flat];
+        state.flats.length === 10 ? state.flats : [...state.flats, action.flat];
       return {
         ...state,
         flats,
@@ -38,8 +36,7 @@ export const flatReducer = (
     }
     case FlatActionTypes.UPDATE_FLAT: {
       const selectedFlatIndex =
-        state.flats.findIndex((flat) => flat.id === action.flat.id) ??
-        0;
+        state.flats.findIndex((flat) => flat.id === action.flat.id) ?? 0;
       const flats = [...state.flats];
       flats.splice(selectedFlatIndex, 1);
       flats.splice(selectedFlatIndex, 0, action.flat);

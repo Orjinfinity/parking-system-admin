@@ -1,18 +1,26 @@
-import React, { Dispatch, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useForm } from 'react-hook-form';
-import { BlockActionTypes, BlockContext } from '../../contexts/BlockContext';
-import { IApartment, IBlock } from '../../interfaces';
-import { addBlock, getApartments, successMessage } from '../../services';
-import Modal from '../modal/Modal';
-import Title from '../title/Title';
-import View from '../view/View';
-import Text from '../text/Text';
 import styled from 'styled-components';
-import TextField from '../textfield/TextField';
-import ErrorMessage from '../text/ErrorMessage';
-import Select, { ISelectOption } from '../select/Select';
-import Button from '../button/Button';
-import Loader from '../loader/Loader';
+import {
+  Modal,
+  Title,
+  View,
+  Text,
+  TextField,
+  ErrorMessage,
+  Button,
+  Loader,
+  Select,
+} from '..';
+import { addBlock, getApartments, successMessage } from '../../services';
+import { BlockActionTypes, BlockContext } from '../../contexts';
+import { IApartment, IBlock, ISelectOption } from '../../interfaces';
 
 export const StyledForm = styled('form')`
   display: grid;
@@ -27,16 +35,16 @@ interface ICreateBlock {
 
 export interface IFormRequiredData {
   loading: boolean;
-  apartments: Array<ISelectOption>
+  apartments: Array<ISelectOption>;
 }
 
 const CreateBlock = ({ modalIsOpen, setModalIsOpen }: ICreateBlock) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [formRequiredData, setFormRequiredData] = useState<IFormRequiredData>({
     loading: true,
-    apartments: []
-  })
-  const dataFetchRef = useRef<boolean>(true)
+    apartments: [],
+  });
+  const dataFetchRef = useRef<boolean>(true);
   const defaultValues = {
     name: '',
     apartmentId: null,
@@ -56,34 +64,47 @@ const CreateBlock = ({ modalIsOpen, setModalIsOpen }: ICreateBlock) => {
       dataFetchRef.current = false;
       const fetchData = async () => {
         try {
-          const response = await getApartments(0)
+          const response = await getApartments(0);
           const apartments = response.data.resultData;
-          const updatedApartments = apartments.map(({ name, id }: IApartment) => ({
-            label: name,
-            value: id,
-          }));
-          setFormRequiredData({ apartments: updatedApartments, loading: false })
+          const updatedApartments = apartments.map(
+            ({ name, id }: IApartment) => ({
+              label: name,
+              value: id,
+            })
+          );
+          setFormRequiredData({
+            apartments: updatedApartments,
+            loading: false,
+          });
         } catch (error) {
-          setFormRequiredData(data => ({...data, loading: false}))
+          setFormRequiredData((data) => ({ ...data, loading: false }));
         }
       };
       fetchData().catch((_) =>
-        setFormRequiredData(data => ({...data, loading: false}))
+        setFormRequiredData((data) => ({ ...data, loading: false }))
       );
     }
   }, []);
 
   const onSubmit = async (form: IBlock) => {
     setLoading(true);
-    console.log('form', form)
-    const response = await addBlock({ ...form, apartmentId: (form.apartmentId as any).value });
+    console.log('form', form);
+    const response = await addBlock({
+      ...form,
+      apartmentId: (form.apartmentId as any).value,
+    });
     if (response.status === 200) {
       successMessage(response.data?.message || 'Blok başarıyla eklendi.');
       const id = state.blocks[state.blocks.length - 1].id + 1 || 1;
       const created_at = new Date().toLocaleString();
       dispatch({
         type: BlockActionTypes.ADD_BLOCK,
-        block: { ...form, created_at, id, apartmentId: (form.apartmentId as any).value },
+        block: {
+          ...form,
+          created_at,
+          id,
+          apartmentId: (form.apartmentId as any).value,
+        },
       });
       reset(defaultValues);
     }

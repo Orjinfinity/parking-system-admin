@@ -87,8 +87,7 @@ interface ImageProps extends SpaceProps {
   height?: string;
 }
 
-interface ListProps extends SpaceProps, LayoutProps, ColorProps {
-}
+interface ListProps extends SpaceProps, LayoutProps, ColorProps {}
 
 interface ListItemProps extends ListProps, PositionProps, BorderProps {}
 

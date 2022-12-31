@@ -1,4 +1,4 @@
-import { ICarRow } from "../../consts";
+import { ICarRow } from '../../consts';
 
 interface ICarActionPayload {
   page: number;
@@ -7,7 +7,7 @@ interface ICarActionPayload {
   filter: {
     key: string;
     result: Array<ICarRow>;
-  }
+  };
   totalCars: number;
   deleteCars: Array<ICarRow>;
   perPageRows: number;

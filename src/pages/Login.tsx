@@ -56,7 +56,7 @@ const Login = () => {
   if (authState.loading) {
     return (
       <View height={['100vh', '100vh', 'auto']}>
-        <Loader/>
+        <Loader />
       </View>
     );
   }

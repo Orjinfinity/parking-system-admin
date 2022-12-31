@@ -47,7 +47,7 @@ const ForgotPassword = () => {
   const onSubmit = async (form: IForgotPassword) => {
     console.log('form', form);
     const response = await forgotPassword(form);
-    console.log(response)
+    console.log(response);
   };
 
   return (

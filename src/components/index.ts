@@ -6,11 +6,11 @@ export { default as LinkButton } from './button/LinkButton';
 export { default as TextField } from './textfield/TextField';
 export { default as Select } from './select/Select';
 export { default as ErrorMessage } from './text/ErrorMessage';
-export { default as PhoneInput } from "./phone/PhoneInput";
-export { default as Image } from "./image/Image";
-export { default as List } from "./list/List";
-export { default as ListItem } from "./list/ListItem";
-export { default as IconLink } from "./link/IconLink";
+export { default as PhoneInput } from './phone/PhoneInput';
+export { default as Image } from './image/Image';
+export { default as List } from './list/List';
+export { default as ListItem } from './list/ListItem';
+export { default as IconLink } from './link/IconLink';
 export { default as RequireAuth } from './routes/RequireAuth';
 export { default as Role } from './role/Role';
 export { default as Loader } from './loader/Loader';
@@ -35,9 +35,11 @@ export { default as CreateCar } from './car/CreateCar';
 export { default as UpdateCar } from './car/UpdateCar';
 export { default as DeleteCar } from './car/DeleteCar';
 export { default as Modal } from './modal/Modal';
+export { BasicTextField } from './textfield/TextField';
 
 // Icons
 export { default as NotificationIcon } from './icons/NotificationIcon';
+export { default as ApartmentIcon } from './icons/ApartmentIcon';
 export { default as LeftArrowIcon } from './icons/LeftArrowIcon';
 export { default as DashboardIcon } from './icons/DashboardIcon';
 export { default as BuildingIcon } from './icons/BuildingIcon';

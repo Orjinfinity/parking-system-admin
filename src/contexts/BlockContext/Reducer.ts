@@ -37,10 +37,9 @@ export const blockReducer = (
       };
     }
     case BlockActionTypes.UPDATE_BLOCK: {
-      console.log('block', action)
+      console.log('block', action);
       const selectedBlockIndex =
-        state.blocks.findIndex((block) => block.id === action.block.id) ??
-        0;
+        state.blocks.findIndex((block) => block.id === action.block.id) ?? 0;
       const blocks = [...state.blocks];
       blocks.splice(selectedBlockIndex, 1);
       blocks.splice(selectedBlockIndex, 0, action.block);

@@ -1,4 +1,4 @@
-import { IFlatRow } from "../../consts";
+import { IFlatRow } from '../../consts';
 
 interface IFlatActionPayload {
   page: number;
@@ -7,7 +7,7 @@ interface IFlatActionPayload {
   filter: {
     key: string;
     result: Array<IFlatRow>;
-  }
+  };
   totalFlats: number;
   deleteFlats: Array<IFlatRow>;
   perPageRows: number;

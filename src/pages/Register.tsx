@@ -10,7 +10,7 @@ import {
   Button,
   LinkButton,
   PhoneInput,
-  Image
+  Image,
 } from '../components';
 import { register } from '../services';
 import { Regex } from '../utils';
@@ -59,7 +59,7 @@ const Register = () => {
   return (
     <StyledView boxShadow="primary">
       <View width="100%">
-         <View display="flex" justifyContent="center" mb="32px">
+        <View display="flex" justifyContent="center" mb="32px">
           <Image height="42px" src={imagePath('logo.png')} alt="logo" />
         </View>
         <Title
@@ -72,7 +72,11 @@ const Register = () => {
         >
           Plaka Tanıma Sistemi
         </Title>
-        <Title mb="6px" color="textColor" fontSize={['1.1em', '1.1em', '1.6em']}>
+        <Title
+          mb="6px"
+          color="textColor"
+          fontSize={['1.1em', '1.1em', '1.6em']}
+        >
           Giriş yapabilmek için kayıt olabilirsiniz 🚀
         </Title>
         <Text
@@ -145,8 +149,8 @@ const Register = () => {
                   },
                   pattern: {
                     value: Regex.PHONE_NUMBER,
-                    message: 'Lütfen doğru formatta telefon numaranızı giriniz'
-                  }
+                    message: 'Lütfen doğru formatta telefon numaranızı giriniz',
+                  },
                 }}
                 placeholder="Telefon numarnız"
               />

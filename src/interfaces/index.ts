@@ -6,3 +6,4 @@ export * from './IApartment';
 export * from './IBlock';
 export * from './IFlat';
 export * from './ICar';
+export * from './ISelectOption';

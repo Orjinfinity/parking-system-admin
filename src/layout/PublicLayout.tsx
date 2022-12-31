@@ -3,7 +3,8 @@ import { View } from '../components';
 
 const PublicLayout = () => {
   const { pathname } = useLocation();
-  const isRegisterPageAndMobile = pathname === '/register' && window.innerWidth <= 567;
+  const isRegisterPageAndMobile =
+    pathname === '/register' && window.innerWidth <= 567;
 
   return (
     <View display="flex" alignItems="center" justifyContent="center">

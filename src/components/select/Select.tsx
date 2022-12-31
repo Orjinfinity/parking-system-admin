@@ -10,11 +10,7 @@ import {
   useController,
 } from 'react-hook-form';
 import { space, SpaceProps } from 'styled-system';
-
-export interface ISelectOption {
-  value: string | number;
-  label: string;
-}
+import { ISelectOption } from '../../interfaces';
 
 interface SelectProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -29,7 +25,10 @@ interface SelectProps<
   placeholder?: string;
   isAsyncSelect?: boolean;
   isLoading?: boolean;
-  loadOptions?: (inputValue: string, callback: (options: OptionsOrGroups<unknown, GroupBase<unknown>>) => void) => void 
+  loadOptions?: (
+    inputValue: string,
+    callback: (options: OptionsOrGroups<unknown, GroupBase<unknown>>) => void
+  ) => void;
   options?: ISelectOption[];
   control: Control<any>;
 }

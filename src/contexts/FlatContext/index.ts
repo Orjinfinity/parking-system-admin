@@ -1,4 +1,4 @@
-import { FlatContext, FlatContextProvider } from './FlatContext'
-import { FlatActionTypes } from './Types'
+import { FlatContext, FlatContextProvider } from './FlatContext';
+import { FlatActionTypes } from './Types';
 
-export { FlatActionTypes, FlatContext, FlatContextProvider }
+export { FlatActionTypes, FlatContext, FlatContextProvider };

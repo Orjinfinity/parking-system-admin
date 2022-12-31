@@ -1,12 +1,8 @@
-import React, { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
+import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
 import { blockColumns, customTableStyles, IBlockRow } from '../../consts';
-import { BlockActionTypes, BlockContext } from '../../contexts/BlockContext';
-import Button from '../button/Button';
-import DeleteIcon from '../icons/DeleteIcon';
-import EditIcon from '../icons/EditIcon';
-import Loader from '../loader/Loader';
-import View from '../view/View';
+import { BlockActionTypes, BlockContext } from '../../contexts';
 import BlockTableHeader from './BlockTableHeader';
 import CreateBlock from './CreateBlock';
 import DeleteBlock from './DeleteBlock';

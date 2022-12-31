@@ -1,6 +1,4 @@
-import {
-  initialState, IUserState,
-} from './UserContext';
+import { initialState, IUserState } from './UserContext';
 import { IUserRow } from '../../consts';
 import { IUserAction, UserActionTypes } from './Types';
 
@@ -22,7 +20,7 @@ export const userReducer = (
         ...state,
         filter: {
           key: action.filter.key,
-          result: action.filter.result
+          result: action.filter.result,
         },
         loading: false,
       };
@@ -33,7 +31,8 @@ export const userReducer = (
       return { ...state, users, totalUsers: state.totalUsers + 1 };
     }
     case UserActionTypes.UPDATE_USER: {
-      const selectedUserIndex = state.users.findIndex((user) => user.id === action.user.id) ?? 0;
+      const selectedUserIndex =
+        state.users.findIndex((user) => user.id === action.user.id) ?? 0;
       const users = [...state.users];
       users.splice(selectedUserIndex, 1);
       users.splice(selectedUserIndex, 0, action.user);

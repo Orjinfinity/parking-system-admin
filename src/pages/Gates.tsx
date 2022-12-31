@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const Gates = () => {
-  return (
-    <div>Gates</div>
-  )
-}
+  return <div>Gates</div>;
+};
 
-export default Gates
+export default Gates;

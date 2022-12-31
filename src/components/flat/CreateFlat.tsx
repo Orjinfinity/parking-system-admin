@@ -7,18 +7,20 @@ import React, {
 } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
-import { FlatActionTypes, FlatContext } from '../../contexts';
-import { IBlock, IFlat } from '../../interfaces';
+import {
+  Modal,
+  Title,
+  View,
+  Text,
+  TextField,
+  ErrorMessage,
+  Button,
+  Loader,
+  Select,
+} from '..';
 import { addFlat, getBlocks, successMessage } from '../../services';
-import Modal from '../modal/Modal';
-import Select, { ISelectOption } from '../select/Select';
-import Title from '../title/Title';
-import View from '../view/View';
-import Text from '../text/Text';
-import TextField from '../textfield/TextField';
-import ErrorMessage from '../text/ErrorMessage';
-import Button from '../button/Button';
-import Loader from '../loader/Loader';
+import { FlatActionTypes, FlatContext } from '../../contexts';
+import { IBlock, ISelectOption } from '../../interfaces';
 
 export const StyledForm = styled('form')`
   display: grid;
@@ -73,8 +75,8 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
         block: (form.block as any).label,
         blockId: (form.block as any).value,
         floor: (form.floor as any).value,
-        number: Number(form.number)
-      })
+        number: Number(form.number),
+      });
       if (response.status === 200) {
         successMessage(response.data?.message || 'Daire başarıyla eklendi.');
         const id = state.flats[state.flats.length - 1].id + 1 || 1;
@@ -176,11 +178,11 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
                 name="floor"
                 control={control}
                 options={[
-                  {label: "1 Araç", value: 1},
-                  {label: "2 Araç", value: 2},
-                  {label: "3 Araç", value: 3},
-                  {label: "4 Araç", value: 4},
-                  {label: "5 Araç", value: 5},
+                  { label: '1 Araç', value: 1 },
+                  { label: '2 Araç', value: 2 },
+                  { label: '3 Araç', value: 3 },
+                  { label: '4 Araç', value: 4 },
+                  { label: '5 Araç', value: 5 },
                 ]}
                 rules={{
                   required: {

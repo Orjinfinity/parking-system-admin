@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from "styled-components";
+import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
 import { View } from '../components';
 import Sidebar from './Sidebar';
@@ -11,7 +11,7 @@ const SectionStyled = styled('section')`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`
+`;
 
 const PrivateLayout = () => {
   return (

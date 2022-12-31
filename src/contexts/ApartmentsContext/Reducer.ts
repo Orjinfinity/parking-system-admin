@@ -11,7 +11,9 @@ export const apartmentReducer = (
       return {
         ...state,
         apartments: action.apartments || ([] as Array<IApartmentRow>),
-        ...(action.totalApartments && { totalApartments: action.totalApartments }),
+        ...(action.totalApartments && {
+          totalApartments: action.totalApartments,
+        }),
         loading: false,
       };
     }
@@ -38,8 +40,9 @@ export const apartmentReducer = (
     }
     case ApartmentActionTypes.UPDATE_APARTMENT: {
       const selectedApartmentIndex =
-        state.apartments.findIndex((apartment) => apartment.id === action.apartment.id) ??
-        0;
+        state.apartments.findIndex(
+          (apartment) => apartment.id === action.apartment.id
+        ) ?? 0;
       const apartments = [...state.apartments];
       apartments.splice(selectedApartmentIndex, 1);
       apartments.splice(selectedApartmentIndex, 0, action.apartment);
@@ -49,8 +52,9 @@ export const apartmentReducer = (
       return {
         ...state,
         apartments:
-          state.apartments.filter((apartment) => apartment.id !== action.apartment.id) ??
-          state.apartments,
+          state.apartments.filter(
+            (apartment) => apartment.id !== action.apartment.id
+          ) ?? state.apartments,
       };
     }
     case ApartmentActionTypes.DELETE_SELECTED_APARTMENTS: {

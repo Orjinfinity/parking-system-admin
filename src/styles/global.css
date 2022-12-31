@@ -79,7 +79,7 @@ button:not(:disabled),
   }
   50% {
     transform: scaleY(1);
-    background: #9155FD;
+    background: #9155fd;
   }
   100% {
     transform: scaleY(0.1);

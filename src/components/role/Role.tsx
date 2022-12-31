@@ -100,13 +100,13 @@ const Role = ({ role = '', count = null }: IRoleCard) => {
               lineHeight="20px"
               variant="text"
               color="primary"
-              size='auto'
+              size="auto"
             >
               Edit Role
             </Button>
             <Button
               variant="icon"
-              size='auto'
+              size="auto"
               onClick={() => copyToClipboard(role)}
             >
               <CopyIcon size="20px" color="textColor" />

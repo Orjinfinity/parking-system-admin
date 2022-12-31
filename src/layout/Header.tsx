@@ -36,33 +36,40 @@ const ProfileCardStyled = styled(View)`
   border-radius: 6px;
 `;
 
-
 const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  
+
   const dispatch = useAppDispatch();
-  const user = { // useAppSelector(state => state.auth.user)
+  const user = {
+    // useAppSelector(state => state.auth.user)
     id: 1,
-    email: "syhnserkan@gmail.com",
-    roles: ["ROLE_USER"],
-    username: "syhnserkan"
-  }
+    email: 'syhnserkan@gmail.com',
+    roles: ['ROLE_USER'],
+    username: 'syhnserkan',
+  };
   const type = user.roles[0] || 'ROLE_USER';
   const userRole = UserTypes[type as keyof typeof Types];
 
   const cardRef = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     const checkIfClickedOutside = (target: HTMLInputElement) => {
-      if(isOpenModal && cardRef.current && !cardRef.current.contains(target as HTMLInputElement))
-        setIsOpenModal(false)
-    }
-    document.addEventListener("click", (event) => checkIfClickedOutside(event.target as HTMLInputElement));
+      if (
+        isOpenModal &&
+        cardRef.current &&
+        !cardRef.current.contains(target as HTMLInputElement)
+      )
+        setIsOpenModal(false);
+    };
+    document.addEventListener('click', (event) =>
+      checkIfClickedOutside(event.target as HTMLInputElement)
+    );
     return () => {
-      document.removeEventListener("click", (event) => checkIfClickedOutside(event.target as HTMLInputElement));
-    }
-  }, [isOpenModal])
+      document.removeEventListener('click', (event) =>
+        checkIfClickedOutside(event.target as HTMLInputElement)
+      );
+    };
+  }, [isOpenModal]);
 
   return (
     <View
@@ -104,7 +111,9 @@ const Header = () => {
               ml="10px"
             >
               <Title mb="4px" fontSize="0.8rem">
-                {`${user.username.charAt(0).toUpperCase()}${user.username.slice(1)}`}
+                {`${user.username.charAt(0).toUpperCase()}${user.username.slice(
+                  1
+                )}`}
               </Title>
               <Title mb="4px" fontSize="0.8rem">
                 {/* Administrator */}

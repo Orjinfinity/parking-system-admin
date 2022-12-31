@@ -64,7 +64,7 @@ const Dashboard = () => {
           roles.
         </Text>
         <UserContextProvider>
-          <UserTable/>
+          <UserTable />
         </UserContextProvider>
       </View>
     </View>

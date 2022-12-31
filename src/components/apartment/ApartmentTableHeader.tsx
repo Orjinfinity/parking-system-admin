@@ -1,38 +1,48 @@
-import React, { useContext } from 'react'
-import { IApartmentRow } from '../../consts';
-import { ApartmentActionTypes, ApartmentContext } from '../../contexts/ApartmentsContext';
+import React, { useContext } from 'react';
+import { ApartmentIcon, BasicTextField, Button, ExportIcon, View } from '..';
+import { ApartmentActionTypes, ApartmentContext } from '../../contexts';
 import { getApartments } from '../../services';
-import Button from '../button/Button';
-import ApartmentIcon from '../icons/ApartmentIcon';
-import ExportIcon from '../icons/ExportIcon';
-import { BasicTextField } from '../textfield/TextField';
-import View from '../view/View';
+import { IApartmentRow } from '../../consts';
 
 interface IApartmentTableHeader {
   handleApartmentFunctions: (type: string) => void;
 }
 
-const ApartmentTableHeader = ({ handleApartmentFunctions }: IApartmentTableHeader) => {
+const ApartmentTableHeader = ({
+  handleApartmentFunctions,
+}: IApartmentTableHeader) => {
   const { state, dispatch } = useContext(ApartmentContext);
 
   const fetchApartments = async (key: string) => {
     const response = await getApartments(0, state.totalApartments || 200);
     const apartments: IApartmentRow[] = await response.data.resultData;
-    const filteredApartments = apartments.filter(({ name, address, city }) =>
-      [name, address, city].some((field) => field.toLowerCase().includes(key))
-    ).map(apartment => ({...apartment, created_at: new Date(apartment.created_at).toLocaleString()}));
+    const filteredApartments = apartments
+      .filter(({ name, address, city }) =>
+        [name, address, city].some((field) => field.toLowerCase().includes(key))
+      )
+      .map((apartment) => ({
+        ...apartment,
+        created_at: new Date(apartment.created_at).toLocaleString(),
+      }));
 
-    dispatch({ type: ApartmentActionTypes.SET_FILTERED_APARTMENTS, filter: { key, result: filteredApartments } });
+    dispatch({
+      type: ApartmentActionTypes.SET_FILTERED_APARTMENTS,
+      filter: { key, result: filteredApartments },
+    });
   };
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
-    if(key && key.length > 2) {
+    if (key && key.length > 2) {
       dispatch({ type: ApartmentActionTypes.SET_LOADING, loading: true });
       fetchApartments(key);
-    } else dispatch({ type: ApartmentActionTypes.SET_FILTERED_APARTMENTS, filter: { key: "", result: [] as IApartmentRow[] } });
+    } else
+      dispatch({
+        type: ApartmentActionTypes.SET_FILTERED_APARTMENTS,
+        filter: { key: '', result: [] as IApartmentRow[] },
+      });
   };
-  
+
   return (
     <View
       display="flex"
@@ -68,12 +78,13 @@ const ApartmentTableHeader = ({ handleApartmentFunctions }: IApartmentTableHeade
           size="md"
           onClick={() => handleApartmentFunctions('add')}
         >
-          <ApartmentIcon size="24px" mb="2px" /><View mr="8px">+</View>
+          <ApartmentIcon size="24px" mb="2px" />
+          <View mr="8px">+</View>
           Yeni Site
         </Button>
       </View>
     </View>
   );
-}
+};
 
-export default ApartmentTableHeader
+export default ApartmentTableHeader;

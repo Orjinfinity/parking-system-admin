@@ -6,7 +6,7 @@ import Button from '../button/Button';
 import CloseIcon from '../icons/CloseIcon';
 import View from '../view/View';
 
-interface IModal extends PropsWithChildren{
+interface IModal extends PropsWithChildren {
   modalIsOpen: boolean;
   setModalIsOpen: Dispatch<React.SetStateAction<boolean>>;
   maxWidth?: string;
@@ -18,14 +18,19 @@ const StyledButtonContainer = styled(View)`
   right: 30px;
 `;
 
-const Modal = ({ modalIsOpen, setModalIsOpen, maxWidth = "900px", children }: IModal) => {
+const Modal = ({
+  modalIsOpen,
+  setModalIsOpen,
+  maxWidth = '900px',
+  children,
+}: IModal) => {
   const customStylesForModal = {
     ...customStyles,
     content: {
       ...customStyles.content,
-      maxWidth
-    }
-  }
+      maxWidth,
+    },
+  };
   return (
     <ReactModal
       isOpen={modalIsOpen}
@@ -35,7 +40,11 @@ const Modal = ({ modalIsOpen, setModalIsOpen, maxWidth = "900px", children }: IM
     >
       {children}
       <StyledButtonContainer>
-        <Button variant="icon" padding="0" onClick={() => setModalIsOpen(false)}>
+        <Button
+          variant="icon"
+          padding="0"
+          onClick={() => setModalIsOpen(false)}
+        >
           <CloseIcon size="24px" color="textSecondaryColor" />
         </Button>
       </StyledButtonContainer>

@@ -25,14 +25,13 @@ import ResetPassword from './pages/ResetPassword';
 import RequestCalls from './pages/RequestCalls';
 
 function App() {
-
   const authToken = localStorage.getItem(LocalStorageKeys.AuthToken);
   const user = localStorage.getItem(LocalStorageKeys.User);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if(authToken && user) dispatch(checkUser(JSON.parse(user)));
-  }, [authToken, user, dispatch])
+    if (authToken && user) dispatch(checkUser(JSON.parse(user)));
+  }, [authToken, user, dispatch]);
 
   return (
     <ThemeProviderWrapper>
@@ -55,11 +54,13 @@ function App() {
             <Route path="/cars" element={<Cars />} />
             <Route path="/request-calls" element={<RequestCalls />} />
           </Route>
-          <Route element={
-            <ProtectedRoute>
-              <PublicLayout />
-            </ProtectedRoute>
-          }>
+          <Route
+            element={
+              <ProtectedRoute>
+                <PublicLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

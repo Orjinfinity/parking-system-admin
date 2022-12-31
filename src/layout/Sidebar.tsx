@@ -30,7 +30,7 @@ const Sidebar = () => {
       // borderRight="1px solid #e4e4e4"
     >
       <View display="flex" alignItems="center" onClick={() => navigate('/')}>
-        <Image  height="36px" src={imagePath('logo.png')} alt="logo" />
+        <Image height="36px" src={imagePath('logo.png')} alt="logo" />
         {/* <Title fontSize="1.1rem" ml="12px">
           PANEL
         </Title> */}
@@ -47,7 +47,6 @@ const Sidebar = () => {
               display="flex"
               alignItems="center"
               width="100%"
-
             >
               <DashboardIcon mr="12px" size="20px" color="textColor" />
               Dashboard

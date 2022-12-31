@@ -1,12 +1,8 @@
 import React, { useContext } from 'react';
+import { View, Button, ExportIcon, BasicTextField, FlatIcon } from '..';
 import { FlatActionTypes, FlatContext } from '../../contexts';
 import { getFlats } from '../../services';
 import { IFlatRow } from '../../consts';
-import View from '../view/View';
-import Button from '../button/Button';
-import ExportIcon from '../icons/ExportIcon';
-import { BasicTextField } from '../textfield/TextField';
-import FlatIcon from '../icons/FlatIcon';
 
 interface IFlatTableHeader {
   handleFlatFunctions: (type: string) => void;

@@ -49,32 +49,32 @@ const CarContext = createContext<ICarContext>({
 });
 
 const CarContextProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(carReducer, initialState);
-  
-    useEffect(() => {
-      const fetchCars = async () => {
-        dispatch({ type: CarActionTypes.SET_LOADING, loading: true });
-        const response = await getCars(state.page, state.perPageRows);
-        const data = await response.data;
-        const totalCars = data.totalItems as number;
-        let cars: ICarRow[] = data.resultData;
-        cars = cars.map((car) => ({
-          ...car,
-          created_at: new Date(car.created_at).toLocaleString(),
-        }));
-        dispatch({ type: CarActionTypes.SET_CARS, cars, totalCars });
-      };
-  
-      fetchCars().catch((_) =>
-        dispatch({ type: CarActionTypes.SET_LOADING, loading: false })
-      );
-    }, [state.page, state.perPageRows]);
-  
-    return (
-      <CarContext.Provider value={{ state, dispatch }}>
-        {children}
-      </CarContext.Provider>
+  const [state, dispatch] = useReducer(carReducer, initialState);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      dispatch({ type: CarActionTypes.SET_LOADING, loading: true });
+      const response = await getCars(state.page, state.perPageRows);
+      const data = await response.data;
+      const totalCars = data.totalItems as number;
+      let cars: ICarRow[] = data.resultData;
+      cars = cars.map((car) => ({
+        ...car,
+        created_at: new Date(car.created_at).toLocaleString(),
+      }));
+      dispatch({ type: CarActionTypes.SET_CARS, cars, totalCars });
+    };
+
+    fetchCars().catch((_) =>
+      dispatch({ type: CarActionTypes.SET_LOADING, loading: false })
     );
+  }, [state.page, state.perPageRows]);
+
+  return (
+    <CarContext.Provider value={{ state, dispatch }}>
+      {children}
+    </CarContext.Provider>
+  );
 };
 
-export { CarContext, CarContextProvider }
+export { CarContext, CarContextProvider };

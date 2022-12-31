@@ -49,11 +49,11 @@ export const buttonVariants = variant({
     },
     dashed: {
       backgroundColor: 'transparent',
-      border:'1px solid var(--bg)',
+      border: '1px solid var(--bg)',
       color: 'var(--bg)',
       '&:hover': {
         backgroundColor: 'var(--bg)',
-        borderColor:'var(--color)',
+        borderColor: 'var(--color)',
         color: 'var(--color)',
       },
     },
@@ -70,11 +70,11 @@ export const buttonVariants = variant({
       '&.active': {
         backgroundColor: 'var(--bg-active)',
         color: 'var(--color-active)',
-        'svg' : {
+        svg: {
           color: 'var(--color-active)',
-        }
-      }
-    }
+        },
+      },
+    },
   },
 });
 
@@ -117,13 +117,13 @@ export const buttonColors = ({ theme }: { theme: DefaultTheme }) =>
       iconPrimary: {
         '--color': theme.colors.primary,
       },
-      linkPrimary : {
+      linkPrimary: {
         '--color': theme.colors.textColor,
         '--bg': 'transparent',
-        '--bg-hover': "rgb(226 226 226)",
+        '--bg-hover': 'rgb(226 226 226)',
         '--bg-active': theme.colors.primary,
-        '--color-active' : theme.colors.white
-      }
+        '--color-active': theme.colors.white,
+      },
     },
   });
 
@@ -131,11 +131,11 @@ export const buttonSizes = variant({
   prop: 'size',
   variants: {
     sm: {
-      padding: ['5px 10px', '6px 12px','8px 16px'],
+      padding: ['5px 10px', '6px 12px', '8px 16px'],
       fontSize: '.9em !important',
     },
     md: {
-      padding: ['5px 10px', '6px 12px','8px 16px','10px 20px'],
+      padding: ['5px 10px', '6px 12px', '8px 16px', '10px 20px'],
     },
     lg: {
       padding: '15px 30px',
