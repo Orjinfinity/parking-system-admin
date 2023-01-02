@@ -34,6 +34,10 @@ export { default as Car } from './car/Car';
 export { default as CreateCar } from './car/CreateCar';
 export { default as UpdateCar } from './car/UpdateCar';
 export { default as DeleteCar } from './car/DeleteCar';
+export { default as Door } from './door/Door';
+export { default as CreateDoor } from './door/CreateDoor';
+export { default as UpdateDoor } from './door/UpdateDoor';
+export { default as DeleteDoor } from './door/DeleteDoor';
 export { default as Modal } from './modal/Modal';
 export { BasicTextField } from './textfield/TextField';
 

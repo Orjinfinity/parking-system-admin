@@ -7,27 +7,27 @@ import {
   Text,
   TextField,
   ErrorMessage,
+  Select,
   Button,
   Loader,
-  Select,
 } from '..';
-import { getApartments, successMessage, updateBlock } from '../../services';
-import { BlockActionTypes, BlockContext } from '../../contexts';
-import { IFormRequiredData, StyledForm } from './CreateBlock';
-import { IApartment, IBlock } from '../../interfaces';
-import { IBlockRow } from '../../consts';
+import { getApartments, successMessage, updateDoor } from '../../services';
+import { DoorActionTypes, DoorContext } from '../../contexts';
+import { IFormRequiredData, StyledForm } from './CreateDoor';
+import { IApartment, IDoor } from '../../interfaces';
+import { IDoorRow } from '../../consts';
 
-interface IUpdateBlock {
+interface IUpdateDoor {
   modalIsOpen: boolean;
   setModalIsOpen: Dispatch<React.SetStateAction<boolean>>;
-  selectedBlock: IBlockRow;
+  selectedDoor: IDoorRow;
 }
 
-const UpdateBlock = ({
+const UpdateDoor = ({
   modalIsOpen,
   setModalIsOpen,
-  selectedBlock,
-}: IUpdateBlock) => {
+  selectedDoor,
+}: IUpdateDoor) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [formRequiredData, setFormRequiredData] = useState<IFormRequiredData>({
     loading: true,
@@ -35,6 +35,8 @@ const UpdateBlock = ({
   });
   const defaultValues = {
     name: '',
+    type: null,
+    camiplink: '',
     apartmentId: null,
   };
   const {
@@ -42,16 +44,43 @@ const UpdateBlock = ({
     control,
     reset,
     formState: { errors },
-  } = useForm<IBlock>({
+  } = useForm<IDoor>({
     defaultValues: { ...defaultValues },
   });
-  const { dispatch } = useContext(BlockContext);
+  const { dispatch } = useContext(DoorContext);
+
+  const onSubmit = async (form: IDoor) => {
+    setLoading(true);
+    try {
+      const response = await updateDoor(selectedDoor.id, {
+        ...form,
+        apartmentId: (form.apartmentId as any).value,
+        type: (form.type as any).value,
+      });
+      if (response.status === 200) {
+        successMessage(response.data?.message || 'Kapı başarıyla güncellendi.');
+        const created_at = new Date().toLocaleString();
+        dispatch({
+          type: DoorActionTypes.UPDATE_DOOR,
+          door: {
+            ...form,
+            id: selectedDoor.id,
+            created_at,
+            apartmentId: (form.apartmentId as any).value,
+            type: (form.type as any).value,
+          },
+        });
+      }
+    } catch (_) {
+      setLoading(false);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setFormRequiredData((data) => ({ ...data, loading: true }));
-        const response = await getApartments(0);
+        const response = await getApartments(0, 200);
         const apartments = response.data.resultData;
         const updatedApartments = apartments.map(
           ({ name, id }: IApartment) => ({
@@ -59,51 +88,32 @@ const UpdateBlock = ({
             value: id,
           })
         );
-        const { name, apartmentId } = selectedBlock;
         const selectedApartment = updatedApartments.find(
-          (item) => item.value === apartmentId
+          (item) => item.value === selectedDoor.apartmentId
         );
         reset({
-          name,
+          ...selectedDoor,
+          type: {
+            label: selectedDoor.type === 0 ? 'Giriş' : 'Çıkış',
+            value: selectedDoor.type,
+          } as any,
           apartmentId: {
             label: selectedApartment.label,
-            value: apartmentId,
+            value: selectedApartment.value,
           } as any,
         });
-        setFormRequiredData({ apartments: updatedApartments, loading: false });
+        setFormRequiredData({
+          apartments: updatedApartments,
+          loading: false,
+        });
       } catch (error) {
         setFormRequiredData((data) => ({ ...data, loading: false }));
       }
     };
-    fetchData().catch((_) => {
-      setFormRequiredData((data) => ({ ...data, loading: false }));
-    });
-  }, [reset, selectedBlock]);
-
-  const onSubmit = async (form: IBlock) => {
-    try {
-      setLoading(true);
-      const response = await updateBlock(selectedBlock.id, {
-        ...form,
-        apartmentId: (form.apartmentId as any).value,
-      });
-      if (response.status === 200) {
-        successMessage(response.data?.message || 'Blok başarıyla eklendi.');
-        dispatch({
-          type: BlockActionTypes.UPDATE_BLOCK,
-          block: {
-            ...form,
-            id: selectedBlock.id,
-            created_at: selectedBlock?.created_at,
-            apartmentId: (form.apartmentId as any).value,
-          },
-        });
-      }
-    } catch (error) {
-      setLoading(false);
-    }
-    setLoading(false);
-  };
+    fetchData().catch((_) =>
+      setFormRequiredData((data) => ({ ...data, loading: false }))
+    );
+  }, [reset, selectedDoor]);
   return (
     <Modal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen}>
       <View
@@ -114,10 +124,10 @@ const UpdateBlock = ({
         padding={['10px', '10px', '14px', '20px', '30px']}
       >
         <Title fontWeight="medium" fontSize="24px" color="textColor">
-          Blok Güncelle
+          Kapı güncelle
         </Title>
         <Text mt="12px" fontSize="small" color="textSecondaryColor">
-          Sistem de bulunan blok bilgisini güncelle.
+          Sisteme eklenen kapı bilgisini güncelle.
         </Text>
         <View width="100%" marginTop="36px" marginBottom="36px">
           <StyledForm onSubmit={handleSubmit(onSubmit)}>
@@ -128,13 +138,56 @@ const UpdateBlock = ({
                 rules={{
                   required: {
                     value: true,
-                    message: 'Lütfen blok adını giriniz',
+                    message: 'Lütfen kapı ismini giriniz.',
                   },
                 }}
-                placeholder="Blok Adı"
+                placeholder="Kapı ismi"
               />
               {errors.name && (
                 <ErrorMessage> {errors.name?.message}</ErrorMessage>
+              )}
+            </View>
+            <View display="flex" flexDirection="column" gridColumn="1/5">
+              <Select
+                name="type"
+                control={control}
+                options={[
+                  {
+                    label: 'Giriş',
+                    value: 0,
+                  },
+                  {
+                    label: 'Çıkış',
+                    value: 1,
+                  },
+                ]}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Lütfen kapı tipini seçiniz.',
+                  },
+                }}
+                placeholder="Kapı tipi"
+                isLoading={formRequiredData.loading}
+              />
+              {errors.type && (
+                <ErrorMessage> {errors.type?.message}</ErrorMessage>
+              )}
+            </View>
+            <View display="flex" flexDirection="column" gridColumn="1/5">
+              <TextField
+                name="camiplink"
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Kapı ip linkini giriniz.',
+                  },
+                }}
+                placeholder="Kapı ip link"
+              />
+              {errors.camiplink && (
+                <ErrorMessage> {errors.camiplink?.message}</ErrorMessage>
               )}
             </View>
             <View display="flex" flexDirection="column" gridColumn="1/5">
@@ -169,7 +222,7 @@ const UpdateBlock = ({
                 color="primary"
                 size="md"
               >
-                Güncelle
+                Kapı Güncelle
               </Button>
               <Button
                 fontSize="medium"
@@ -192,4 +245,4 @@ const UpdateBlock = ({
   );
 };
 
-export default UpdateBlock;
+export default UpdateDoor;

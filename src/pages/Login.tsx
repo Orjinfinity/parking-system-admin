@@ -53,14 +53,6 @@ const Login = () => {
     dispatch(loginAction(form));
   };
 
-  if (authState.loading) {
-    return (
-      <View height={['100vh', '100vh', 'auto']}>
-        <Loader />
-      </View>
-    );
-  }
-
   return (
     <StyledView boxShadow="primary" height={['100vh', '100vh', 'auto']}>
       <View display="flex" justifyContent="center" mb="32px">
@@ -176,6 +168,7 @@ const Login = () => {
           </LinkButton>
         </Text>
       </View>
+      { authState.loading && <Loader />}
     </StyledView>
   );
 };

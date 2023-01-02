@@ -13,7 +13,7 @@ const StyledView = styled(View)`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 3;
   backdrop-filter: blur(1px);
 `;
 const Loader = ({ position = 'absolute' }: ILoader) => {

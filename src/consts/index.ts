@@ -7,4 +7,5 @@ export * from './Table/Apartments';
 export * from './Table/Block';
 export * from './Table/Flat';
 export * from './Table/Car';
+export * from './Table/Door';
 export * from './ModalStyles';

@@ -19,7 +19,7 @@ import {
   Loader,
   Select,
 } from '..';
-import { addCar, getBlocks, successMessage } from '../../services';
+import { addCar, getFlats, successMessage } from '../../services';
 import { CarActionTypes, CarContext } from '../../contexts';
 import { ICar, IFlat, ISelectOption } from '../../interfaces';
 import { Regex } from '../../utils';
@@ -71,19 +71,24 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
   const onSubmit = async (form: ICar) => {
     setLoading(true);
     console.log('form', form);
-    const response = await addCar({
-      ...form,
-      flatId: (form.flatId as any).value,
-    });
-    if (response.status === 200) {
-      successMessage(response.data?.message || 'Araç başarıyla eklendi.');
-      const id = state.cars[state.cars.length - 1].id + 1 || 1;
-      const created_at = new Date().toLocaleString();
-      dispatch({
-        type: CarActionTypes.ADD_CAR,
-        car: { ...form, created_at, id, flatId: (form.flatId as any).value },
+    try {
+      const response = await addCar({
+        ...form,
+        flatId: Number((form.flatId as any).value),
+        isguest: (form.isguest as any).value
       });
-      reset(defaultValues);
+      if (response.status === 200) {
+        successMessage(response.data?.message || 'Araç başarıyla eklendi.');
+        const id = state.cars[state.cars.length - 1].id + 1 || 1;
+        const created_at = new Date().toLocaleString();
+        dispatch({
+          type: CarActionTypes.ADD_CAR,
+          car: { ...form, created_at, id, flatId: (form.flatId as any).value },
+        });
+        reset(defaultValues);
+      }
+    } catch (_) {
+      setLoading(false);
     }
     setLoading(false);
   };
@@ -93,7 +98,7 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
       dataFetchRef.current = false;
       const fetchData = async () => {
         try {
-          const response = await getBlocks(0, 200);
+          const response = await getFlats(0, 200);
           const flats = response.data.resultData;
           const updatedFlats = flats.map(({ number }: IFlat) => ({
             label: number,

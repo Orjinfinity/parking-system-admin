@@ -14,13 +14,13 @@ import {
   Text,
   TextField,
   ErrorMessage,
+  Select,
   Button,
   Loader,
-  Select,
 } from '..';
-import { addFlat, getBlocks, successMessage } from '../../services';
-import { FlatActionTypes, FlatContext } from '../../contexts';
-import { IBlock, ISelectOption } from '../../interfaces';
+import { DoorActionTypes, DoorContext } from '../../contexts';
+import { IApartment, IDoor, ISelectOption } from '../../interfaces';
+import { addDoor, getApartments, successMessage } from '../../services';
 
 export const StyledForm = styled('form')`
   display: grid;
@@ -28,75 +28,68 @@ export const StyledForm = styled('form')`
   grid-gap: 24px;
 `;
 
-interface ICreateFlat {
+interface ICreateDoor {
   modalIsOpen: boolean;
   setModalIsOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface IFlatForm {
-  number: number;
-  block: string;
-  floor: number;
-}
-
 export interface IFormRequiredData {
   loading: boolean;
-  blocks: Array<ISelectOption>;
+  apartments: Array<ISelectOption>;
 }
 
-const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
+const CreateDoor = ({ modalIsOpen, setModalIsOpen }: ICreateDoor) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [formRequiredData, setFormRequiredData] = useState<IFormRequiredData>({
     loading: true,
-    blocks: [],
+    apartments: [],
   });
   const dataFetchRef = useRef<boolean>(true);
   const defaultValues = {
-    number: null as any,
-    block: '',
-    floor: '' as any,
+    name: '',
+    type: 0,
+    camiplink: '',
+    apartmentId: null,
   };
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
-  } = useForm<IFlatForm>({
+  } = useForm<IDoor>({
     defaultValues: { ...defaultValues },
   });
-  const { state, dispatch } = useContext(FlatContext);
+  const { state, dispatch } = useContext(DoorContext);
 
-  const onSubmit = async (form: IFlatForm) => {
+  const onSubmit = async (form: IDoor) => {
+    setLoading(true);
     console.log('form', form);
     try {
-      setLoading(true);
-      const response = await addFlat({
+      const response = await addDoor({
         ...form,
-        // block: (form.block as any).label,
-        blockId: (form.block as any).value,
-        floor: Number(form.floor),
-        number: Number(form.number),
+        apartmentId: (form.apartmentId as any).value,
+        type: (form.type as any).value,
       });
       if (response.status === 200) {
-        successMessage(response.data?.message || 'Daire başarıyla eklendi.');
-        const id = state.flats[state.flats.length - 1].id + 1 || 1;
+        successMessage(response.data?.message || 'Kapı başarıyla eklendi.');
+        const id = state.doors[state.doors.length - 1].id + 1 || 1;
         const created_at = new Date().toLocaleString();
         dispatch({
-          type: FlatActionTypes.ADD_FLAT,
-          flat: {
+          type: DoorActionTypes.ADD_DOOR,
+          door: {
             ...form,
             created_at,
             id,
-            blockId: (form.block as any).value,
-            block: (form.block as any).label,
+            apartmentId: (form.apartmentId as any).value,
+            type: (form.type as any).value,
           },
         });
         reset(defaultValues);
       }
-      setLoading(false);
-    } catch (error) {
+    } catch (_) {
       setLoading(false);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -104,13 +97,18 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
       dataFetchRef.current = false;
       const fetchData = async () => {
         try {
-          const response = await getBlocks(0, 200);
-          const blocks = response.data.resultData;
-          const updatedBlocks = blocks.map(({ name, id }: IBlock) => ({
-            label: name,
-            value: id,
-          }));
-          setFormRequiredData({ blocks: updatedBlocks, loading: false });
+          const response = await getApartments(0, 200);
+          const apartments = response.data.resultData;
+          const updatedApartments = apartments.map(
+            ({ name, id }: IApartment) => ({
+              label: name,
+              value: id,
+            })
+          );
+          setFormRequiredData({
+            apartments: updatedApartments,
+            loading: false,
+          });
         } catch (error) {
           setFormRequiredData((data) => ({ ...data, loading: false }));
         }
@@ -120,6 +118,7 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
       );
     }
   }, []);
+
   return (
     <Modal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen}>
       <View
@@ -130,85 +129,88 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
         padding={['10px', '10px', '14px', '20px', '30px']}
       >
         <Title fontWeight="medium" fontSize="24px" color="textColor">
-          Yeni Daire Oluştur
+          Yeni Kapı Ekle
         </Title>
         <Text mt="12px" fontSize="small" color="textSecondaryColor">
-          Sisteme yeni daire ekle.
+          Apartmana yeni kapı ekle.
         </Text>
         <View width="100%" marginTop="36px" marginBottom="36px">
           <StyledForm onSubmit={handleSubmit(onSubmit)}>
             <View display="flex" flexDirection="column" gridColumn="1/5">
               <TextField
-                name="number"
+                name="name"
                 control={control}
-                type="number"
                 rules={{
                   required: {
                     value: true,
-                    message: 'Lütfen daire numarasını giriniz',
+                    message: 'Lütfen kapı ismini giriniz.',
                   },
                 }}
-                placeholder="Daire numarası"
+                placeholder="Kapı ismi"
               />
-              {errors.number && (
-                <ErrorMessage> {errors.number?.message}</ErrorMessage>
+              {errors.name && (
+                <ErrorMessage> {errors.name?.message}</ErrorMessage>
               )}
             </View>
             <View display="flex" flexDirection="column" gridColumn="1/5">
               <Select
-                name="block"
-                control={control}
-                options={formRequiredData.blocks}
-                isLoading={formRequiredData.loading}
-                rules={{
-                  required: {
-                    value: true,
-                    message: 'Lütfen blok seçiniz',
-                  },
-                }}
-                placeholder="Blok seçiniz"
-              />
-              {errors.block && (
-                <ErrorMessage> {errors.block?.message}</ErrorMessage>
-              )}
-            </View>
-            <View display="flex" flexDirection="column" gridColumn="1/5">
-            <TextField
-                name="floor"
-                control={control}
-                type="number"
-                rules={{
-                  required: {
-                    value: true,
-                    message: 'Lütfen kaçıncı kat olduğunu giriniz',
-                  },
-                }}
-                placeholder="Daire kat numarası"
-              />
-              {errors.floor && (
-                <ErrorMessage> {errors.floor?.message}</ErrorMessage>
-              )}
-              {/* <Select
-                name="floor"
+                name="type"
                 control={control}
                 options={[
-                  { label: '1 Araç', value: 1 },
-                  { label: '2 Araç', value: 2 },
-                  { label: '3 Araç', value: 3 },
-                  { label: '4 Araç', value: 4 },
-                  { label: '5 Araç', value: 5 },
+                  {
+                    label: 'Giriş',
+                    value: 0,
+                  },
+                  {
+                    label: 'Çıkış',
+                    value: 1,
+                  },
                 ]}
                 rules={{
                   required: {
                     value: true,
-                    message: 'Lütfen araba sayısını seçiniz',
+                    message: 'Lütfen kapı tipini seçiniz.',
                   },
                 }}
-                placeholder="Araba sayısı seçiniz"
+                placeholder="Kapı tipi"
               />
-              {errors.floor && (
-                <ErrorMessage> {errors.floor?.message}</ErrorMessage>
-              )} */}
+              {errors.type && (
+                <ErrorMessage> {errors.type?.message}</ErrorMessage>
+              )}
+            </View>
+            <View display="flex" flexDirection="column" gridColumn="1/5">
+              <TextField
+                name="camiplink"
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Kapı ip linkini giriniz.',
+                  },
+                }}
+                placeholder="Kapı ip link"
+              />
+              {errors.camiplink && (
+                <ErrorMessage> {errors.camiplink?.message}</ErrorMessage>
+              )}
+            </View>
+            <View display="flex" flexDirection="column" gridColumn="1/5">
+              <Select
+                name="apartmentId"
+                control={control}
+                options={formRequiredData.apartments}
+                isLoading={formRequiredData.loading}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Lütfen apartman seçiniz',
+                  },
+                }}
+                placeholder="Apartman seçiniz"
+              />
+              {errors.apartmentId && (
+                <ErrorMessage> {errors.apartmentId?.message}</ErrorMessage>
+              )}
             </View>
             <View
               display="flex"
@@ -224,7 +226,7 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
                 color="primary"
                 size="md"
               >
-                Oluştur
+                Kapı Ekle
               </Button>
               <Button
                 fontSize="medium"
@@ -247,4 +249,4 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
   );
 };
 
-export default CreateFlat;
+export default CreateDoor;

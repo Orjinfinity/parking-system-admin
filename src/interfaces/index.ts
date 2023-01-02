@@ -7,3 +7,5 @@ export * from './IBlock';
 export * from './IFlat';
 export * from './ICar';
 export * from './ISelectOption';
+export * from './IDoor';
+export * from './ITable';

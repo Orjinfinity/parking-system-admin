@@ -97,7 +97,7 @@ const UpdateApartment = ({
           Apartman Bilgilerini Güncelle
         </Title>
         <Text mt="12px" fontSize="small" color="textSecondaryColor">
-          Sisteme yeni apartman ekle.
+          Sistemde bulunan apartman bilgisini güncelle.
         </Text>
         <View width="100%" marginTop="36px" marginBottom="36px">
           <StyledForm onSubmit={handleSubmit(onSubmit)}>
