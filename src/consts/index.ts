@@ -4,6 +4,7 @@ export * from './Roles';
 export * from './Table/User';
 export * from './Table/TableStyles';
 export * from './Table/Apartments';
+export * from './Table/RequestCall';
 export * from './Table/Block';
 export * from './Table/Flat';
 export * from './Table/Car';

@@ -37,6 +37,7 @@ export interface IFlatForm {
   number: number;
   block: string;
   floor: number;
+  // blockId?: number;
 }
 
 export interface IFormRequiredData {
@@ -52,18 +53,16 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
   });
   const dataFetchRef = useRef<boolean>(true);
   const defaultValues = {
-    number: null as any,
-    block: '',
-    floor: '' as any,
+    number: '',
+    block: null,
+    floor: '',
   };
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
-  } = useForm<IFlatForm>({
-    defaultValues: { ...defaultValues },
-  });
+  } = useForm<IFlatForm>();
   const { state, dispatch } = useContext(FlatContext);
 
   const onSubmit = async (form: IFlatForm) => {
@@ -72,7 +71,6 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
       setLoading(true);
       const response = await addFlat({
         ...form,
-        // block: (form.block as any).label,
         blockId: (form.block as any).value,
         floor: Number(form.floor),
         number: Number(form.number),
@@ -91,7 +89,7 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
             block: (form.block as any).label,
           },
         });
-        reset(defaultValues);
+        reset(defaultValues as any);
       }
       setLoading(false);
     } catch (error) {
@@ -141,7 +139,7 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
               <TextField
                 name="number"
                 control={control}
-                type="number"
+                type="text"
                 rules={{
                   required: {
                     value: true,
@@ -176,7 +174,7 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
             <TextField
                 name="floor"
                 control={control}
-                type="number"
+                type="text"
                 rules={{
                   required: {
                     value: true,

@@ -17,7 +17,7 @@ const DeleteBlock = ({
 }: IDeleteBlock) => {
   const { state, dispatch } = useContext(BlockContext);
 
-  const handleDeleteApartment = async () => {
+  const handleDeleteBlock = async () => {
     const response = await deleteBlock(selectedBlock.id);
     if (response.status === 200) {
       successMessage(response.data?.message || 'Blok başarıyla silindi.');
@@ -65,7 +65,7 @@ const DeleteBlock = ({
             variant="contained"
             color="error"
             size="sm"
-            onClick={handleDeleteApartment}
+            onClick={handleDeleteBlock}
           >
             Blok Sil
           </Button>

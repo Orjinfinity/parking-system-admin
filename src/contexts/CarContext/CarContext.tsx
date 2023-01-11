@@ -60,6 +60,7 @@ const CarContextProvider = ({ children }) => {
       let cars: ICarRow[] = data.resultData;
       cars = cars.map((car) => ({
         ...car,
+        isguest: car.isguest ? 'Evet' : 'Hayır',
         created_at: new Date(car.created_at).toLocaleString(),
       }));
       dispatch({ type: CarActionTypes.SET_CARS, cars, totalCars });

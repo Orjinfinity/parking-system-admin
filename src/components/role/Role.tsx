@@ -1,13 +1,9 @@
-import View from '../view/View';
-import Text from '../text/Text';
-import Image from '../image/Image';
+
 import styled from 'styled-components';
-import Title from '../title/Title';
-import Button from '../button/Button';
-import CopyIcon from '../icons/CopyIcon';
 import { IRoleCard } from '../../interfaces';
 import imagePath from '../../utils/assetHelper';
 import { errorMessage, successMessage } from '../../services';
+import { Title, View, Image, Button, Text, CopyIcon } from '..';
 
 const ContentStyled = styled(View)`
   background-color: ${({ theme }) => theme.colors.white};
@@ -48,8 +44,12 @@ const ImageContainer = styled(View)`
   }
 `;
 
-const Role = ({ role = '', count = null }: IRoleCard) => {
-  const isRoleCard = Boolean(role && count);
+interface IRole {
+  role: IRoleCard;
+}
+
+const Role = ({ role }: IRole) => {
+  const isRoleCard = Boolean(role);
 
   const copyToClipboard = async (role: string) => {
     try {
@@ -72,7 +72,7 @@ const Role = ({ role = '', count = null }: IRoleCard) => {
             mb="24px"
           >
             <Text fontSize="small" color="textSecondaryColor">
-              Total {count} users
+              Total {role.users?.length || 0} users
             </Text>
             <ImageContainer height="40px">
               <Image src={imagePath('Avatar3.png')} alt="avatar_1" />
@@ -87,7 +87,7 @@ const Role = ({ role = '', count = null }: IRoleCard) => {
             color="textSecondaryColor"
             mb="8px"
           >
-            {role}
+            {role.name.toUpperCase()}
           </Title>
           <View
             display="flex"
@@ -107,7 +107,7 @@ const Role = ({ role = '', count = null }: IRoleCard) => {
             <Button
               variant="icon"
               size="auto"
-              onClick={() => copyToClipboard(role)}
+              onClick={() => copyToClipboard(role.name.toUpperCase())}
             >
               <CopyIcon size="20px" color="textColor" />
             </Button>

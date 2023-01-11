@@ -26,15 +26,15 @@ const flatColumns: TableColumn<IFlatRow>[] = [
     sortable: true,
   },
   {
-    name: 'Araba Sayısı',
+    name: 'Kaçıncı Kat',
     selector: (row) => row.floor,
     sortable: true,
   },
-  {
-    name: 'Blok',
-    selector: (row) => row.block,
-    sortable: true,
-  },
+  // {
+  //   name: 'Blok',
+  //   selector: (row) => row.block,
+  //   sortable: true,
+  // },
   {
     name: 'Blok Id',
     selector: (row) => row.blockId,

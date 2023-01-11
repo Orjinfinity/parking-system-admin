@@ -1,51 +1,56 @@
-import { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
+import { RequestCallActionTypes, RequestCallContext } from '../../contexts';
 import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
-import { carColumns, customTableStyles, ICarRow } from '../../consts';
-import { CarActionTypes, CarContext } from '../../contexts';
-import CarTableHeader from './CarTableHeader';
-import CreateCar from './CreateCar';
-import DeleteCar from './DeleteCar';
-import UpdateCar from './UpdateCar';
+import CreateRequestCall from './CreateRequestCall';
+import DeleteRequestCall from './DeleteRequestCall';
+import UpdateRequestCall from './UpdateRequestCall';
+import {
+  customTableStyles,
+  IRequestCallRow,
+  requestCallColumns,
+} from '../../consts';
+import RequestCallHeader from './RequestCallHeader';
 
-enum CarTableModalTypes {
+enum RequestCallTableModalTypes {
   ADD = 'add',
   UPDATE = 'update',
   DELETE = 'delete',
 }
 
-interface ISelectedCar {
-  type: CarTableModalTypes;
-  car: ICarRow;
+interface ISelectedRequestCall {
+  type: RequestCallTableModalTypes;
+  block: IRequestCallRow;
 }
 
-const Car = () => {
+const RequestCall = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  const [selectedCar, setSelectedCar] = useState<ISelectedCar>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<ICarRow>>([]);
+  const [selectedRequestCall, setSelectedRequestCall] =
+    useState<ISelectedRequestCall>(null);
+  const [selectedRows, setSelectedRows] = useState<Array<IRequestCallRow>>([]);
 
-  const { state, dispatch } = useContext(CarContext);
-  console.log('stat', state);
-  const handleCarFunctions = (
-    type: CarTableModalTypes,
-    car = {} as ICarRow
+  const { state, dispatch } = useContext(RequestCallContext);
+
+  const handleRequestCallFunctions = (
+    type: RequestCallTableModalTypes,
+    block = {} as IRequestCallRow
   ) => {
     setModalIsOpen(!modalIsOpen);
-    setSelectedCar({ type, car });
+    setSelectedRequestCall({ type, block });
   };
 
   const getModalComponent = () => {
     const Components = {
-      [CarTableModalTypes.ADD]: CreateCar,
-      [CarTableModalTypes.UPDATE]: UpdateCar,
-      [CarTableModalTypes.DELETE]: DeleteCar,
+      [RequestCallTableModalTypes.ADD]: CreateRequestCall,
+      [RequestCallTableModalTypes.UPDATE]: UpdateRequestCall,
+      [RequestCallTableModalTypes.DELETE]: DeleteRequestCall,
     };
-    const Component = Components[selectedCar.type];
+    const Component = Components[selectedRequestCall.type];
     return (
       <Component
         modalIsOpen={modalIsOpen}
         setModalIsOpen={setModalIsOpen}
-        selectedCar={selectedCar.car}
+        selectedRequestCall={selectedRequestCall.block}
       />
     );
   };
@@ -57,19 +62,25 @@ const Car = () => {
   }, []);
 
   const handlePageChange = (page: number) =>
-    dispatch({ type: CarActionTypes.UPDATE_PAGE_COUNT, page: page - 1 });
+    dispatch({
+      type: RequestCallActionTypes.UPDATE_PAGE_COUNT,
+      page: page - 1,
+    });
   const handlePerRowsChange = (perPageRows: number) =>
-    dispatch({ type: CarActionTypes.UPDATE_PER_PAGE_ROWS, perPageRows });
+    dispatch({
+      type: RequestCallActionTypes.UPDATE_PER_PAGE_ROWS,
+      perPageRows,
+    });
 
   return (
-    <View boxShadow="primary" maxWidth="1628px">
+    <View boxShadow="primary">
       <DataTable
         title={selectedRows.length ? 'Show Title' : ''}
         selectableRows
         responsive
         className="table"
         columns={[
-          ...carColumns,
+          ...requestCallColumns,
           {
             cell: (row) => (
               <View
@@ -84,7 +95,10 @@ const Car = () => {
                   variant="icon"
                   size="auto"
                   onClick={() =>
-                    handleCarFunctions(CarTableModalTypes.UPDATE, row)
+                    handleRequestCallFunctions(
+                      RequestCallTableModalTypes.UPDATE,
+                      row
+                    )
                   }
                 >
                   <EditIcon size="20px" color="success" />
@@ -96,7 +110,10 @@ const Car = () => {
                   variant="icon"
                   size="auto"
                   onClick={() =>
-                    handleCarFunctions(CarTableModalTypes.DELETE, row)
+                    handleRequestCallFunctions(
+                      RequestCallTableModalTypes.DELETE,
+                      row
+                    )
                   }
                 >
                   <DeleteIcon size="20px" color="error" />
@@ -110,14 +127,18 @@ const Car = () => {
         ]}
         subHeader
         subHeaderComponent={
-          <CarTableHeader handleCarFunctions={handleCarFunctions} />
+          <RequestCallHeader
+            handleRequestCallFunctions={handleRequestCallFunctions}
+          />
         }
-        data={state.filter.key.length ? state.filter.result : state.cars}
+        data={
+          state.filter.key.length ? state.filter.result : state.requestCalls
+        }
         pagination
         paginationServer
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
-        paginationTotalRows={state.totalCars}
+        paginationTotalRows={state.totalRequestCalls}
         customStyles={customTableStyles}
         progressPending={state.loading}
         noDataComponent={<View padding="40px">Görüntülenecek Kayıt Yok</View>}
@@ -140,9 +161,9 @@ const Car = () => {
         }
         onSelectedRowsChange={handleRowSelected}
       />
-      {selectedCar ? getModalComponent() : null}
+      {selectedRequestCall ? getModalComponent() : null}
     </View>
   );
 };
 
-export default Car;
+export default RequestCall;

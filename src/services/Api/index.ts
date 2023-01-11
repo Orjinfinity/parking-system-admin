@@ -6,3 +6,4 @@ export * from './roles';
 export * from './flats';
 export * from './cars';
 export * from './doors';
+export * from './requestCalls';

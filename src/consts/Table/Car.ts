@@ -10,8 +10,9 @@ interface ICarRow {
   brand: string;
   model: string;
   color: string;
-  isguest: boolean;
+  isguest: string;
   flatId: number;
+  number?: string;
 }
 
 const carColumns: TableColumn<ICarRow>[] = [

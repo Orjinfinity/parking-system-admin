@@ -75,7 +75,7 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
       const response = await addCar({
         ...form,
         flatId: Number((form.flatId as any).value),
-        isguest: (form.isguest as any).value
+        isguest: (form.isguest as any).value,
       });
       if (response.status === 200) {
         successMessage(response.data?.message || 'Araç başarıyla eklendi.');
@@ -83,7 +83,13 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
         const created_at = new Date().toLocaleString();
         dispatch({
           type: CarActionTypes.ADD_CAR,
-          car: { ...form, created_at, id, flatId: (form.flatId as any).value },
+          car: {
+            ...form,
+            created_at,
+            id,
+            flatId: (form.flatId as any).value,
+            isguest: (form.isguest as any).value,
+          },
         });
         reset(defaultValues);
       }
@@ -100,9 +106,9 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
         try {
           const response = await getFlats(0, 200);
           const flats = response.data.resultData;
-          const updatedFlats = flats.map(({ number }: IFlat) => ({
+          const updatedFlats = flats.map(({ number, id }: IFlat) => ({
             label: number,
-            value: number,
+            value: id,
           }));
           setFormRequiredData({ flats: updatedFlats, loading: false });
         } catch (error) {

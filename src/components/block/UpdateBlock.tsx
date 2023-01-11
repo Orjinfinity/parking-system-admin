@@ -81,6 +81,7 @@ const UpdateBlock = ({
   }, [reset, selectedBlock]);
 
   const onSubmit = async (form: IBlock) => {
+    console.log('form block', form)
     try {
       setLoading(true);
       const response = await updateBlock(selectedBlock.id, {

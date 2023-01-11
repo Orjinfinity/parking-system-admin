@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Title, View, Text, Role, UserTable } from '../components';
-import { roles } from '../consts';
+import { Title, View, Text, Role, UserTable, RoleList } from '../components';
+// import { roles } from '../consts';
 import { UserContextProvider } from '../contexts';
 
 const CardContainer = styled(View)`
@@ -41,12 +41,13 @@ const Dashboard = () => {
         depending on assigned role an administrator can have access to what he
         need.
       </Text>
-      <CardContainer>
+      {/* <CardContainer>
         {roles.map((roleProps, index) => (
           <Role key={index} {...roleProps} />
         ))}
         <Role />
-      </CardContainer>
+      </CardContainer> */}
+        <RoleList/>
       <View mt="40px">
         <Title
           mb="6px"
