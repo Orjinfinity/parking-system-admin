@@ -43,12 +43,18 @@ export { default as RequestCall } from './requestCall/RequestCall';
 export { default as CreateRequestCall } from './requestCall/CreateRequestCall';
 export { default as UpdateRequestCall } from './requestCall/UpdateRequestCall';
 export { default as DeleteRequestCall } from './requestCall/DeleteRequestCall';
+export { default as GateProces } from './gateProces/GateProces';
+export { default as CreateGateProces } from './gateProces/CreateGateProces';
+export { default as UpdateGateProces } from './gateProces/UpdateGateProces';
+export { default as DeleteGateProces } from './gateProces/DeleteGateProces';
 export { default as Modal } from './modal/Modal';
 export { BasicTextField } from './textfield/TextField';
 export { default as Skelaton } from './skelaton/Skelaton';
 
 // Icons
+export { default as ApartmentAdminIcon } from './icons/ApartmentAdminIcon';
 export { default as NotificationIcon } from './icons/NotificationIcon';
+export { default as GateProcesesIcon } from './icons/GateProcesesIcon';
 export { default as ApartmentIcon } from './icons/ApartmentIcon';
 export { default as LeftArrowIcon } from './icons/LeftArrowIcon';
 export { default as DashboardIcon } from './icons/DashboardIcon';
@@ -68,3 +74,4 @@ export { default as DeleteIcon } from './icons/DeleteIcon';
 export { default as ExportIcon } from './icons/ExportIcon';
 export { default as CloseIcon } from './icons/CloseIcon';
 export { default as UrgentIcon } from './icons/UrgentIcon';
+export { default as AdminIcon } from './icons/AdminIcon';

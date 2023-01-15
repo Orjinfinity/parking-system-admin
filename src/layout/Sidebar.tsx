@@ -13,6 +13,7 @@ import {
   CarIcon,
   GateIcon,
   UrgentIcon,
+  GateProcesesIcon,
 } from '../components';
 import ApartmentIcon from '../components/icons/ApartmentIcon';
 import imagePath from '../utils/assetHelper';
@@ -22,10 +23,14 @@ const Sidebar = () => {
   return (
     <View
       minWidth="260px"
+      position="fixed"
+      zIndex="3"
       height="100vh"
       display="flex"
       flexDirection="column"
       alignItems="flex-start"
+      backgroundColor="white"
+      boxShadow="secondary"
       p={[12, 12, 12, 16, 16]}
       // borderRight="1px solid #e4e4e4"
     >
@@ -125,6 +130,21 @@ const Sidebar = () => {
             >
               <GateIcon mr="12px" size="20px" color="textColor" />
               Giriş Kapıları
+            </LinkButton>
+          </ListItem>
+          <ListItem height="42px" borderRadius="6px" mb="10px">
+            <LinkButton
+              to="/gate-processes"
+              color="linkPrimary"
+              fontSize="medium"
+              padding="12px"
+              variant="link"
+              display="flex"
+              alignItems="center"
+              width="100%"
+            >
+              <GateProcesesIcon mr="12px" size="20px" color="textColor" />
+              Giriş Çıkış İşlemleri
             </LinkButton>
           </ListItem>
           <ListItem height="42px" borderRadius="6px" mb="10px">

@@ -87,7 +87,7 @@ const Role = ({ role }: IRole) => {
             color="textSecondaryColor"
             mb="8px"
           >
-            {role.name.toUpperCase()}
+            {`${role.name.charAt(0).toUpperCase()}${role.name.slice(1)}`}
           </Title>
           <View
             display="flex"

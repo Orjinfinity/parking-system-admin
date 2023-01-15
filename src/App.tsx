@@ -12,6 +12,9 @@ import {
   Register,
   Blocks,
   Users,
+  GateProcesses,
+  RequestCalls,
+  ResetPassword
 } from './pages';
 import ProtectedRoute from './components/routes/ProtectedRoute';
 import PrivateLayout from './layout/PrivateLayout';
@@ -21,8 +24,6 @@ import { useAppDispatch } from './store/hooks';
 import ThemeProviderWrapper from './theme';
 import { RequireAuth } from './components';
 import { checkUser } from './store/auth';
-import ResetPassword from './pages/ResetPassword';
-import RequestCalls from './pages/RequestCalls';
 
 function App() {
   const authToken = localStorage.getItem(LocalStorageKeys.AuthToken);
@@ -53,6 +54,7 @@ function App() {
             <Route path="/gates" element={<Gates />} />
             <Route path="/cars" element={<Cars />} />
             <Route path="/request-calls" element={<RequestCalls />} />
+            <Route path="/gate-processes" element={<GateProcesses />} />
           </Route>
           <Route
             element={

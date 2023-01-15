@@ -1,26 +1,6 @@
-import styled from 'styled-components';
-import { Title, View, Text, Role, UserTable, RoleList } from '../components';
-// import { roles } from '../consts';
+import { Title, View, Text, UserTable, RoleList } from '../components';
 import { UserContextProvider } from '../contexts';
 
-const CardContainer = styled(View)`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 48px;
-
-  @media screen and (max-width: 1700px) {
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 24px;
-  }
-  @media screen and (max-width: 1400px) {
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 24px;
-  }
-  @media screen and (max-width: 992px) {
-    grid-template-columns: repeat(1, 1fr);
-    grid-gap: 24px;
-  }
-`;
 
 const Dashboard = () => {
   return (
@@ -41,13 +21,7 @@ const Dashboard = () => {
         depending on assigned role an administrator can have access to what he
         need.
       </Text>
-      {/* <CardContainer>
-        {roles.map((roleProps, index) => (
-          <Role key={index} {...roleProps} />
-        ))}
-        <Role />
-      </CardContainer> */}
-        <RoleList/>
+      <RoleList/>
       <View mt="40px">
         <Title
           mb="6px"

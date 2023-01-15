@@ -18,8 +18,12 @@ export interface IUserFormFields {
 
 export enum Types {
   ROLE_USER = 'ROLE_USER',
+  ROLE_ADMIN = 'ROLE_ADMIN',
+  ROLE_APARTMENTADMIN = 'ROLE_APARTMENTADMIN'
 }
 
 export const UserTypes = {
   [Types.ROLE_USER]: 'Kullanıcı',
+  [Types.ROLE_ADMIN]: 'Admin',
+  [Types.ROLE_APARTMENTADMIN]: 'Apartman Yöneticisi',
 };

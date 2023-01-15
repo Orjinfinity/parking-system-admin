@@ -10,18 +10,22 @@ interface IModal extends PropsWithChildren {
   modalIsOpen: boolean;
   setModalIsOpen: Dispatch<React.SetStateAction<boolean>>;
   maxWidth?: string;
+  isCustomModal?: boolean;
 }
 
-const StyledButtonContainer = styled(View)`
+const StyledButtonContainer = styled(View)<{ isCustomModal: boolean }>`
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: ${({ isCustomModal }) =>
+  isCustomModal ? '5px' : '30px'};
+  right: ${({ isCustomModal }) =>
+  isCustomModal ? '0px' : '30px'};
 `;
 
 const Modal = ({
   modalIsOpen,
   setModalIsOpen,
   maxWidth = '900px',
+  isCustomModal = false,
   children,
 }: IModal) => {
   const customStylesForModal = {
@@ -39,7 +43,7 @@ const Modal = ({
       style={customStylesForModal}
     >
       {children}
-      <StyledButtonContainer>
+      <StyledButtonContainer isCustomModal={isCustomModal}>
         <Button
           variant="icon"
           padding="0"

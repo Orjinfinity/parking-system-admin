@@ -3,7 +3,7 @@ import { TableColumn } from 'react-data-table-component';
 interface IRequestCallRow {
   id?: number;
   created_at?: string;
-  isdone: boolean;
+  isdone: string;
   description: string;
   userId: number;
   flatId: number;

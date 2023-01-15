@@ -30,7 +30,7 @@ const RequestCall = () => {
   const [selectedRows, setSelectedRows] = useState<Array<IRequestCallRow>>([]);
 
   const { state, dispatch } = useContext(RequestCallContext);
-
+  
   const handleRequestCallFunctions = (
     type: RequestCallTableModalTypes,
     block = {} as IRequestCallRow

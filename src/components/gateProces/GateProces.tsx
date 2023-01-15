@@ -1,71 +1,56 @@
-import { useCallback, useContext, useState } from 'react';
-import DataTable from 'react-data-table-component';
-import styled from 'styled-components';
+import React, { useCallback, useContext, useState } from 'react';
+import { GateProcesActionTypes, GateProcesContext } from '../../contexts';
 import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
-import { carColumns, customTableStyles, ICarRow } from '../../consts';
-import { CarActionTypes, CarContext } from '../../contexts';
-import CarTableHeader from './CarTableHeader';
-import CreateCar from './CreateCar';
-import DeleteCar from './DeleteCar';
-import UpdateCar from './UpdateCar';
+import {
+  customTableStyles,
+  gateProcesColumns,
+  IGateProcesRow,
+} from '../../consts';
+import CreateGateProces from './CreateGateProces';
+import DeleteGateProces from './DeleteGateProces';
+import UpdateGateProces from './UpdateGateProces';
+import DataTable from 'react-data-table-component';
+import GateProcesHeader from './GateProcesHeader';
 
-const StyledView = styled(View)`
-  box-shadow: ${({ theme }) => theme.shadows.primary};
-  max-width: 1628px;
-
-  @media screen and (max-width: 1700px) {
-    max-width: 1386px
-  }
-  @media screen and (max-width: 1400px) {
-    max-width: 1086px
-  }
-  @media screen and (max-width: 992px) {
-    max-width: 656px
-  }
-  @media screen and (max-width: 768px) {
-    max-width: 520px
-  }
-
-`
-
-enum CarTableModalTypes {
+enum GateProcesTableModalTypes {
   ADD = 'add',
   UPDATE = 'update',
   DELETE = 'delete',
 }
 
-interface ISelectedCar {
-  type: CarTableModalTypes;
-  car: ICarRow;
+interface ISelectedGateProces {
+  type: GateProcesTableModalTypes;
+  gateProces: IGateProcesRow;
 }
 
-const Car = () => {
+const GateProces = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  const [selectedCar, setSelectedCar] = useState<ISelectedCar>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<ICarRow>>([]);
+  const [selectedGateProces, setSelectedGateProces] =
+    useState<ISelectedGateProces>(null);
+  const [selectedRows, setSelectedRows] = useState<Array<IGateProcesRow>>([]);
 
-  const { state, dispatch } = useContext(CarContext);
-  console.log('stat', state);
-  const handleCarFunctions = (
-    type: CarTableModalTypes,
-    car = {} as ICarRow
+  const { state, dispatch } = useContext(GateProcesContext);
+
+  const handleGateProcesFunctions = (
+    type: GateProcesTableModalTypes,
+    gateProces = {} as IGateProcesRow
   ) => {
     setModalIsOpen(!modalIsOpen);
-    setSelectedCar({ type, car });
+    setSelectedGateProces({ type, gateProces });
   };
 
   const getModalComponent = () => {
     const Components = {
-      [CarTableModalTypes.ADD]: CreateCar,
-      [CarTableModalTypes.UPDATE]: UpdateCar,
-      [CarTableModalTypes.DELETE]: DeleteCar,
+      [GateProcesTableModalTypes.ADD]: CreateGateProces,
+      [GateProcesTableModalTypes.UPDATE]: UpdateGateProces,
+      [GateProcesTableModalTypes.DELETE]: DeleteGateProces,
     };
-    const Component = Components[selectedCar.type];
+    const Component = Components[selectedGateProces.type];
     return (
       <Component
         modalIsOpen={modalIsOpen}
         setModalIsOpen={setModalIsOpen}
-        selectedCar={selectedCar.car}
+        selectedGateProces={selectedGateProces.gateProces}
       />
     );
   };
@@ -77,19 +62,24 @@ const Car = () => {
   }, []);
 
   const handlePageChange = (page: number) =>
-    dispatch({ type: CarActionTypes.UPDATE_PAGE_COUNT, page: page - 1 });
+    dispatch({
+      type: GateProcesActionTypes.UPDATE_PAGE_COUNT,
+      page: page - 1,
+    });
   const handlePerRowsChange = (perPageRows: number) =>
-    dispatch({ type: CarActionTypes.UPDATE_PER_PAGE_ROWS, perPageRows });
-
+    dispatch({
+      type: GateProcesActionTypes.UPDATE_PER_PAGE_ROWS,
+      perPageRows,
+    });
   return (
-    <StyledView boxShadow="primary" maxWidth="calc(100% - 500px)">
+    <View boxShadow="primary">
       <DataTable
         title={selectedRows.length ? 'Show Title' : ''}
         selectableRows
         responsive
         className="table"
         columns={[
-          ...carColumns,
+          ...gateProcesColumns,
           {
             cell: (row) => (
               <View
@@ -104,7 +94,10 @@ const Car = () => {
                   variant="icon"
                   size="auto"
                   onClick={() =>
-                    handleCarFunctions(CarTableModalTypes.UPDATE, row)
+                    handleGateProcesFunctions(
+                      GateProcesTableModalTypes.UPDATE,
+                      row
+                    )
                   }
                 >
                   <EditIcon size="20px" color="success" />
@@ -116,7 +109,10 @@ const Car = () => {
                   variant="icon"
                   size="auto"
                   onClick={() =>
-                    handleCarFunctions(CarTableModalTypes.DELETE, row)
+                    handleGateProcesFunctions(
+                      GateProcesTableModalTypes.DELETE,
+                      row
+                    )
                   }
                 >
                   <DeleteIcon size="20px" color="error" />
@@ -130,14 +126,18 @@ const Car = () => {
         ]}
         subHeader
         subHeaderComponent={
-          <CarTableHeader handleCarFunctions={handleCarFunctions} />
+          <GateProcesHeader
+            handleGateProcesFunctions={handleGateProcesFunctions}
+          />
         }
-        data={state.filter.key.length ? state.filter.result : state.cars}
+        data={
+          state.filter.key.length ? state.filter.result : state.gateProcesses
+        }
         pagination
         paginationServer
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
-        paginationTotalRows={state.totalCars}
+        paginationTotalRows={state.totalGateProcesses}
         customStyles={customTableStyles}
         progressPending={state.loading}
         noDataComponent={<View padding="40px">Görüntülenecek Kayıt Yok</View>}
@@ -160,9 +160,9 @@ const Car = () => {
         }
         onSelectedRowsChange={handleRowSelected}
       />
-      {selectedCar ? getModalComponent() : null}
-    </StyledView>
+      {selectedGateProces ? getModalComponent() : null}
+    </View>
   );
 };
 
-export default Car;
+export default GateProces;

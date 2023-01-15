@@ -14,9 +14,9 @@ import {
   PhoneInput,
 } from '..';
 import {
+  addUser,
   getApartments,
   getRoles,
-  register,
   successMessage,
 } from '../../services';
 import { IApartment, ISelectOption, IUserFormFields } from '../../interfaces';
@@ -123,7 +123,7 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
   const onSubmit = async (form: IUserFormFields) => {
     setLoading((loading) => ({ ...loading, createUser: true }));
     const payload = { ...form, roles: [(form.roles as any).value] };
-    const response = await register(payload);
+    const response = await addUser(payload);
     if (response.status === 200) {
       successMessage(response.data?.message || 'Kullanıcı başarıyla eklendi.');
       const id = state.users[state.users.length - 1].id + 1 || 1;

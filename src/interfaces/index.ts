@@ -10,3 +10,4 @@ export * from './ISelectOption';
 export * from './IDoor';
 export * from './ITable';
 export * from './IRequestCall';
+export * from './IGateProces';

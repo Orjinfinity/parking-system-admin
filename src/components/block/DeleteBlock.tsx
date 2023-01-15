@@ -41,6 +41,7 @@ const DeleteBlock = ({
       modalIsOpen={modalIsOpen}
       setModalIsOpen={setModalIsOpen}
       maxWidth="400px"
+      isCustomModal={true}
     >
       <View
         display="flex"

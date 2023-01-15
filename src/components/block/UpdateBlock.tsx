@@ -89,7 +89,7 @@ const UpdateBlock = ({
         apartmentId: (form.apartmentId as any).value,
       });
       if (response.status === 200) {
-        successMessage(response.data?.message || 'Blok başarıyla eklendi.');
+        successMessage(response.data?.message || 'Blok başarıyla güncellendi.');
         dispatch({
           type: BlockActionTypes.UPDATE_BLOCK,
           block: {

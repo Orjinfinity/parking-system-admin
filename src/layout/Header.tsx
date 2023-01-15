@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import styled, { DefaultTheme, StyledComponent } from 'styled-components';
+import { StyledIcon } from 'styled-icons/types';
 import {
   Image,
-  NotificationIcon,
-  SearchIcon,
+  UrgentIcon,
   Title,
   View,
   Text,
@@ -11,8 +11,12 @@ import {
   UserIcon,
   QuestionIcon,
   LogoutIcon,
+  AdminIcon,
+  ApartmentAdminIcon,
 } from '../components';
-import { Types, UserTypes } from '../interfaces';
+import { END_POINTS } from '../consts';
+import { useFetch } from '../hooks/useFetch';
+import { IconProps, Types, UserTypes } from '../interfaces';
 import { logout } from '../store/auth';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import imagePath from '../utils/assetHelper';
@@ -36,16 +40,29 @@ const ProfileCardStyled = styled(View)`
   border-radius: 6px;
 `;
 
+const roleIcons: {
+  [key: string]: StyledComponent<StyledIcon, DefaultTheme, IconProps, never>;
+} = {
+  ROLE_APARTMENTADMIN: ApartmentAdminIcon,
+  ROLE_ADMIN: AdminIcon,
+};
+
 const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(state => state.auth.user)
-  const type = user.roles[0] || 'ROLE_USER';
-  const userRole = UserTypes[type as keyof typeof Types];
-
   const cardRef = useRef<HTMLDivElement>(null);
+  const dataFetchRef = useRef(true);
+  const dispatch = useAppDispatch();
 
+  const { data, loading } = useFetch(
+    END_POINTS.REQUEST_CALLS.requestCalls,
+    { page: 0, size: 10 },
+    dataFetchRef,
+    []
+  );
+  const user = useAppSelector((state) => state.auth.user);
+  const type = user.roles[0] || 'ROLE_USER';
+  const AdminIcon = useMemo(() => roleIcons[type], [type]);
+  const userRole = UserTypes[type as keyof typeof Types];
   useEffect(() => {
     const checkIfClickedOutside = (target: HTMLInputElement) => {
       if (
@@ -76,14 +93,44 @@ const Header = () => {
       position="relative"
       ref={cardRef}
     >
-      <View>
-        <SearchIcon size="20px" />
-      </View>
-      <View display="flex" justifyContent="center" alignItems="center">
-        <NotificationIcon size="20px" />
-        <ImageContainerStyled onClick={() => setIsOpenModal(!isOpenModal)}>
-          <Image src={imagePath('Avatar.png')} alt="Avatar" />
-        </ImageContainerStyled>
+      <View
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        width="100%"
+        backgroundColor="white"
+        borderRadius="5px"
+        padding="8px 12px"
+        boxShadow="primary"
+        color="textColor"
+        fontSize={['0.6rem', '0.8rem', '0.8rem', '1rem', '1rem']}
+      >
+        {!loading && data ? (
+          <View>
+            Toplam{' '}
+            <strong>
+              {' '}
+              <UrgentIcon mb="6px" mr="1px" size="20px" color="error" />{' '}
+              {data?.totalItems || 0} acil durum çağrısı
+            </strong>{' '}
+            bulunmaktadır.
+          </View>
+        ) : null}
+        <View
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          ml="auto"
+          onClick={() => setIsOpenModal(!isOpenModal)}
+        >
+          {!!AdminIcon ? (
+            <AdminIcon size="20px" mr="8px" color="error" />
+          ) : null}{' '}
+          <strong>{userRole}</strong>
+          <ImageContainerStyled>
+            <Image src={imagePath('Avatar.png')} alt="Avatar" />
+          </ImageContainerStyled>
+        </View>
       </View>
       {isOpenModal && (
         <ProfileCardStyled>
