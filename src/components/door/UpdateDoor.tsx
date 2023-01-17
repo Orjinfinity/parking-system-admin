@@ -202,7 +202,7 @@ const UpdateDoor = ({
                     message: 'Lütfen apartman seçiniz',
                   },
                 }}
-                placeholder="Apartman seçiniz"
+                placeholder={formRequiredData.loading ? "Loading..." : "Apartman seçiniz"}
               />
               {errors.apartmentId && (
                 <ErrorMessage> {errors.apartmentId?.message}</ErrorMessage>

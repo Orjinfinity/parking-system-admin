@@ -60,6 +60,7 @@ const UserContextProvider = ({ children }) => {
       let users: IUserRow[] = data.resultData;
       users = users.map((user) => ({
         ...user,
+        roles: user?.roles[0]?.name || "user",
         created_at: new Date(user.created_at).toLocaleString(),
       }));
       dispatch({ type: UserActionTypes.SET_USERS, users, totalUsers });

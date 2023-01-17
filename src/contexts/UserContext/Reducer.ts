@@ -22,6 +22,7 @@ export const userReducer = (
           key: action.filter.key,
           result: action.filter.result,
         },
+        ...(action.totalUsers && { totalUsers: action.totalUsers }),
         loading: false,
       };
     }

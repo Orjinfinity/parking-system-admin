@@ -14,6 +14,7 @@ export interface IRegisterProps {
   phone: string;
   email: string;
   password: string;
+  roles?: Array<string>;
 }
 
 export interface IForgotPassword {

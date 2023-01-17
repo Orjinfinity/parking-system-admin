@@ -44,7 +44,7 @@ interface ICreateUser {
   setModalIsOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface IFormRequiredFields {
+export interface IFormRequiredFields {
   apartments: Array<ISelectOption>;
   roles: Array<ISelectOption>;
 }
@@ -104,7 +104,6 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
             label: name,
             value: name,
           }));
-          console.log('roles', roles);
           setFormRequiredValues({
             apartments: updatedApartments,
             roles: updatedRoles,
@@ -121,20 +120,26 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
   }, []);
 
   const onSubmit = async (form: IUserFormFields) => {
-    setLoading((loading) => ({ ...loading, createUser: true }));
-    const payload = { ...form, roles: [(form.roles as any).value] };
-    const response = await addUser(payload);
-    if (response.status === 200) {
-      successMessage(response.data?.message || 'Kullanıcı başarıyla eklendi.');
-      const id = state.users[state.users.length - 1].id + 1 || 1;
-      const created_at = new Date().toLocaleString();
-      dispatch({
-        type: UserActionTypes.ADD_USER,
-        user: { ...form, created_at, id },
-      });
-      reset(defaultValues);
+    try {
+      setLoading((loading) => ({ ...loading, createUser: true }));
+      const payload = { ...form, roles: [(form.roles as any).value] };
+      const response = await addUser(payload);
+      if (response.status === 200) {
+        successMessage(
+          response.data?.message || 'Kullanıcı başarıyla eklendi.'
+        );
+        const id = state?.users[state?.users.length - 1]?.id + 1 || 1;
+        const created_at = new Date().toLocaleString();
+        dispatch({
+          type: UserActionTypes.ADD_USER,
+          user: { ...form, created_at, id },
+        });
+        reset(defaultValues);
+      }
+      setLoading((loading) => ({ ...loading, createUser: false }));
+    } catch (error) {
+      setLoading((loading) => ({ ...loading, createUser: false }));
     }
-    setLoading((loading) => ({ ...loading, createUser: false }));
   };
 
   return (

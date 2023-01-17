@@ -9,6 +9,7 @@ interface IUserRow {
   surname: string;
   phone: string;
   email: string;
+  roles: any;
   password?: string;
 }
 
@@ -21,6 +22,7 @@ export const DummyUsers: IUserRow[] = [
     surname: 'Sayhan',
     phone: '5317092908',
     email: 'syhnserkan@gmail.com',
+    roles: 'user'
   },
   {
     id: 2,
@@ -30,6 +32,7 @@ export const DummyUsers: IUserRow[] = [
     surname: 'Atar',
     phone: '5357229081',
     email: 'superadmin@gmail.com',
+    roles: 'user'
   },
 ];
 
@@ -62,6 +65,10 @@ const userColumns: TableColumn<IUserRow>[] = [
   {
     name: 'Phone',
     selector: (row) => row.phone,
+  },
+  {
+    name: 'Role',
+    selector: (row) => row.roles,
   },
   {
     name: 'Email',

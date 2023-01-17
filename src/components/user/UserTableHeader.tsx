@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Button, ExportIcon, BasicTextField, UserPlusIcon } from '..';
 import { UserActionTypes, UserContext } from '../../contexts';
 import { getUsers } from '../../services';
@@ -9,37 +9,72 @@ interface IUserTableHeader {
 }
 
 const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
+  const [fetchedUsers, setFetchedUsers] = useState<Array<IUserRow>>([]);
   const { state, dispatch } = useContext(UserContext);
 
-  const fetchUsers = async (key: string) => {
-    const response = await getUsers(0, state.totalUsers || 200);
-    const users: IUserRow[] = await response.data.resultData;
-    const filteredUsers = users
+  const setFilteredUsers = (key: string, users?: Array<IUserRow>) => {
+    console.log(fetchedUsers, key);
+    const filteredUsers = (users || fetchedUsers)
       .filter(({ name, surname, email, username }) =>
-        [name, surname, email, username].some((field) =>
-          field.toLowerCase().includes(key)
+        [name, surname, email, username].some(
+          (field) => field && field.toLowerCase().includes(key)
         )
       )
-      .map((user) => ({
-        ...user,
-        created_at: new Date(user.created_at).toLocaleString(),
-      }));
-
+      .map(
+        ({
+          id,
+          name,
+          surname,
+          username,
+          email,
+          password,
+          phone,
+          roles,
+          created_at,
+        }) => ({
+          id,
+          name,
+          surname,
+          email,
+          password,
+          phone,
+          roles: roles[0]?.name || 'user',
+          username,
+          created_at: new Date(created_at).toLocaleString(),
+        })
+      );
     dispatch({
       type: UserActionTypes.SET_FILTERED_USERS,
-      filter: { key, result: filteredUsers },
+      filter: { key, result: filteredUsers, },
+      totalUsers: filteredUsers?.length || 0
     });
+  };
+
+  const fetchUsers = async (key: string) => {
+    try {
+      const response = await getUsers(0, state.totalUsers || 200);
+      const users: IUserRow[] = await response.data.resultData;
+      setFilteredUsers(key, users)
+      setFetchedUsers(users);
+    } catch (error) {
+      console.log(error);
+      setFetchedUsers([]);
+    }
   };
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      dispatch({ type: UserActionTypes.SET_LOADING, loading: true });
-      fetchUsers(key);
+      if (!(fetchedUsers && fetchedUsers.length)) {
+        dispatch({ type: UserActionTypes.SET_LOADING, loading: true });
+        fetchUsers(key);
+      }
+      setFilteredUsers(key);
     } else
       dispatch({
         type: UserActionTypes.SET_FILTERED_USERS,
-        filter: { key: '', result: [] as IUserRow[] },
+        filter: { key: '', result: [] as IUserRow[]},
+        ...(fetchedUsers?.length && { totalUsers: fetchedUsers.length})
       });
   };
 

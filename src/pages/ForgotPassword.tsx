@@ -12,7 +12,7 @@ import {
   LeftArrowIcon,
   Image,
 } from '../components';
-import { forgotPassword } from '../services';
+import { forgotPassword, successMessage } from '../services';
 import imagePath from '../utils/assetHelper';
 
 const StyledView = styled(View)`
@@ -46,8 +46,14 @@ const ForgotPassword = () => {
 
   const onSubmit = async (form: IForgotPassword) => {
     console.log('form', form);
-    const response = await forgotPassword(form);
-    console.log(response);
+    try {
+      const response = await forgotPassword(form);
+      if (response.status === 200) {
+        successMessage(response.data?.message || 'Şifre sıfırlama linki mailinize yollanmıştır.');
+      }
+    } catch (error) {      
+      console.log(error);
+    }
   };
 
   return (

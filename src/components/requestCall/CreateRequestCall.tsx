@@ -67,7 +67,7 @@ const CreateRequestCall = ({ modalIsOpen, setModalIsOpen }: ICreateRequestCall) 
             response.data?.message || 'Acil durum başarıyla eklendi.'
           );
           const id =
-            state.requestCalls[state.requestCalls.length - 1].id + 1 || 1;
+            state?.requestCalls[state?.requestCalls.length - 1]?.id + 1 || 1;
           const created_at = new Date().toLocaleString();
           dispatch({
             type: RequestCallActionTypes.ADD_REQUESTCALL,
@@ -80,7 +80,7 @@ const CreateRequestCall = ({ modalIsOpen, setModalIsOpen }: ICreateRequestCall) 
               isdone: (form.isdone as any).value,
             },
           });
-          reset();
+          reset({ isdone: null, description: '', flatId: null, userId: null });
         }
         setLoading((loading) => ({ ...loading, createRequestCall: false }));
       } catch (error) {
@@ -135,10 +135,10 @@ const CreateRequestCall = ({ modalIsOpen, setModalIsOpen }: ICreateRequestCall) 
       padding={['10px', '10px', '14px', '20px', '30px']}
     >
       <Title fontWeight="medium" fontSize="24px" color="textColor">
-        Yeni Kullanıcı Oluştur
+        Yeni Acil Durum Oluştur
       </Title>
       <Text mt="12px" fontSize="small" color="textSecondaryColor">
-        Siteye yeni kullanıcı ekle.
+        Sisteme yeni acil durum çağrısı ekle.
       </Text>
       <View width="100%" marginTop="36px" marginBottom="36px">
         <StyledForm onSubmit={handleSubmit(onSubmit)}>

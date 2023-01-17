@@ -8,7 +8,6 @@ interface IAddUser extends IRegisterProps {
 
 interface IUpdateUser extends IRegisterProps {
   id: number;
-  brand: string;
 }
 
 const getUsers = (page: number, size: number = 10) =>

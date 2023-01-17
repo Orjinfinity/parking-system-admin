@@ -155,7 +155,7 @@ const UpdateFlat = ({
                     message: 'Lütfen blok seçiniz',
                   },
                 }}
-                placeholder="Blok seçiniz"
+                placeholder={formRequiredData.loading ? "Loading..." : "Blok seçiniz"}
               />
               {errors.block && (
                 <ErrorMessage> {errors.block?.message}</ErrorMessage>

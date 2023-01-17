@@ -95,7 +95,7 @@ const CreateBlock = ({ modalIsOpen, setModalIsOpen }: ICreateBlock) => {
     });
     if (response.status === 200) {
       successMessage(response.data?.message || 'Blok başarıyla eklendi.');
-      const id = state.blocks[state.blocks.length - 1].id + 1 || 1;
+      const id = state?.blocks[state.blocks.length - 1]?.id + 1 || 1;
       const created_at = new Date().toLocaleString();
       dispatch({
         type: BlockActionTypes.ADD_BLOCK,

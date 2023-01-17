@@ -16,6 +16,8 @@ const initialState: InitialState = {
   error: '',
 };
 
+const LoginRoles = ['ROLE_ADMIN', 'ROLE_APARTMENTADMIN', 'ROLE_MODERATOR'];
+
 export const loginAction = createAsyncThunk(
   'auth/login',
   (payload: ILoginProps) => login(payload).then((response) => response.data)
@@ -55,12 +57,17 @@ const authSlice = createSlice({
       ) => {
         const { accessToken, email, id, username, roles } = action.payload;
         const user = { email, id, username, roles };
+        const isIncludeRole = roles.some(role => LoginRoles.includes(role));
         state.loading = false;
         state.error = '';
-        state.user = user;
-        state.isAuthenticated = true;
-        localStorage.setItem(LocalStorageKeys.AuthToken, accessToken);
-        localStorage.setItem(LocalStorageKeys.User, JSON.stringify(user));
+        if(isIncludeRole) {
+          state.user = user;
+          state.isAuthenticated = true;
+          localStorage.setItem(LocalStorageKeys.AuthToken, accessToken);
+          localStorage.setItem(LocalStorageKeys.User, JSON.stringify(user));
+        } else {
+          state.isAuthenticated = false;
+        }
       }
     );
     builder.addCase(loginAction.rejected, (state, action) => {

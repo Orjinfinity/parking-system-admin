@@ -77,7 +77,7 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
       });
       if (response.status === 200) {
         successMessage(response.data?.message || 'Daire başarıyla eklendi.');
-        const id = state.flats[state.flats.length - 1].id + 1 || 1;
+        const id = state?.flats[state?.flats.length - 1]?.id + 1 || 1;
         const created_at = new Date().toLocaleString();
         dispatch({
           type: FlatActionTypes.ADD_FLAT,

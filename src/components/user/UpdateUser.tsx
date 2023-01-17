@@ -11,10 +11,17 @@ import {
   Button,
   Loader,
   PhoneInput,
+  Select,
 } from '..';
 import { UserActionTypes, UserContext } from '../../contexts';
-import { successMessage, updateUser } from '../../services';
-import { IUserFormFields } from '../../interfaces';
+import {
+  getApartments,
+  getRoles,
+  successMessage,
+  updateUser,
+} from '../../services';
+import { IApartment, ISelectOption, IUserFormFields } from '../../interfaces';
+import { IFormRequiredFields } from './CreateUser';
 import { IUserRow } from '../../consts';
 import { Regex } from '../../utils';
 
@@ -45,7 +52,18 @@ const UpdateUser = ({
   setModalIsOpen,
   selectedUser,
 }: IUpdateUser) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<{
+    formFields: boolean;
+    updateUser: boolean;
+  }>({
+    formFields: true,
+    updateUser: false,
+  });
+  const [formRequiredValues, setFormRequiredValues] =
+    useState<IFormRequiredFields>({
+      apartments: [] as Array<ISelectOption>,
+      roles: [] as Array<ISelectOption>,
+    });
   const {
     handleSubmit,
     control,
@@ -65,30 +83,82 @@ const UpdateUser = ({
   const { dispatch } = useContext(UserContext);
 
   const onSubmit = async (form: IUserFormFields) => {
-    setLoading(true);
-    const response = await updateUser(selectedUser.id, {
-      id: selectedUser.id,
-      ...form,
-    });
-    if (response.status === 200) {
-      successMessage(
-        response.data?.message || 'Kullanıcı başarıyla güncellendi.'
-      );
-      dispatch({
-        type: UserActionTypes.UPDATE_USER,
-        user: {
-          id: selectedUser.id,
-          created_at: selectedUser.created_at,
-          ...form,
-        },
+    try {
+      setLoading((loading) => ({ ...loading, updateUser: true }));
+      const response = await updateUser(selectedUser.id, {
+        id: selectedUser.id,
+        ...form,
+        roles: [(form.roles as any).value]
       });
+      if (response.status === 200) {
+        successMessage(
+          response.data?.message || 'Kullanıcı başarıyla güncellendi.'
+        );
+        dispatch({
+          type: UserActionTypes.UPDATE_USER,
+          user: {
+            id: selectedUser.id,
+            created_at: selectedUser.created_at,
+            ...form,
+            roles: [(form.roles as any).value],
+          },
+        });
+      }
+      setLoading((loading) => ({ ...loading, updateUser: false }));
+    } catch (error) {
+      setLoading((loading) => ({ ...loading, updateUser: false }));
     }
-    setLoading(false);
   };
 
   useEffect(() => {
-    const { name, surname, username, phone, email, password } = selectedUser;
-    reset({ name, surname, username, phone, email, password });
+    const fetchData = async () => {
+      try {
+        const [resApartments, resRoles] = await Promise.all([
+          getApartments(0),
+          getRoles(0),
+        ]);
+        const [apartments, roles] = await [
+          resApartments.data.resultData,
+          resRoles.data.resultData,
+        ];
+        const updatedApartments = apartments.map(({ name }: IApartment) => ({
+          label: name,
+          value: name,
+        }));
+        const updatedRoles = roles.map(({ name }) => ({
+          label: name,
+          value: name,
+        }));
+        setFormRequiredValues({
+          apartments: updatedApartments,
+          roles: updatedRoles,
+        });
+        const {
+          name,
+          surname,
+          username,
+          phone,
+          email,
+          password,
+          roles: userRoles,
+        } = selectedUser;
+        reset({
+          name,
+          surname,
+          username,
+          phone,
+          email,
+          password,
+          roles: { label: userRoles, value: userRoles} as any,
+        });
+        setLoading((loading) => ({ ...loading, formFields: false }));
+      } catch (error) {
+        setLoading((loading) => ({ ...loading, formFields: false }));
+      }
+    };
+    fetchData().catch((_) =>
+      setLoading((loading) => ({ ...loading, formFields: false }))
+    );
   }, [reset, selectedUser]);
 
   return (
@@ -178,6 +248,24 @@ const UpdateUser = ({
               )}
             </View>
             <View className="column-3" display="flex" flexDirection="column">
+              <Select
+                name="roles"
+                control={control}
+                options={formRequiredValues.roles}
+                isLoading={loading.formFields}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Lütfen hangi kullanıcının rolünü seçiniz',
+                  },
+                }}
+                placeholder={loading.formFields ? "Loading..." : "Kullanıcının rolünü seçiniz"}
+              />
+              {errors.roles && (
+                <ErrorMessage> {errors.roles?.message}</ErrorMessage>
+              )}
+            </View>
+            <View className="column-3" display="flex" flexDirection="column">
               <TextField
                 name="email"
                 type="email"
@@ -244,7 +332,7 @@ const UpdateUser = ({
             </View>
           </StyledForm>
         </View>
-        {loading && <Loader position="fixed" />}
+        {loading.updateUser && <Loader position="fixed" />}
       </View>
     </Modal>
   );

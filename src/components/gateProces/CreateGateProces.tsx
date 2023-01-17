@@ -103,7 +103,7 @@ const CreateGateProces = ({
           response.data?.message || 'Giriş çıkış işlemi başarıyla eklendi.'
         );
         const id =
-          state.gateProcesses[state.gateProcesses.length - 1].id + 1 || 1;
+          state?.gateProcesses[state?.gateProcesses.length - 1]?.id + 1 || 1;
         const created_at = new Date().toLocaleString();
         dispatch({
           type: GateProcesActionTypes.ADD_GATEPROCES,

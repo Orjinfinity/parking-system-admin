@@ -72,7 +72,7 @@ const CreateDoor = ({ modalIsOpen, setModalIsOpen }: ICreateDoor) => {
       });
       if (response.status === 200) {
         successMessage(response.data?.message || 'Kapı başarıyla eklendi.');
-        const id = state.doors[state.doors.length - 1].id + 1 || 1;
+        const id = state?.doors[state.doors.length - 1]?.id + 1 || 1;
         const created_at = new Date().toLocaleString();
         dispatch({
           type: DoorActionTypes.ADD_DOOR,
@@ -84,7 +84,7 @@ const CreateDoor = ({ modalIsOpen, setModalIsOpen }: ICreateDoor) => {
             type: (form.type as any).value,
           },
         });
-        reset(defaultValues);
+        reset();
       }
     } catch (_) {
       setLoading(false);

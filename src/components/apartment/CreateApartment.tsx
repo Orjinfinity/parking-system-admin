@@ -47,27 +47,31 @@ const CreateApartment = ({ modalIsOpen, setModalIsOpen }: ICreateApartment) => {
   const { state, dispatch } = useContext(ApartmentContext);
 
   const onSubmit = async (form: IApartment) => {
-    setLoading(true);
-    const response = await addApartment({
-      ...form,
-      country: (form.country as any).value,
-    });
-    if (response.status === 200) {
-      successMessage(response.data?.message || 'Apartman başarıyla eklendi.');
-      const id = state.apartments[state.apartments.length - 1].id + 1 || 1;
-      const created_at = new Date().toLocaleString();
-      dispatch({
-        type: ApartmentActionTypes.ADD_APARTMENT,
-        apartment: {
-          ...form,
-          country: (form.country as any).value,
-          created_at,
-          id,
-        },
+    try {
+      setLoading(true);
+      const response = await addApartment({
+        ...form,
+        country: (form.country as any).value,
       });
-      reset(defaultValues);
+      if (response.status === 200) {
+        successMessage(response.data?.message || 'Apartman başarıyla eklendi.');
+        const id = state?.apartments[state.apartments.length - 1]?.id + 1 || 1;
+        const created_at = new Date().toLocaleString();
+        dispatch({
+          type: ApartmentActionTypes.ADD_APARTMENT,
+          apartment: {
+            ...form,
+            country: (form.country as any).value,
+            created_at,
+            id,
+          },
+        });
+        reset(defaultValues);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false)
     }
-    setLoading(false);
   };
 
   return (
@@ -94,10 +98,10 @@ const CreateApartment = ({ modalIsOpen, setModalIsOpen }: ICreateApartment) => {
                 rules={{
                   required: {
                     value: true,
-                    message: 'Lütfen apartman adını giriniz',
+                    message: 'Lütfen site adını giriniz',
                   },
                 }}
-                placeholder="Apartman Adı"
+                placeholder="Site Adı"
               />
               {errors.name && (
                 <ErrorMessage> {errors.name?.message}</ErrorMessage>

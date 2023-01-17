@@ -39,7 +39,6 @@ const UpdateRequestCall = ({
   setModalIsOpen,
   selectedRequestCall,
 }: IUpdateRequestCall) => {
-  const dataFetchRef = useRef<boolean>(true);
   const [loading, setLoading] = useState<{
     formFields: boolean;
     updateRequestCall: boolean;
@@ -99,62 +98,59 @@ const UpdateRequestCall = ({
   };
 
   useEffect(() => {
-    if (dataFetchRef.current) {
-      dataFetchRef.current = false;
-      console.log(selectedRequestCall)
-      const fetchData = async () => {
-        try {
-          const [resUsers, resFlats] = await Promise.all([
-            getUsers(0),
-            getFlats(0),
-          ]);
-          const [users, flats] = await [
-            resUsers.data.resultData,
-            resFlats.data.resultData,
-          ];
-          const updatedUsers = users.map(({ username, id }: IUser) => ({
-            label: username,
-            value: id,
-          }));
-          const updatedFlats = flats.map(({ number, id }: IFlat) => ({
-            label: number,
-            value: id,
-          }));
-          const selectedFlat = updatedFlats.find(
-            (flat) => flat.value === selectedRequestCall.flatId
-          );
-          const selectedUser = updatedUsers.find(
-            (user) => user.value === selectedRequestCall.userId
-          );
-          console.log('users flats', updatedUsers, updatedFlats);
-          reset({
-            description: selectedRequestCall?.description || '',
-            flatId: {
-              label: selectedFlat.label,
-              value: selectedRequestCall.flatId,
-            } as any,
-            userId: {
-              label: selectedUser.label,
-              value: selectedRequestCall.userId,
-            } as any,
-            isdone: {
-              label: selectedRequestCall.isdone === 'true' ? 'Evet' : 'Hayır',
-              value: selectedRequestCall.isdone === 'true'
-            } as any,
-          });
-          setFormRequiredValues({
-            users: updatedUsers,
-            flats: updatedFlats,
-          });
-          setLoading((loading) => ({ ...loading, formFields: false }));
-        } catch (error) {
-          setLoading((loading) => ({ ...loading, formFields: false }));
-        }
-      };
-      fetchData().catch((_) =>
-        setLoading((loading) => ({ ...loading, formFields: false }))
-      );
-    }
+    console.log(selectedRequestCall);
+    const fetchData = async () => {
+      try {
+        const [resUsers, resFlats] = await Promise.all([
+          getUsers(0),
+          getFlats(0),
+        ]);
+        const [users, flats] = await [
+          resUsers.data.resultData,
+          resFlats.data.resultData,
+        ];
+        const updatedUsers = users.map(({ username, id }: IUser) => ({
+          label: username,
+          value: id,
+        }));
+        const updatedFlats = flats.map(({ number, id }: IFlat) => ({
+          label: number,
+          value: id,
+        }));
+        const selectedFlat = updatedFlats.find(
+          (flat) => flat.value === selectedRequestCall.flatId
+        );
+        const selectedUser = updatedUsers.find(
+          (user) => user.value === selectedRequestCall.userId
+        );
+        console.log('users flats', updatedUsers, updatedFlats);
+        reset({
+          description: selectedRequestCall?.description || '',
+          flatId: {
+            label: selectedFlat.label,
+            value: selectedRequestCall.flatId,
+          } as any,
+          userId: {
+            label: selectedUser.label,
+            value: selectedRequestCall.userId,
+          } as any,
+          isdone: {
+            label: selectedRequestCall.isdone === 'true' ? 'Evet' : 'Hayır',
+            value: selectedRequestCall.isdone === 'true',
+          } as any,
+        });
+        setFormRequiredValues({
+          users: updatedUsers,
+          flats: updatedFlats,
+        });
+        setLoading((loading) => ({ ...loading, formFields: false }));
+      } catch (error) {
+        setLoading((loading) => ({ ...loading, formFields: false }));
+      }
+    };
+    fetchData().catch((_) =>
+      setLoading((loading) => ({ ...loading, formFields: false }))
+    );
   }, [reset, selectedRequestCall]);
   return (
     <Modal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen}>

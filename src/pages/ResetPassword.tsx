@@ -12,7 +12,7 @@ import {
   LeftArrowIcon,
   Image,
 } from '../components';
-import { resetPassword } from '../services';
+import { resetPassword, successMessage } from '../services';
 import imagePath from '../utils/assetHelper';
 
 const StyledView = styled(View)`
@@ -46,11 +46,16 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (form: IResetPassword) => {
-    console.log('form', form);
-    const token = searchParams.get('token') || '';
-    const response = await resetPassword({ ...form, token });
-    // const response = await resetPassword({email:"syhnserkan@gmail.com", password:"betbet123", token:"073215103ce55dff8815a23e2d4faaa8c1ff6e8d01cc13de3d163ac6d26fdfe9f015b48d3c52d2b7 email=syhnserkan@gmail.com"})
-    console.log(response);
+    try {
+      console.log('form', form);
+      const token = searchParams.get('token') || '';
+      const response = await resetPassword({ ...form, token });
+      if(response.status === 200) {
+        successMessage(response.data?.message || 'Şifre sıfırlama linki mailinize yollanmıştır.');
+      }
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (

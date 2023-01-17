@@ -79,7 +79,7 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
       });
       if (response.status === 200) {
         successMessage(response.data?.message || 'Araç başarıyla eklendi.');
-        const id = state.cars[state.cars.length - 1].id + 1 || 1;
+        const id = state?.cars[state.cars.length - 1]?.id + 1 || 1;
         const created_at = new Date().toLocaleString();
         dispatch({
           type: CarActionTypes.ADD_CAR,

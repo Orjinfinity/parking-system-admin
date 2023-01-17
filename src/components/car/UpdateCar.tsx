@@ -277,13 +277,14 @@ const UpdateCar = ({
                 name="flatId"
                 control={control}
                 options={formRequiredData.flats}
+                isLoading={formRequiredData.loading}
                 rules={{
                   required: {
                     value: true,
                     message: 'Lütfen daire seçiniz.',
                   },
                 }}
-                placeholder="Daire seçiniz"
+                placeholder={formRequiredData.loading ? "Loading..." : "Daire seçiniz"}
               />
               {errors.flatId && (
                 <ErrorMessage> {errors.flatId?.message}</ErrorMessage>

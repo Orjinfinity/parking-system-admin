@@ -94,10 +94,10 @@ const UpdateApartment = ({
         padding={['10px', '10px', '14px', '20px', '30px']}
       >
         <Title fontWeight="medium" fontSize="24px" color="textColor">
-          Apartman Bilgilerini Güncelle
+          Site Bilgilerini Güncelle
         </Title>
         <Text mt="12px" fontSize="small" color="textSecondaryColor">
-          Sistemde bulunan apartman bilgisini güncelle.
+          Sistemde bulunan site bilgisini güncelle.
         </Text>
         <View width="100%" marginTop="36px" marginBottom="36px">
           <StyledForm onSubmit={handleSubmit(onSubmit)}>
