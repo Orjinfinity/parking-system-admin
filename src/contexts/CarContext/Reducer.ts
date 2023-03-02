@@ -22,6 +22,7 @@ export const carReducer = (
           key: action.filter.key,
           result: action.filter.result,
         },
+        ...(action.totalCars && { totalCars: action.totalCars }),
         loading: false,
       };
     }

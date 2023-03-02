@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled, { DefaultTheme, StyledComponent } from 'styled-components';
 import { StyledIcon } from 'styled-icons/types';
 import {
@@ -51,6 +52,7 @@ const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const dataFetchRef = useRef(true);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const { data, loading } = useFetch(
@@ -173,7 +175,7 @@ const Header = () => {
               fontSize="medium"
               fontWeight="regular"
               color="linkPrimary"
-              // onClick={() => navigate('/profile')}
+              onClick={() => navigate('/profile')}
             >
               <UserIcon mr="14px" size="24px" />
               Profile

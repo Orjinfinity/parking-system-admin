@@ -2,13 +2,14 @@ import { MutableRefObject, useEffect, useState } from 'react';
 import { axiosInstance } from '../../services';
 
 interface IFetchConfig {
-  page?: number;
-  size?: number;
+  page: number;
+  size: number;
+  single: boolean;
 }
 
 export const useFetch = (
   url: string,
-  config = { page: 0, size: 10 } as IFetchConfig,
+  config = { page: 0, size: 10, single: false } as Partial<IFetchConfig>,
   ref: MutableRefObject<boolean>,
   initialValue
 ) => {
@@ -19,10 +20,9 @@ export const useFetch = (
   useEffect(() => {
     if (ref.current) {
       (async () => {
+        const fullUrl = config.single ? `${url}` : `${url}?page=${config.page}&size=${config.size}`;
         try {
-          const res = await axiosInstance.get(
-            `${url}?page=${config.page}&size=${config.size}`
-          );
+          const res = await axiosInstance.get(fullUrl);
           const data = await res.data;
           setData(data);
         } catch (error) {

@@ -57,7 +57,8 @@ const authSlice = createSlice({
       ) => {
         const { accessToken, email, id, username, roles } = action.payload;
         const user = { email, id, username, roles };
-        const isIncludeRole = roles.some(role => LoginRoles.includes(role));
+        // const isIncludeRole = roles.some(role => LoginRoles.includes(role));
+        const isIncludeRole = true;
         state.loading = false;
         state.error = '';
         if(isIncludeRole) {

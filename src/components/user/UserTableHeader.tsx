@@ -52,6 +52,7 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
 
   const fetchUsers = async (key: string) => {
     try {
+      dispatch({ type: UserActionTypes.SET_LOADING, loading: true });
       const response = await getUsers(0, state.totalUsers || 200);
       const users: IUserRow[] = await response.data.resultData;
       setFilteredUsers(key, users)
@@ -65,10 +66,7 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      if (!(fetchedUsers && fetchedUsers.length)) {
-        dispatch({ type: UserActionTypes.SET_LOADING, loading: true });
-        fetchUsers(key);
-      }
+      if (!(fetchedUsers && fetchedUsers.length)) fetchUsers(key);
       setFilteredUsers(key);
     } else
       dispatch({

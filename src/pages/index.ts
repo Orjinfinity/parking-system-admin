@@ -12,3 +12,4 @@ export { default as RequestCalls } from './RequestCalls';
 export { default as ForgotPassword } from './ForgotPassword';
 export { default as ResetPassword } from './ResetPassword';
 export { default as NotFound } from './NotFound';
+export { default as Profile } from './Profile';

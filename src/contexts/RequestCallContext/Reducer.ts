@@ -22,6 +22,7 @@ export const requestCallReducer = (
           key: action.filter.key,
           result: action.filter.result,
         },
+        ...(action.totalRequestCalls && { totalRequestCalls: action.totalRequestCalls }),
         loading: false,
       };
     }

@@ -22,6 +22,7 @@ export const doorReducer = (
           key: action.filter.key,
           result: action.filter.result,
         },
+        ...(action.totalDoors && { totalDoors: action.totalDoors }),
         loading: false,
       };
     }

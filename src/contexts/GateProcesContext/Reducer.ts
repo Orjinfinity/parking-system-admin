@@ -22,6 +22,7 @@ export const gateProcesReducer = (
           key: action.filter.key,
           result: action.filter.result,
         },
+        ...(action.totalGateProcesses && { totalGateProcesses: action.totalGateProcesses }),
         loading: false,
       };
     }

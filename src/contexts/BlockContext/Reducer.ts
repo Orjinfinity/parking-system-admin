@@ -22,6 +22,7 @@ export const blockReducer = (
           key: action.filter.key,
           result: action.filter.result,
         },
+        ...(action.totalBlocks && { totalBlocks: action.totalBlocks }),
         loading: false,
       };
     }

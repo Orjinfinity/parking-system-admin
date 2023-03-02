@@ -22,6 +22,7 @@ export const flatReducer = (
           key: action.filter.key,
           result: action.filter.result,
         },
+        ...(action.totalFlats && { totalFlats: action.totalFlats }),
         loading: false,
       };
     }

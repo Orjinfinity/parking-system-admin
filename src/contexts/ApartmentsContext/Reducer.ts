@@ -24,6 +24,7 @@ export const apartmentReducer = (
           key: action.filter.key,
           result: action.filter.result,
         },
+        ...(action.totalApartments && { totalApartments: action.totalApartments }),
         loading: false,
       };
     }

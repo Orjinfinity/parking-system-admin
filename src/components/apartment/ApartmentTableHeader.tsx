@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ApartmentIcon, BasicTextField, Button, ExportIcon, View } from '..';
 import { ApartmentActionTypes, ApartmentContext } from '../../contexts';
 import { getApartments } from '../../services';
@@ -11,14 +11,13 @@ interface IApartmentTableHeader {
 const ApartmentTableHeader = ({
   handleApartmentFunctions,
 }: IApartmentTableHeader) => {
+  const [fetchedApartments, setFetchedApartments] = useState<Array<IApartmentRow>>([]);
   const { state, dispatch } = useContext(ApartmentContext);
 
-  const fetchApartments = async (key: string) => {
-    const response = await getApartments(0, state.totalApartments || 200);
-    const apartments: IApartmentRow[] = await response.data.resultData;
-    const filteredApartments = apartments
-      .filter(({ name, address, city }) =>
-        [name, address, city].some((field) => field.toLowerCase().includes(key))
+  const setFilteredApartments = async (key: string, apartments?: Array<IApartmentRow>) => {
+    const filteredApartments = (apartments ?? fetchedApartments)
+      .filter(({ name, address, city, country }) =>
+        [name, address, city, country].some((field) => field && field.toLowerCase().includes(key))
       )
       .map((apartment) => ({
         ...apartment,
@@ -28,18 +27,33 @@ const ApartmentTableHeader = ({
     dispatch({
       type: ApartmentActionTypes.SET_FILTERED_APARTMENTS,
       filter: { key, result: filteredApartments },
+      totalApartments: filteredApartments?.length || 0
     });
+  };
+
+  const fetchApartments = async (key: string) => {
+    try {
+      dispatch({ type: ApartmentActionTypes.SET_LOADING, loading: true });
+      const response = await getApartments(0, state.totalApartments || 200);
+      const apartments: IApartmentRow[] = await response.data.resultData;
+      setFilteredApartments(key, apartments)
+      setFetchedApartments(apartments);
+    } catch (error) {
+      console.log(error);
+      setFetchedApartments([]);
+    }
   };
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      dispatch({ type: ApartmentActionTypes.SET_LOADING, loading: true });
-      fetchApartments(key);
+      if (!(fetchedApartments && fetchedApartments.length)) fetchApartments(key);
+      setFilteredApartments(key)
     } else
       dispatch({
         type: ApartmentActionTypes.SET_FILTERED_APARTMENTS,
         filter: { key: '', result: [] as IApartmentRow[] },
+        ...(fetchedApartments?.length && { totalApartments: fetchedApartments.length})
       });
   };
 
