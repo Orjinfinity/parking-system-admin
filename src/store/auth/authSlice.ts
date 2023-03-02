@@ -16,7 +16,7 @@ const initialState: InitialState = {
   error: '',
 };
 
-const LoginRoles = ['ROLE_ADMIN', 'ROLE_APARTMENTADMIN', 'ROLE_MODERATOR'];
+// const LoginRoles = ['ROLE_ADMIN', 'ROLE_APARTMENTADMIN', 'ROLE_MODERATOR'];
 
 export const loginAction = createAsyncThunk(
   'auth/login',

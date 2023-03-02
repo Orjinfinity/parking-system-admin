@@ -1,6 +1,6 @@
 import { IRoleCard } from '../interfaces';
 
-// export const roles: Array<IRoleCard> = [
+export const roles: Array<IRoleCard> = [
 //   {
 //     role: 'Administrator',
 //     count: 2,
@@ -17,4 +17,4 @@ import { IRoleCard } from '../interfaces';
 //     role: 'Misafir Kullanıcı',
 //     count: 5,
 //   },
-// ];
+];
