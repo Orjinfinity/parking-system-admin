@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { BasicTextField, Button, ExportIcon, GateProcesesIcon, View } from '..';
+import { BasicTextField, Button, ExportIcon, View } from '..';
 import { GateProcesActionTypes, GateProcesContext } from '../../contexts';
 import { getGateProcesses } from '../../services';
 import { IGateProcesRow } from '../../consts';
@@ -68,7 +68,7 @@ const GateProcesHeader = ({
           placeholder="İşlem Ara"
           onChange={handleSearchInput}
         />
-        <Button
+        {/* <Button
           fontSize="medium"
           letterSpacing=".46px"
           variant="contained"
@@ -80,7 +80,7 @@ const GateProcesHeader = ({
           <GateProcesesIcon size="24px" mb="2px" />
           <View mr="8px">+</View>
           Yeni İşlem
-        </Button>
+        </Button> */}
       </View>
     </View>
   );
