@@ -15,7 +15,8 @@ import {
   GateProcesses,
   RequestCalls,
   ResetPassword,
-  Profile
+  Profile,
+  Register
 } from './pages';
 import ProtectedRoute from './components/routes/ProtectedRoute';
 import PrivateLayout from './layout/PrivateLayout';
@@ -66,7 +67,7 @@ function App() {
             }
           >
             <Route path="/login" element={<Login />} />
-            {/* <Route path="/register" element={<Register />} /> */}
+            <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
