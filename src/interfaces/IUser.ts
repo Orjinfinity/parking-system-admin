@@ -14,16 +14,21 @@ export interface IUserFormFields {
   phone: string;
   email: string;
   password: string;
+  apartmentId: number;
+  blockId: number;
+  flatId: number;
 }
 
 export enum Types {
   ROLE_USER = 'ROLE_USER',
   ROLE_ADMIN = 'ROLE_ADMIN',
+  ROLE_MODERATOR = 'ROLE_MODERATOR',
   ROLE_APARTMENTADMIN = 'ROLE_APARTMENTADMIN'
 }
 
 export const UserTypes = {
   [Types.ROLE_USER]: 'Kullanıcı',
   [Types.ROLE_ADMIN]: 'Admin',
+  [Types.ROLE_MODERATOR]: 'Moderatör',
   [Types.ROLE_APARTMENTADMIN]: 'Apartman Yöneticisi',
 };

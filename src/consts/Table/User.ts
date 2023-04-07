@@ -2,6 +2,7 @@ import { TableColumn } from 'react-data-table-component';
 
 // Brand need to be send it with user.
 interface IUserRow {
+  [x: string]: any;
   id?: number;
   created_at?: string;
   username: string;
@@ -10,6 +11,8 @@ interface IUserRow {
   phone: string;
   email: string;
   roles: any;
+  flatId?: any;
+  flats?: any[];
   password?: string;
 }
 
@@ -69,6 +72,10 @@ const userColumns: TableColumn<IUserRow>[] = [
   {
     name: 'Role',
     selector: (row) => row.roles,
+  },
+  {
+    name: 'Daire',
+    selector: (row) => row?.flatId?.name,
   },
   {
     name: 'Email',

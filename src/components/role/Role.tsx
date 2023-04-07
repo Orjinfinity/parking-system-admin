@@ -91,10 +91,10 @@ const Role = ({ role }: IRole) => {
           </Title>
           <View
             display="flex"
-            justifyContent="space-between"
+            justifyContent="flex-end"
             alignItems="center"
           >
-            <Button
+            {/* <Button
               fontSize="small"
               fontWeight="400"
               lineHeight="20px"
@@ -103,7 +103,7 @@ const Role = ({ role }: IRole) => {
               size="auto"
             >
               Edit Role
-            </Button>
+            </Button> */}
             <Button
               variant="icon"
               size="auto"

@@ -15,6 +15,7 @@ export interface IRegisterProps {
   email: string;
   password: string;
   roles?: Array<string>;
+  flatId?: number;
 }
 
 export interface IForgotPassword {

@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { GateProcesActionTypes, GateProcesContext } from '../../contexts';
-import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
+import { View, Button, Loader, DeleteIcon, Image } from '..';
 import {
   customTableStyles,
   gateProcesColumns,
@@ -30,11 +30,13 @@ const GateProces = () => {
   const [selectedRows, setSelectedRows] = useState<Array<IGateProcesRow>>([]);
 
   const { state, dispatch } = useContext(GateProcesContext);
+  const defaultProcessImageUrl = "http://i0.shbdn.com/photos/47/63/80/x5_10854763805tx.jpg";
 
   const handleGateProcesFunctions = (
     type: GateProcesTableModalTypes,
     gateProces = {} as IGateProcesRow
   ) => {
+    console.log(type, gateProces);
     setModalIsOpen(!modalIsOpen);
     setSelectedGateProces({ type, gateProces });
   };
@@ -84,10 +86,24 @@ const GateProces = () => {
             cell: (row) => (
               <View
                 display="flex"
+                width="70px"
+                height="auto"
+              >
+                <Image width="100%" height="100%" src={row.processimageurl || defaultProcessImageUrl} alt="araba" />
+              </View>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+          },
+          {
+            cell: (row) => (
+              <View
+                display="flex"
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Button
+                {/* <Button
                   fontSize="small"
                   padding="8px"
                   letterSpacing=".46px"
@@ -101,7 +117,7 @@ const GateProces = () => {
                   }
                 >
                   <EditIcon size="20px" color="success" />
-                </Button>
+                </Button> */}
                 <Button
                   fontSize="small"
                   padding="8px"

@@ -3,7 +3,7 @@ import { TableColumn } from 'react-data-table-component';
 interface IFlatRow {
   id?: number;
   created_at?: string;
-  number: number;
+  number: string; 
   floor: number;
   block: string;
   blockId: number;

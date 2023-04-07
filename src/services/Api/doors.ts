@@ -5,6 +5,9 @@ import { IDoor } from '../../interfaces';
 const getDoors = (page: number, size: number = 10) =>
   axiosInstance.get(`${END_POINTS.DOORS.doors}?page=${page}&size=${size}`);
 
+const getDoorsByApartmentId = (page: number, size: number = 10, apartmentId: number) =>
+  axiosInstance.get(`${END_POINTS.DOORS.doors}?page=${page}&size=${size}&apartmentId=${apartmentId}`);
+
 const getDoorById = (doorId: number) =>
   axiosInstance.get(`${END_POINTS.DOORS.doors}/${doorId}`);
 
@@ -17,4 +20,4 @@ const updateDoor = (doorId: number, payload: IDoor) =>
 const deleteDoor = (doorId: number) =>
   axiosInstance.delete(`${END_POINTS.DOORS.doors}/${doorId}`);
 
-export { getDoors, getDoorById, addDoor, updateDoor, deleteDoor };
+export { getDoors, getDoorsByApartmentId, getDoorById, addDoor, updateDoor, deleteDoor };

@@ -1,6 +1,7 @@
 import { createContext, Dispatch, useEffect, useReducer } from 'react';
 import { IGateProcesRow } from '../../consts';
-import { getGateProcesses } from '../../services';
+import { getGateProcesses, getGateProcessesByApartmentId } from '../../services';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 import { gateProcesReducer } from './Reducer';
 import { GateProcesActionTypes, IGateProcesAction } from './Types';
 
@@ -52,21 +53,29 @@ const GateProcesContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(gateProcesReducer, initialState);
   
     useEffect(() => {
+      const isApartmentAdmin = getUserIsApartmentAdmin();
+      const apartmentInfo = getApartmentIdForAdmin();
       const fetchGateProcesses = async () => {
-        dispatch({ type: GateProcesActionTypes.SET_LOADING, loading: true });
-        const response = await getGateProcesses(state.page, state.perPageRows);
-        const data = await response.data;
-        const totalGateProcesses = data.totalItems as number;
-        let gateProcesses: IGateProcesRow[] = data.resultData;
-        gateProcesses = gateProcesses.map((gateProces) => ({
-          ...gateProces,
-          created_at: new Date(gateProces.created_at).toLocaleString(),
-        }));
-        dispatch({
-          type: GateProcesActionTypes.SET_GATEPROCESSES,
-          gateProcesses,
-          totalGateProcesses,
-        });
+        try {
+          const gateProcessesEndpoint = isApartmentAdmin ? getGateProcessesByApartmentId : getGateProcesses;
+          dispatch({ type: GateProcesActionTypes.SET_LOADING, loading: true });
+          const response = await gateProcessesEndpoint(state.page, state.perPageRows, apartmentInfo?.id);
+          const data = await response.data;
+          const totalGateProcesses = data.totalItems as number;
+          let gateProcesses: IGateProcesRow[] = data.resultData;
+          gateProcesses = gateProcesses.map((gateProces) => ({
+            ...gateProces,
+            isdone: gateProces.isdone ? "Kapalı" : "Açık",
+            created_at: new Date(gateProces.created_at).toLocaleString(),
+          }));
+          dispatch({
+            type: GateProcesActionTypes.SET_GATEPROCESSES,
+            gateProcesses,
+            totalGateProcesses,
+          });
+        } catch (error) {
+          dispatch({ type: GateProcesActionTypes.SET_LOADING, loading: false });
+        }
       };
   
       fetchGateProcesses().catch((_) =>

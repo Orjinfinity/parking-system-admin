@@ -75,3 +75,4 @@ export { default as ExportIcon } from './icons/ExportIcon';
 export { default as CloseIcon } from './icons/CloseIcon';
 export { default as UrgentIcon } from './icons/UrgentIcon';
 export { default as AdminIcon } from './icons/AdminIcon';
+export { default as ModeratorIcon } from './icons/ModeratorIcon';

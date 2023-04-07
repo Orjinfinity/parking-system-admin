@@ -34,7 +34,7 @@ const UpdateFlat = ({
     blocks: [],
   });
   const defaultValues = {
-    number: 0,
+    number: "",
     block: null,
     floor: 0,
   };
@@ -42,11 +42,14 @@ const UpdateFlat = ({
     handleSubmit,
     control,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<IFlatForm>({
     defaultValues: { ...defaultValues },
   });
   const { dispatch } = useContext(FlatContext);
+  const [flatNumber] = watch(['number']);
 
   const onSubmit = async (form: IFlatForm) => {
     try {
@@ -55,7 +58,7 @@ const UpdateFlat = ({
         ...form,
         blockId: (form.block as any).value,
         floor: Number(form.floor),
-        number: Number(form.number),
+        number: form.number,
       });
       if (response.status === 200) {
         successMessage(
@@ -67,6 +70,7 @@ const UpdateFlat = ({
             ...form,
             created_at: selectedFlat.created_at,
             id: selectedFlat.id,
+            number: form.number,
             block: (form.block as any).label,
             blockId: (form.block as any).value,
           },
@@ -77,6 +81,14 @@ const UpdateFlat = ({
       setLoading(false);
     }
   };
+
+  // useEffect(() => {
+  //   console.log(flatNumber)
+  //   let val = parseInt(flatNumber, 10);
+  //   if (val < 0) {
+  //     setValue('number', "0")
+  //   }
+  // }, [flatNumber, setValue])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,7 +105,7 @@ const UpdateFlat = ({
         );
         reset({
           floor: selectedFlat.floor,
-          number: Number(selectedFlat.number),
+          number: selectedFlat.number,
           block: {
             label: selectedBlock.label,
             value: selectedFlat.blockId,
@@ -130,7 +142,7 @@ const UpdateFlat = ({
               <TextField
                 name="number"
                 control={control}
-                type="number"
+                type="text"
                 rules={{
                   required: {
                     value: true,

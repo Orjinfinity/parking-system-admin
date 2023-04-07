@@ -34,7 +34,7 @@ interface ICreateFlat {
 }
 
 export interface IFlatForm {
-  number: number;
+  number: string;
   block: string;
   floor: number;
   // blockId?: number;
@@ -61,9 +61,13 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
     handleSubmit,
     control,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<IFlatForm>();
   const { state, dispatch } = useContext(FlatContext);
+
+  const [flatNumber] = watch(['number']);
 
   const onSubmit = async (form: IFlatForm) => {
     console.log('form', form);
@@ -73,7 +77,7 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
         ...form,
         blockId: (form.block as any).value,
         floor: Number(form.floor),
-        number: Number(form.number),
+        number: form.number,
       });
       if (response.status === 200) {
         successMessage(response.data?.message || 'Daire başarıyla eklendi.');
@@ -96,6 +100,13 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
       setLoading(false);
     }
   };
+
+  // useEffect(() => {
+  //   let val = parseInt(flatNumber, 10);
+  //   if (val < 0) {
+  //     setValue('number', "0")
+  //   }
+  // }, [flatNumber, setValue])
 
   useEffect(() => {
     if (dataFetchRef.current) {

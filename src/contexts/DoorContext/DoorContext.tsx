@@ -1,8 +1,9 @@
 import { createContext, Dispatch, useEffect, useReducer } from 'react';
 import { DoorActionTypes, IDoorAction } from './Types';
-import { getDoors } from '../../services';
+import { getDoors, getDoorsByApartmentId } from '../../services';
 import { doorReducer } from './Reducer';
 import { IDoorRow } from '../../consts';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 export interface IDoorState {
   doors: IDoorRow[];
@@ -52,17 +53,24 @@ const DoorContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(doorReducer, initialState);
 
   useEffect(() => {
+    const isApartmentAdmin = getUserIsApartmentAdmin();
+    const apartmentInfo = getApartmentIdForAdmin();
     const fetchDoors = async () => {
-      dispatch({ type: DoorActionTypes.SET_LOADING, loading: true });
-      const response = await getDoors(state.page, state.perPageRows);
-      const data = await response.data;
-      const totalDoors = data.totalItems as number;
-      let doors: IDoorRow[] = data.resultData;
-      doors = doors.map((door) => ({
-        ...door,
-        created_at: new Date(door.created_at).toLocaleString(),
-      }));
-      dispatch({ type: DoorActionTypes.SET_DOORS, doors, totalDoors });
+      try {
+        const doorsEndpoint = isApartmentAdmin ? getDoorsByApartmentId : getDoors;
+        dispatch({ type: DoorActionTypes.SET_LOADING, loading: true });
+        const response = await doorsEndpoint(state.page, state.perPageRows, apartmentInfo?.id);
+        const data = await response.data;
+        const totalDoors = data.totalItems as number;
+        let doors: IDoorRow[] = data.resultData;
+        doors = doors.map((door) => ({
+          ...door,
+          created_at: new Date(door.created_at).toLocaleString(),
+        }));
+        dispatch({ type: DoorActionTypes.SET_DOORS, doors, totalDoors });
+      } catch (error) {
+        dispatch({ type: DoorActionTypes.SET_LOADING, loading: false })
+      }
     };
 
     fetchDoors().catch((_) =>

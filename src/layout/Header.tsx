@@ -14,6 +14,7 @@ import {
   LogoutIcon,
   AdminIcon,
   ApartmentAdminIcon,
+  ModeratorIcon,
 } from '../components';
 import { END_POINTS } from '../consts';
 import { useFetch } from '../hooks/useFetch';
@@ -46,6 +47,7 @@ const roleIcons: {
 } = {
   ROLE_APARTMENTADMIN: ApartmentAdminIcon,
   ROLE_ADMIN: AdminIcon,
+  ROLE_MODERATOR: ModeratorIcon
 };
 
 const Header = () => {

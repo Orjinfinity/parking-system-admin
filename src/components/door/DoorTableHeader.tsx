@@ -1,43 +1,59 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { BasicTextField, Button, ExportIcon, GateIcon, View } from '..';
 import { IDoorRow } from '../../consts';
 import { DoorActionTypes, DoorContext } from '../../contexts';
-import { getDoors } from '../../services';
+import { getDoors, getDoorsByApartmentId } from '../../services';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 interface IDoorTableHeader {
   handleDoorFunctions: (type: string) => void;
 }
 
 const DoorTableHeader = ({ handleDoorFunctions }: IDoorTableHeader) => {
+  const [fetchedDoors, setFetchedDoors] = useState<Array<IDoorRow>>([]);
   const { state, dispatch } = useContext(DoorContext);
+  const isApartmentAdmin = getUserIsApartmentAdmin();
+  const apartmentInfo = getApartmentIdForAdmin();
 
-  const fetchDoors = async (key: string) => {
-    const response = await getDoors(0, state.totalDoors || 200);
-    const doors: IDoorRow[] = await response.data.resultData;
-    const filteredDoors = doors
-      .filter(({ name, camiplink }) =>
-        [name, camiplink].some((field) => field.toLowerCase().includes(key))
-      )
-      .map((door) => ({
-        ...door,
-        created_at: new Date(door.created_at).toLocaleString(),
-      }));
-
+  const setFilteredDoors = (key: string, doors?: Array<IDoorRow>) => {
+    console.log(fetchedDoors, key);
+    const filteredDoors = (doors || fetchedDoors)
+    .filter(({ name, camiplink }) =>
+    [name, camiplink].some((field) => field.toLowerCase().includes(key))
+  )
+  .map((door) => ({
+    ...door,
+    created_at: new Date(door.created_at).toLocaleString(),
+  }));
     dispatch({
       type: DoorActionTypes.SET_FILTERED_DOORS,
       filter: { key, result: filteredDoors },
     });
   };
 
+  const fetchDoors = async (key: string) => {
+    try {
+      const doorsEndpoint = isApartmentAdmin ? getDoorsByApartmentId : getDoors;
+      const response = await doorsEndpoint(0, state.totalDoors || 200, apartmentInfo?.id);
+      const doors: IDoorRow[] = await response.data.resultData;
+      setFilteredDoors(key, doors);
+      setFetchedDoors(doors);
+    } catch (error) {
+      console.log(error)
+      setFetchedDoors([]);
+    }
+  };
+
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      dispatch({ type: DoorActionTypes.SET_LOADING, loading: true });
-      fetchDoors(key);
+      if (!(fetchedDoors && fetchedDoors.length)) fetchDoors(key);
+      setFilteredDoors(key)
     } else
       dispatch({
         type: DoorActionTypes.SET_FILTERED_DOORS,
         filter: { key: '', result: [] as IDoorRow[] },
+        ...(fetchedDoors?.length && { totalDoors: fetchedDoors.length})
       });
   };
   return (

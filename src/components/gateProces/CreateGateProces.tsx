@@ -89,38 +89,38 @@ const CreateGateProces = ({
   }, []);
 
   const onSubmit = async (form: IGateProces) => {
-    try {
-      setLoading(true);
-      console.log('form', form);
-      const response = await addGateProces({
-        ...form,
-        doorId: (form.doorId as any).value,
-        isdone: (form.isdone as any).value,
-        carId: 11
-      });
-      if (response.status === 200) {
-        successMessage(
-          response.data?.message || 'Giriş çıkış işlemi başarıyla eklendi.'
-        );
-        const id =
-          state?.gateProcesses[state?.gateProcesses.length - 1]?.id + 1 || 1;
-        const created_at = new Date().toLocaleString();
-        dispatch({
-          type: GateProcesActionTypes.ADD_GATEPROCES,
-          gateProces: {
-            ...form,
-            created_at,
-            id,
-            doorId: (form.doorId as any).value,
-            isdone: (form.isdone as any).value
-          },
-        });
-        reset(defaultValues);
-      }
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
+    // try {
+    //   setLoading(true);
+    //   console.log('form', form);
+    //   const response = await addGateProces({
+    //     ...form,
+    //     doorId: (form.doorId as any).value,
+    //     isdone: (form.isdone as any).value,
+    //     carId: 11
+    //   });
+    //   if (response.status === 200) {
+    //     successMessage(
+    //       response.data?.message || 'Giriş çıkış işlemi başarıyla eklendi.'
+    //     );
+    //     const id =
+    //       state?.gateProcesses[state?.gateProcesses.length - 1]?.id + 1 || 1;
+    //     const created_at = new Date().toLocaleString();
+    //     dispatch({
+    //       type: GateProcesActionTypes.ADD_GATEPROCES,
+    //       gateProces: {
+    //         ...form,
+    //         created_at,
+    //         id,
+    //         doorId: (form.doorId as any).value,
+    //         isdone: (form.isdone as any).value
+    //       },
+    //     });
+    //     reset(defaultValues);
+    //   }
+    //   setLoading(false);
+    // } catch (error) {
+    //   setLoading(false);
+    // }
   };
 
   return (

@@ -13,6 +13,9 @@ interface IUpdateUser extends IRegisterProps {
 const getUsers = (page: number, size: number = 10) =>
   axiosInstance.get(`${END_POINTS.USERS.users}?page=${page}&size=${size}`);
 
+const getUsersByApartmentId = (page: number, size: number = 10, payload: { apartmentId: number }) =>
+  axiosInstance.post(`${END_POINTS.USERS.users}/findAllByApartmentId?page=${page}&size=${size}`, payload);
+
 const getUserById = (userId: number) =>
   axiosInstance.get(`${END_POINTS.USERS.users}/${userId}`);
 
@@ -25,4 +28,4 @@ const updateUser = (userId: number, payload: IUpdateUser) =>
 const deleteUser = (userId: number) =>
   axiosInstance.delete(`${END_POINTS.USERS.users}/${userId}`);
 
-export { getUsers, getUserById, addUser, updateUser, deleteUser };
+export { getUsers, getUsersByApartmentId, getUserById, addUser, updateUser, deleteUser };

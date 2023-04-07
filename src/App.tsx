@@ -21,19 +21,40 @@ import {
 import ProtectedRoute from './components/routes/ProtectedRoute';
 import PrivateLayout from './layout/PrivateLayout';
 import PublicLayout from './layout/PublicLayout';
-import { LocalStorageKeys } from './interfaces';
-import { useAppDispatch } from './store/hooks';
+import { LocalStorageKeys, Types } from './interfaces';
+import { useAppDispatch, useAppSelector } from './store/hooks';
 import ThemeProviderWrapper from './theme';
 import { RequireAuth } from './components';
 import { checkUser } from './store/auth';
+import { getUserById } from './services';
+import { getUserApartmentInfo } from './utils';
 
 function App() {
   const authToken = localStorage.getItem(LocalStorageKeys.AuthToken);
-  const user = localStorage.getItem(LocalStorageKeys.User);
+  const user = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
+  const isSuperAdmin = user.roles.some(role => role === Types.ROLE_ADMIN);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (authToken && user) dispatch(checkUser(JSON.parse(user)));
+    if (user && isAuthenticated) {
+      const fetchUser = async () => {
+        const response = await getUserById(user?.id);
+        const data = await response.data;
+        const flats = data?.flats ? data.flats[0] : null;
+        if(flats) {
+          const apartment = getUserApartmentInfo(data?.flats[0]);
+          const userInfo = {...user, apartment};
+          localStorage.setItem(LocalStorageKeys.User, JSON.stringify(userInfo));
+          dispatch(checkUser(userInfo));
+        }
+      }
+      fetchUser();
+    }
+  }, [user, dispatch, isAuthenticated])
+
+  useEffect(() => {
+    if (authToken && user) dispatch(checkUser(user));
   }, [authToken, user, dispatch]);
 
   return (
@@ -50,7 +71,7 @@ function App() {
           >
             <Route index element={<Dashboard />} />
             <Route path="/users" element={<Users />} />
-            <Route path="/apartments" element={<Apartments />} />
+            {isSuperAdmin ? <Route path="/apartments" element={<Apartments />} /> : null}
             <Route path="/blocks" element={<Blocks />} />
             <Route path="/flats" element={<Flats />} />
             <Route path="/gates" element={<Gates />} />

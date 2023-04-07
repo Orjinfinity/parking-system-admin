@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import {
   View,
   Image,
@@ -16,29 +17,29 @@ import {
   GateProcesesIcon,
 } from '../components';
 import ApartmentIcon from '../components/icons/ApartmentIcon';
+import { LocalStorageKeys, Types } from '../interfaces';
 import imagePath from '../utils/assetHelper';
+
+const StyledView = styled(View)`
+  min-width: 260px;
+  position: fixed;
+  z-index: 3;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: ${({ theme }) => theme.colors.white};
+  box-shadow: ${({ theme }) => theme.shadows.secondary};
+`;
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
+  const isSuperAdmin = user.roles.some((role) => role === Types.ROLE_ADMIN);
   return (
-    <View
-      minWidth="260px"
-      position="fixed"
-      zIndex="3"
-      height="100vh"
-      display="flex"
-      flexDirection="column"
-      alignItems="flex-start"
-      backgroundColor="white"
-      boxShadow="secondary"
-      p={[12, 12, 12, 16, 16]}
-      // borderRight="1px solid #e4e4e4"
-    >
-      <View display="flex" alignItems="center" onClick={() => navigate('/')}>
+    <StyledView p={[12, 12, 12, 16, 16]}>
+      <View display="flex" onClick={() => navigate('/')}>
         <Image height="36px" src={imagePath('logo.png')} alt="logo" />
-        {/* <Title fontSize="1.1rem" ml="12px">
-          PANEL
-        </Title> */}
       </View>
       <View width="100%">
         <List mt="25px">
@@ -50,7 +51,6 @@ const Sidebar = () => {
               padding="12px"
               variant="link"
               display="flex"
-              alignItems="center"
               width="100%"
             >
               <DashboardIcon mr="12px" size="20px" color="textColor" />
@@ -65,28 +65,28 @@ const Sidebar = () => {
               padding="12px"
               variant="link"
               display="flex"
-              alignItems="center"
               width="100%"
             >
               <UsersIcon mr="12px" size="20px" color="textColor" />
               Kullanıcılar
             </LinkButton>
           </ListItem>
-          <ListItem height="42px" borderRadius="6px" mb="10px">
-            <LinkButton
-              to="/apartments"
-              color="linkPrimary"
-              fontSize="medium"
-              padding="12px"
-              variant="link"
-              display="flex"
-              alignItems="center"
-              width="100%"
-            >
-              <ApartmentIcon mr="12px" size="20px" color="textColor" />
-              Siteler
-            </LinkButton>
-          </ListItem>
+          {isSuperAdmin ? (
+            <ListItem height="42px" borderRadius="6px" mb="10px">
+              <LinkButton
+                to="/apartments"
+                color="linkPrimary"
+                fontSize="medium"
+                padding="12px"
+                variant="link"
+                display="flex"
+                width="100%"
+              >
+                <ApartmentIcon mr="12px" size="20px" color="textColor" />
+                Siteler
+              </LinkButton>
+            </ListItem>
+          ) : null}
           <ListItem height="42px" borderRadius="6px" mb="10px">
             <LinkButton
               to="/blocks"
@@ -95,7 +95,6 @@ const Sidebar = () => {
               padding="12px"
               variant="link"
               display="flex"
-              alignItems="center"
               width="100%"
             >
               <BuildingIcon mr="12px" size="20px" color="textColor" />
@@ -110,7 +109,6 @@ const Sidebar = () => {
               padding="12px"
               variant="link"
               display="flex"
-              alignItems="center"
               width="100%"
             >
               <FlatIcon mr="12px" size="20px" color="textColor" />
@@ -125,7 +123,6 @@ const Sidebar = () => {
               padding="12px"
               variant="link"
               display="flex"
-              alignItems="center"
               width="100%"
             >
               <GateIcon mr="12px" size="20px" color="textColor" />
@@ -140,7 +137,6 @@ const Sidebar = () => {
               padding="12px"
               variant="link"
               display="flex"
-              alignItems="center"
               width="100%"
             >
               <GateProcesesIcon mr="12px" size="20px" color="textColor" />
@@ -155,7 +151,6 @@ const Sidebar = () => {
               padding="12px"
               variant="link"
               display="flex"
-              alignItems="center"
               width="100%"
             >
               <CarIcon mr="12px" size="20px" color="textColor" />
@@ -170,7 +165,6 @@ const Sidebar = () => {
               padding="12px"
               variant="link"
               display="flex"
-              alignItems="center"
               width="100%"
             >
               <UrgentIcon mr="12px" size="20px" color="textColor" />
@@ -179,7 +173,7 @@ const Sidebar = () => {
           </ListItem>
         </List>
       </View>
-    </View>
+    </StyledView>
   );
 };
 

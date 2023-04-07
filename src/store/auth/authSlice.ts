@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser, LocalStorageKeys } from '../../interfaces';
-import { ILoginProps, login } from '../../services';
+import { errorMessage, ILoginProps, login } from '../../services';
 
 interface InitialState {
   loading: boolean;
@@ -16,7 +16,7 @@ const initialState: InitialState = {
   error: '',
 };
 
-// const LoginRoles = ['ROLE_ADMIN', 'ROLE_APARTMENTADMIN', 'ROLE_MODERATOR'];
+const LoginRoles = ['ROLE_ADMIN', 'ROLE_APARTMENTADMIN', 'ROLE_MODERATOR'];
 
 export const loginAction = createAsyncThunk(
   'auth/login',
@@ -57,8 +57,7 @@ const authSlice = createSlice({
       ) => {
         const { accessToken, email, id, username, roles } = action.payload;
         const user = { email, id, username, roles };
-        // const isIncludeRole = roles.some(role => LoginRoles.includes(role));
-        const isIncludeRole = true;
+        const isIncludeRole = roles.some(role => LoginRoles.includes(role));
         state.loading = false;
         state.error = '';
         if(isIncludeRole) {
@@ -68,6 +67,7 @@ const authSlice = createSlice({
           localStorage.setItem(LocalStorageKeys.User, JSON.stringify(user));
         } else {
           state.isAuthenticated = false;
+          errorMessage(`${roles[0].replace('ROLE_', '')} rolünün giriş yetkisi bulunmamaktadır.`)
         }
       }
     );

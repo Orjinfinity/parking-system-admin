@@ -1,8 +1,9 @@
 import { createContext, Dispatch, useEffect, useReducer } from 'react';
 import { BlockActionTypes, IBlockAction } from './Types';
-import { getBlocks } from '../../services';
+import { getBlocks, getBlocksByApartmentId } from '../../services';
 import { IBlockRow } from '../../consts';
 import { blockReducer } from './Reducer';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 export interface IBlockState {
   blocks: IBlockRow[];
@@ -50,19 +51,26 @@ const BlockContext = createContext<IBlockContext>({
 
 const BlockContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(blockReducer, initialState);
-
+  
   useEffect(() => {
     const fetchBlocks = async () => {
-      dispatch({ type: BlockActionTypes.SET_LOADING, loading: true });
-      const response = await getBlocks(state.page, state.perPageRows);
-      const data = await response.data;
-      const totalBlocks = data.totalItems as number;
-      let blocks: IBlockRow[] = data.resultData;
-      blocks = blocks.map((block) => ({
-        ...block,
-        created_at: new Date(block.created_at).toLocaleString(),
-      }));
-      dispatch({ type: BlockActionTypes.SET_BLOCKS, blocks, totalBlocks });
+      try {
+        const isApartmentAdmin = getUserIsApartmentAdmin();
+        const apartmentInfo = getApartmentIdForAdmin();
+        dispatch({ type: BlockActionTypes.SET_LOADING, loading: true });
+        const blocksEndpoint = isApartmentAdmin ? getBlocksByApartmentId : getBlocks;
+        const response = await blocksEndpoint(state.page, state.perPageRows, apartmentInfo?.id);
+        const data = await response.data;
+        const totalBlocks = data.totalItems as number;
+        let blocks: IBlockRow[] = data.resultData;
+        blocks = blocks.map((block) => ({
+          ...block,
+          created_at: new Date(block.created_at).toLocaleString(),
+        }));
+        dispatch({ type: BlockActionTypes.SET_BLOCKS, blocks, totalBlocks });
+      } catch (error) {
+        dispatch({ type: BlockActionTypes.SET_LOADING, loading: false })
+      }
     };
 
     fetchBlocks().catch((_) =>

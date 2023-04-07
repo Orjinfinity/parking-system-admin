@@ -20,7 +20,8 @@ import {
 } from '..';
 import { addBlock, getApartments, successMessage } from '../../services';
 import { BlockActionTypes, BlockContext } from '../../contexts';
-import { IApartment, IBlock, ISelectOption } from '../../interfaces';
+import { IApartment, IBlock, ISelectOption, LocalStorageKeys } from '../../interfaces';
+import { getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 export const StyledForm = styled('form')`
   display: grid;
@@ -49,10 +50,14 @@ const CreateBlock = ({ modalIsOpen, setModalIsOpen }: ICreateBlock) => {
     name: '',
     apartmentId: null,
   };
+  const user = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
+  const isApartmentAdmin = getUserIsApartmentAdmin();
+  
   const {
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<IBlock>({
     defaultValues: { ...defaultValues },
@@ -62,6 +67,8 @@ const CreateBlock = ({ modalIsOpen, setModalIsOpen }: ICreateBlock) => {
   useEffect(() => {
     if (dataFetchRef.current) {
       dataFetchRef.current = false;
+      const defaultValue = { label: user.apartment?.apartment?.name, value: user.apartment?.apartment?.id }
+      if(isApartmentAdmin) setValue('apartmentId', defaultValue as any)
       const fetchData = async () => {
         try {
           const response = await getApartments(0);
@@ -150,6 +157,7 @@ const CreateBlock = ({ modalIsOpen, setModalIsOpen }: ICreateBlock) => {
                 control={control}
                 options={formRequiredData.apartments}
                 isLoading={formRequiredData.loading}
+                isDisabled={isApartmentAdmin}
                 rules={{
                   required: {
                     value: true,

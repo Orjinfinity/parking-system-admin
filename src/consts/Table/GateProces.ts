@@ -3,8 +3,9 @@ import { TableColumn } from 'react-data-table-component';
 interface IGateProcesRow {
   id: number;
   created_at: string;
-  isdone: boolean;
+  isdone: string;
   processimageurl: string;
+  carId: number;
   doorId: number;
 }
 
@@ -15,7 +16,7 @@ const gateProcesColumns: TableColumn<IGateProcesRow>[] = [
     sortable: true,
   },
   {
-    name: 'Created At',
+    name: 'İşlem Tarihi',
     selector: (row) => row.created_at,
     sortable: true,
   },
@@ -25,8 +26,8 @@ const gateProcesColumns: TableColumn<IGateProcesRow>[] = [
     sortable: true,
   },
   {
-    name: 'Giriş veya Çıkış Görseli',
-    selector: (row) => row.processimageurl,
+    name: 'Araç Id',
+    selector: (row) => row.carId,
     sortable: true,
   },
   {

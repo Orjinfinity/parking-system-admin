@@ -30,6 +30,7 @@ interface SelectProps<
     callback: (options: OptionsOrGroups<unknown, GroupBase<unknown>>) => void
   ) => void;
   options?: ISelectOption[];
+  isDisabled?: boolean;
   control: Control<any>;
 }
 
@@ -45,6 +46,7 @@ const Select = <
   loadOptions,
   options = [],
   isLoading = false,
+  isDisabled = false,
   control,
 }: SelectProps<TFieldValues, TName>) => {
   const { field, fieldState } = useController({ name, control, rules });
@@ -58,6 +60,7 @@ const Select = <
         loadOptions={loadOptions}
         defaultValue={defaultValue}
         placeholder={placeholder}
+        isDisabled={isDisabled}
         styles={{
           control: (styles) => ({
             ...styles,
@@ -92,6 +95,7 @@ const Select = <
       defaultValue={defaultValue}
       isLoading={isLoading}
       placeholder={placeholder}
+      isDisabled={isDisabled}
       styles={{
         control: (styles) => ({
           ...styles,

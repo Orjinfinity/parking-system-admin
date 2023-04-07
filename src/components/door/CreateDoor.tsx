@@ -19,8 +19,9 @@ import {
   Loader,
 } from '..';
 import { DoorActionTypes, DoorContext } from '../../contexts';
-import { IApartment, IDoor, ISelectOption } from '../../interfaces';
+import { IApartment, IDoor, ISelectOption, LocalStorageKeys } from '../../interfaces';
 import { addDoor, getApartments, successMessage } from '../../services';
+import { getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 export const StyledForm = styled('form')`
   display: grid;
@@ -51,10 +52,13 @@ const CreateDoor = ({ modalIsOpen, setModalIsOpen }: ICreateDoor) => {
     camiplink: '',
     apartmentId: null,
   };
+  const user = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
+  const isApartmentAdmin = getUserIsApartmentAdmin();
   const {
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<IDoor>({
     defaultValues: { ...defaultValues },
@@ -95,6 +99,8 @@ const CreateDoor = ({ modalIsOpen, setModalIsOpen }: ICreateDoor) => {
   useEffect(() => {
     if (dataFetchRef.current) {
       dataFetchRef.current = false;
+      const defaultValue = { label: user.apartment?.apartment?.name, value: user.apartment?.apartment?.id }
+      if (isApartmentAdmin) setValue('apartmentId', defaultValue as any)
       const fetchData = async () => {
         try {
           const response = await getApartments(0, 200);
@@ -200,6 +206,7 @@ const CreateDoor = ({ modalIsOpen, setModalIsOpen }: ICreateDoor) => {
                 control={control}
                 options={formRequiredData.apartments}
                 isLoading={formRequiredData.loading}
+                isDisabled={isApartmentAdmin}
                 rules={{
                   required: {
                     value: true,

@@ -15,13 +15,24 @@ import {
 } from '..';
 import {
   addUser,
+  errorMessage,
   getApartments,
+  getAllBlocksByApartmentId,
+  getFlatsByBlockId,
   getRoles,
   successMessage,
 } from '../../services';
-import { IApartment, ISelectOption, IUserFormFields } from '../../interfaces';
+import {
+  IApartment,
+  IBlock,
+  IFlat,
+  ISelectOption,
+  IUserFormFields,
+  LocalStorageKeys,
+} from '../../interfaces';
 import { UserActionTypes, UserContext } from '../../contexts';
 import { Regex } from '../../utils';
+import { getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 const StyledForm = styled('form')`
   display: grid;
@@ -38,6 +49,11 @@ const StyledForm = styled('form')`
     grid-column: 1/5;
   }
 `;
+
+interface ISelectField {
+  loading: boolean;
+  options: Array<ISelectOption>;
+}
 
 interface ICreateUser {
   modalIsOpen: boolean;
@@ -63,29 +79,135 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
       apartments: [] as Array<ISelectOption>,
       roles: [] as Array<ISelectOption>,
     });
+  const [blocks, setBlocks] = useState<ISelectField>({
+    loading: false,
+    options: [],
+  });
+  const [flats, setFlats] = useState<ISelectField>({
+    loading: false,
+    options: [],
+  });
+
+  const [apartmentId, setApartmentId] = useState<number>();
+  const [blockId, setBlockId] = useState<number>();
+
+  const user = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
+  const isApartmentAdmin = getUserIsApartmentAdmin();
+
   const defaultValues = {
     username: '',
     name: '',
     surname: '',
     phone: '',
-    brand: '',
     email: '',
     roles: '',
     password: '',
+    apartmentId: null,
+    blockId: null,
+    flatId: null,
   };
   const {
     handleSubmit,
     control,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<IUserFormFields>({
     defaultValues: { ...defaultValues },
   });
   const { state, dispatch } = useContext(UserContext);
 
+  const [apartmentChanges, blockChanges] = watch(['apartmentId', 'blockId']);
+  console.log('field', apartmentChanges, blockChanges);
+
+  useEffect(() => {
+    if (
+      (apartmentChanges as any)?.value &&
+      (apartmentChanges as any).value !== apartmentId
+    ) {
+      setBlocks((prev) => ({ ...prev, loading: true }));
+      const fetchBlocks = async () => {
+        try {
+          const response = await getAllBlocksByApartmentId(
+            (apartmentChanges as any)?.value
+          );
+          if (response.data?.totalPages) {
+            const blocks = response.data.resultData || [];
+            const blockFormField = blocks.map(({ id, name }: IBlock) => ({
+              label: name,
+              value: id,
+            }));
+            setBlocks((prev) => ({
+              ...prev,
+              options: blockFormField,
+              loading: false,
+            }));
+            setFlats((prev) => ({ ...prev, options: [], loading: false }));
+            if ((apartmentChanges as any).value !== apartmentId) {
+              setValue('blockId', null);
+            }
+          } else {
+            setBlocks((prev) => ({ ...prev, options: [], loading: false }));
+            setFlats((prev) => ({ ...prev, options: [], loading: false }));
+            errorMessage('Seçili siteye ait bir blok bulunamadı.');
+          }
+        } catch (error) {
+          setBlocks((prev) => ({ ...prev, loading: false }));
+        }
+        setApartmentId((apartmentChanges as any).value);
+      };
+
+      fetchBlocks();
+    }
+  }, [apartmentChanges, setValue, apartmentId]);
+
+  useEffect(() => {
+    if (
+      ((blockChanges as any)?.value &&
+        (blockChanges as any).value !== blockId) ||
+      ((blockChanges as any)?.value &&
+        !(blocks.options && blocks.options.length))
+    ) {
+      setFlats((prev) => ({ ...prev, loading: true }));
+      const fetchFlats = async () => {
+        try {
+          const response = await getFlatsByBlockId(
+            (blockChanges as any)?.value
+          );
+          if (response.data?.totalPages) {
+            const flats = response.data.resultData || [];
+            const flatFormField = flats.map(({ id, number }: IFlat) => ({
+              label: number,
+              value: id,
+            }));
+            setFlats((prev) => ({
+              ...prev,
+              options: flatFormField,
+              loading: false,
+            }));
+            if ((blockChanges as any).value !== blockId) {
+              setValue('flatId', null);
+            }
+          } else {
+            setFlats((prev) => ({ ...prev, options: [], loading: false }));
+            errorMessage('Seçili blok bilgisine ait bir daire bulunamadı.');
+          }
+        } catch (error) {
+          setFlats((prev) => ({ ...prev, loading: false }));
+        }
+        setBlockId((blockChanges as any).value);
+      };
+      fetchFlats();
+    }
+  }, [blockChanges, setValue, blockId, blocks]);
+
   useEffect(() => {
     if (dataFetchRef.current) {
       dataFetchRef.current = false;
+      const defaultValue = { label: user.apartment?.apartment?.name, value: user.apartment?.apartment?.id}
+      if(isApartmentAdmin) setValue('apartmentId', defaultValue as any)
+
       const fetchData = async () => {
         try {
           const [resApartments, resRoles] = await Promise.all([
@@ -96,18 +218,21 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
             resApartments.data.resultData,
             resRoles.data.resultData,
           ];
-          const updatedApartments = apartments.map(({ name }: IApartment) => ({
+          const updatedApartments = apartments.map(
+            ({ id, name }: IApartment) => ({
+              label: name,
+              value: id,
+            })
+          );
+          const updatedRoles = !isApartmentAdmin ? roles.map(({ name }) => ({
             label: name,
             value: name,
-          }));
-          const updatedRoles = roles.map(({ name }) => ({
-            label: name,
-            value: name,
-          }));
+          })) : [{ label: "user", value: "user" }];
           setFormRequiredValues({
             apartments: updatedApartments,
             roles: updatedRoles,
           });
+          
           setLoading((loading) => ({ ...loading, formFields: false }));
         } catch (error) {
           setLoading((loading) => ({ ...loading, formFields: false }));
@@ -117,22 +242,51 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
         setLoading((loading) => ({ ...loading, apartments: false }))
       );
     }
-  }, []);
+  }, [isApartmentAdmin, setValue, user]);
 
   const onSubmit = async (form: IUserFormFields) => {
+    console.log('form', form);
+    if (!form.flatId) {
+      errorMessage('Lütfen kullanıcının daire bilgisini seçiniz.');
+      return;
+    }
     try {
       setLoading((loading) => ({ ...loading, createUser: true }));
-      const payload = { ...form, roles: [(form.roles as any).value] };
+      const { apartmentId, blockId, ...res } = form;
+      const payload = {
+        ...res,
+        roles: [(form.roles as any).value],
+        flatId: (form?.flatId as any).value,
+      };
       const response = await addUser(payload);
+      console.log('res', response);
       if (response.status === 200) {
         successMessage(
           response.data?.message || 'Kullanıcı başarıyla eklendi.'
         );
         const id = state?.users[state?.users.length - 1]?.id + 1 || 1;
         const created_at = new Date().toLocaleString();
+        console.log('cre', {
+          ...res,
+          created_at,
+          id,
+          flatId: {
+            id: (form?.flatId as any).value,
+            name: (form?.flatId as any).label,
+          },
+        });
         dispatch({
           type: UserActionTypes.ADD_USER,
-          user: { ...form, created_at, id },
+          user: {
+            ...res,
+            created_at,
+            id,
+            flatId: {
+              id: (form?.flatId as any).value,
+              name: (form?.flatId as any).label,
+            },
+            roles: [(form.roles as any).value],
+          },
         });
         reset(defaultValues);
       }
@@ -229,10 +383,11 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
             </View>
             <View className="column-3" display="flex" flexDirection="column">
               <Select
-                name="brand"
+                name="apartmentId"
                 control={control}
                 options={formRequiredValues.apartments}
                 isLoading={loading.formFields}
+                isDisabled={isApartmentAdmin}
                 rules={{
                   required: {
                     value: true,
@@ -245,6 +400,47 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
                 <ErrorMessage> {errors.brand?.message}</ErrorMessage>
               )}
             </View>
+            {blocks.options && blocks.options.length ? (
+              <View className="column-3" display="flex" flexDirection="column">
+                <Select
+                  name="blockId"
+                  control={control}
+                  options={blocks.options}
+                  isLoading={blocks.loading}
+                  rules={{
+                    required: {
+                      value: true,
+                      message:
+                        'Lütfen hangi bloka eklemek istediğinizi giriniz',
+                    },
+                  }}
+                  placeholder="Kullanıcının blok bilgisini seçiniz"
+                />
+                {errors.blockId && (
+                  <ErrorMessage> {errors.blockId?.message}</ErrorMessage>
+                )}
+              </View>
+            ) : null}
+            {flats.options && flats.options.length ? (
+              <View className="column-3" display="flex" flexDirection="column">
+                <Select
+                  name="flatId"
+                  control={control}
+                  options={flats.options}
+                  isLoading={flats.loading}
+                  rules={{
+                    required: {
+                      value: true,
+                      message: 'Lütfen kullanıcı daire bilgisini giriniz',
+                    },
+                  }}
+                  placeholder="Kullanıcının daire bilgisini seçiniz"
+                />
+                {errors.flatId && (
+                  <ErrorMessage> {errors.flatId?.message}</ErrorMessage>
+                )}
+              </View>
+            ) : null}
             <View className="column-3" display="flex" flexDirection="column">
               <Select
                 name="roles"

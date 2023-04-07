@@ -14,6 +14,8 @@ import {
 import { getApartments, successMessage, updateBlock } from '../../services';
 import { BlockActionTypes, BlockContext } from '../../contexts';
 import { IFormRequiredData, StyledForm } from './CreateBlock';
+
+import { getUserIsApartmentAdmin } from '../../utils/userHelper';
 import { IApartment, IBlock } from '../../interfaces';
 import { IBlockRow } from '../../consts';
 
@@ -37,6 +39,7 @@ const UpdateBlock = ({
     name: '',
     apartmentId: null,
   };
+  const isApartmentAdmin = getUserIsApartmentAdmin();
   const {
     handleSubmit,
     control,
@@ -144,6 +147,7 @@ const UpdateBlock = ({
                 control={control}
                 options={formRequiredData.apartments}
                 isLoading={formRequiredData.loading}
+                isDisabled={isApartmentAdmin}
                 rules={{
                   required: {
                     value: true,

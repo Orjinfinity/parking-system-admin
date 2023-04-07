@@ -16,6 +16,7 @@ import { DoorActionTypes, DoorContext } from '../../contexts';
 import { IFormRequiredData, StyledForm } from './CreateDoor';
 import { IApartment, IDoor } from '../../interfaces';
 import { IDoorRow } from '../../consts';
+import { getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 interface IUpdateDoor {
   modalIsOpen: boolean;
@@ -39,6 +40,7 @@ const UpdateDoor = ({
     camiplink: '',
     apartmentId: null,
   };
+  const isApartmentAdmin = getUserIsApartmentAdmin();
   const {
     handleSubmit,
     control,
@@ -80,6 +82,7 @@ const UpdateDoor = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const response = await getApartments(0, 200);
         const apartments = response.data.resultData;
         const updatedApartments = apartments.map(
@@ -106,12 +109,16 @@ const UpdateDoor = ({
           apartments: updatedApartments,
           loading: false,
         });
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         setFormRequiredData((data) => ({ ...data, loading: false }));
       }
     };
-    fetchData().catch((_) =>
+    fetchData().catch((_) => {
+      setLoading(false);
       setFormRequiredData((data) => ({ ...data, loading: false }))
+    }
     );
   }, [reset, selectedDoor]);
   return (
@@ -196,6 +203,7 @@ const UpdateDoor = ({
                 control={control}
                 options={formRequiredData.apartments}
                 isLoading={formRequiredData.loading}
+                isDisabled={isApartmentAdmin}
                 rules={{
                   required: {
                     value: true,

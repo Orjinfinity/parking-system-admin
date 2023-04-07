@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { View, Button, ExportIcon, BasicTextField, UserPlusIcon } from '..';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
+import { getUsers, getUsersByApartmentId } from '../../services';
 import { UserActionTypes, UserContext } from '../../contexts';
-import { getUsers } from '../../services';
 import { IUserRow } from '../../consts';
 
 interface IUserTableHeader {
@@ -11,6 +12,8 @@ interface IUserTableHeader {
 const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
   const [fetchedUsers, setFetchedUsers] = useState<Array<IUserRow>>([]);
   const { state, dispatch } = useContext(UserContext);
+  const isApartmentAdmin = getUserIsApartmentAdmin();
+  const apartmentInfo = getApartmentIdForAdmin();
 
   const setFilteredUsers = (key: string, users?: Array<IUserRow>) => {
     console.log(fetchedUsers, key);
@@ -20,29 +23,23 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
           (field) => field && field.toLowerCase().includes(key)
         )
       )
-      .map(
-        ({
-          id,
-          name,
-          surname,
-          username,
-          email,
-          password,
-          phone,
-          roles,
-          created_at,
-        }) => ({
-          id,
-          name,
-          surname,
-          email,
-          password,
-          phone,
-          roles: roles[0]?.name || 'user',
-          username,
-          created_at: new Date(created_at).toLocaleString(),
-        })
-      );
+      .map(user => {
+        if (!isApartmentAdmin) {
+          return {
+            ...user,
+            roles: user?.roles[0]?.name || "user",
+            ...(user.flats.length && {flatId: { id: user.flats[0]?.id, name: user.flats[0]?.number }}),
+            created_at: new Date(user.created_at).toLocaleString(),
+          }
+        } else {
+          return {
+            ...user,
+            roles: "user",
+            flatId: { id: user?.FlatId, name: user?.FlatNumber} as any,
+            created_at: new Date(user.created_at).toLocaleString(),
+          }
+        }
+      })
     dispatch({
       type: UserActionTypes.SET_FILTERED_USERS,
       filter: { key, result: filteredUsers, },
@@ -52,9 +49,11 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
 
   const fetchUsers = async (key: string) => {
     try {
+      const usersEndpoint = isApartmentAdmin ? getUsersByApartmentId : getUsers;
       dispatch({ type: UserActionTypes.SET_LOADING, loading: true });
-      const response = await getUsers(0, state.totalUsers || 200);
-      const users: IUserRow[] = await response.data.resultData;
+      const response = await usersEndpoint(state.page, state.totalUsers || 200, { apartmentId: apartmentInfo?.id });
+      const data = await response.data;
+      const users: IUserRow[] = data.resultData;
       setFilteredUsers(key, users)
       setFetchedUsers(users);
     } catch (error) {

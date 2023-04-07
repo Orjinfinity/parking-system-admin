@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { BasicTextField, Button, ExportIcon, View } from '..';
 import { GateProcesActionTypes, GateProcesContext } from '../../contexts';
-import { getGateProcesses } from '../../services';
+import { getGateProcesses, getGateProcessesByApartmentId } from '../../services';
 import { IGateProcesRow } from '../../consts';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 interface IGateProcesTableHeader {
   handleGateProcesFunctions: (type: string) => void;
@@ -11,12 +12,14 @@ interface IGateProcesTableHeader {
 const GateProcesHeader = ({
   handleGateProcesFunctions,
 }: IGateProcesTableHeader) => {
+  const [fetchedProcesess, setFetchedProcesess] = useState<Array<IGateProcesRow>>([]);
   const { state, dispatch } = useContext(GateProcesContext);
+  const isApartmentAdmin = getUserIsApartmentAdmin();
+  const apartmentInfo = getApartmentIdForAdmin();
 
-  const fetchGateProcesses = async (key: string) => {
-    const response = await getGateProcesses(0, state.totalGateProcesses || 200);
-    const gateProcesses: IGateProcesRow[] = await response.data.resultData;
-    const filteredGateProcesses = gateProcesses
+  const setFilteredProcesess = (key: string, procesess?: Array<IGateProcesRow>) => {
+    console.log(procesess, key);
+    const filteredGateProcesses = (procesess || fetchedProcesess)
       .filter(({ doorId }) =>
         [doorId].some((field) => field.toString().toLowerCase().includes(key))
       )
@@ -31,15 +34,30 @@ const GateProcesHeader = ({
     });
   };
 
+  const fetchGateProcesses = async (key: string) => {
+    try {
+      dispatch({ type: GateProcesActionTypes.SET_LOADING, loading: true });
+      const procesessEndpoint = isApartmentAdmin ? getGateProcessesByApartmentId : getGateProcesses;
+      const response = await procesessEndpoint(0, state.totalGateProcesses || 200, apartmentInfo?.id);
+      const gateProcesses: IGateProcesRow[] = await response.data.resultData;
+      setFilteredProcesess(key, gateProcesses);
+      setFetchedProcesess(gateProcesses);
+    } catch (error) {
+      console.log(error);
+      setFetchedProcesess([]);
+    }
+  };
+
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      dispatch({ type: GateProcesActionTypes.SET_LOADING, loading: true });
-      fetchGateProcesses(key);
+      if (!(fetchedProcesess && fetchedProcesess.length)) fetchGateProcesses(key);
+      setFilteredProcesess(key);
     } else
       dispatch({
         type: GateProcesActionTypes.SET_FILTERED_GATEPROCESSES,
         filter: { key: '', result: [] as IGateProcesRow[] },
+        ...(fetchedProcesess?.length && { totalGateProcesses: fetchedProcesess.length})
       });
   };
   return (
