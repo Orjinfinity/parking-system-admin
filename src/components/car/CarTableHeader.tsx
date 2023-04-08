@@ -1,20 +1,23 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Button, ExportIcon, BasicTextField, CarIcon } from '..';
 import { CarActionTypes, CarContext } from '../../contexts';
-import { getCars } from '../../services';
+import { getCars, getCarsByApartmentId } from '../../services';
 import { ICarRow } from '../../consts';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 interface ICarTableHeader {
   handleCarFunctions: (type: string) => void;
 }
 
 const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
+  const [fetchedCars, setFetchedCars] = useState<Array<ICarRow>>([]);
   const { state, dispatch } = useContext(CarContext);
+  const isApartmentAdmin = getUserIsApartmentAdmin();
+  const apartmentInfo = getApartmentIdForAdmin();
 
-  const fetchCars = async (key: string) => {
-    const response = await getCars(0, state.totalCars || 200);
-    const cars: ICarRow[] = await response.data.resultData;
-    const filteredCars = cars
+  const setFilteredCars = (key: string, cars?: Array<ICarRow>) => {
+    console.log(cars, key);
+    const filteredCars = (cars || fetchedCars)
       .filter(({ model, brand, ownername, ownersurname }) =>
         [model, brand, ownername, ownersurname].some((field) =>
           field.toLowerCase().includes(key)
@@ -24,22 +27,36 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
         ...car,
         created_at: new Date(car.created_at).toLocaleString(),
       }));
+      dispatch({
+        type: CarActionTypes.SET_FILTERED_CARS,
+        filter: { key, result: filteredCars },
+      });
+  };
 
-    dispatch({
-      type: CarActionTypes.SET_FILTERED_CARS,
-      filter: { key, result: filteredCars },
-    });
+  const fetchCars = async (key: string) => {
+    try {
+      dispatch({ type: CarActionTypes.SET_LOADING, loading: true });
+      const carsEndpoint = isApartmentAdmin ? getCarsByApartmentId : getCars;
+      const response = await carsEndpoint(0, state.totalCars || 200, apartmentInfo?.id);
+      const cars: ICarRow[] = await response.data.resultData;
+      setFilteredCars(key, cars);
+      setFetchedCars(cars);
+    } catch (error) {
+      console.log(error);
+      setFetchedCars([]);
+    }
   };
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      dispatch({ type: CarActionTypes.SET_LOADING, loading: true });
-      fetchCars(key);
+      if(!(fetchedCars && fetchedCars.length)) fetchCars(key);
+      setFilteredCars(key);
     } else
       dispatch({
         type: CarActionTypes.SET_FILTERED_CARS,
         filter: { key: '', result: [] as ICarRow[] },
+        ...(fetchedCars?.length && { totalCars: fetchedCars.length})
       });
   };
   return (

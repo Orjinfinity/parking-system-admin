@@ -5,6 +5,9 @@ import { END_POINTS } from '../../consts';
 const getRequestCalls = (page: number, size: number = 10) =>
   axiosInstance.get(`${END_POINTS.REQUEST_CALLS.requestCalls}?page=${page}&size=${size}`);
 
+const getRequestCallsByApartmentId = (page: number, size: number = 10, apartmentId: number) =>
+  axiosInstance.get(`${END_POINTS.REQUEST_CALLS.requestCalls}?page=${page}&size=${size}&apartmentId=${apartmentId}`);
+
 const getRequestById = (requestCallId: number) =>
   axiosInstance.get(`${END_POINTS.REQUEST_CALLS.requestCalls}/${requestCallId}`);
 
@@ -17,4 +20,4 @@ const updateRequestCall = (requestCallId: number, payload: IRequestCall) =>
 const deleteRequestCall = (requestCallId: number) =>
   axiosInstance.delete(`${END_POINTS.REQUEST_CALLS.requestCalls}/${requestCallId}`);
 
-export { getRequestCalls, getRequestById, addRequestCall, updateRequestCall, deleteRequestCall };
+export { getRequestCalls, getRequestCallsByApartmentId, getRequestById, addRequestCall, updateRequestCall, deleteRequestCall };

@@ -21,6 +21,7 @@ interface InputProps<
   onFocus?: () => void;
   defaultValue?: string | number | readonly string[] | undefined;
   placeholder?: string;
+  isDisabled?: boolean;
   control: Control<any>;
 }
 
@@ -65,6 +66,7 @@ const TextField = <
   control,
   rules,
   type = 'text',
+  isDisabled = false,
   defaultValue,
 }: InputProps<TFieldValues, TName>) => {
   const { field, fieldState } = useController({ name, control, rules });
@@ -76,6 +78,7 @@ const TextField = <
       type={type}
       placeholder={placeholder}
       defaultValue={defaultValue}
+      disabled={isDisabled}
       autoComplete="off"
       error={!!fieldState.error?.message}
     />

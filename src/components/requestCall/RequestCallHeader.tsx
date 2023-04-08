@@ -1,20 +1,23 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { IRequestCallRow } from '../../consts';
 import { BasicTextField, Button, ExportIcon, UrgentIcon, View } from '..';
 import { RequestCallActionTypes, RequestCallContext } from '../../contexts';
-import { getRequestCalls } from '../../services';
+import { getRequestCalls, getRequestCallsByApartmentId } from '../../services';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 interface IRequestCallTableHeader {
   handleRequestCallFunctions: (type: string) => void;
 }
 
 const RequestCallHeader = ({ handleRequestCallFunctions }: IRequestCallTableHeader) => {
+  const [fetchedRequestCalls, setFetchedRequestCalls] = useState<Array<IRequestCallRow>>([]);
   const { state, dispatch } = useContext(RequestCallContext);
+  const isApartmentAdmin = getUserIsApartmentAdmin();
+  const apartmentInfo = getApartmentIdForAdmin();
 
-  const fetchRequestCalls = async (key: string) => {
-    const response = await getRequestCalls(0, state.totalRequestCalls || 200);
-    const requestCalls: IRequestCallRow[] = await response.data.resultData;
-    const filteredRequestCalls = requestCalls
+  const setFilteredRequestCall = (key: string, requestCalls?: Array<IRequestCallRow>) => {
+    console.log(requestCalls, key);
+    const filteredRequestCalls = (requestCalls || fetchedRequestCalls)
       .filter(({ description }) =>
         [description].some((field) => field && field.toLowerCase().includes(key))
       )
@@ -29,17 +32,32 @@ const RequestCallHeader = ({ handleRequestCallFunctions }: IRequestCallTableHead
     });
   };
 
+  const fetchRequestCalls = async (key: string) => {
+    try {
+      dispatch({ type: RequestCallActionTypes.SET_LOADING, loading: true });
+      const requestCallsEndpoint = isApartmentAdmin ? getRequestCallsByApartmentId : getRequestCalls;
+      const response = await requestCallsEndpoint(0, state.totalRequestCalls || 200, apartmentInfo?.id);
+      const requestCalls: IRequestCallRow[] = await response.data.resultData;
+      setFilteredRequestCall(key, requestCalls);
+      setFetchedRequestCalls(requestCalls);
+    } catch (error) {
+      setFetchedRequestCalls([]);
+    }
+  };
+
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      dispatch({ type: RequestCallActionTypes.SET_LOADING, loading: true });
-      fetchRequestCalls(key);
+      if(!(fetchedRequestCalls && fetchedRequestCalls.length)) fetchRequestCalls(key);
+      setFilteredRequestCall(key)
     } else
       dispatch({
         type: RequestCallActionTypes.SET_FILTERED_REQUESTCALLS,
         filter: { key: '', result: [] as IRequestCallRow[] },
+        ...(fetchedRequestCalls?.length && { totalRequestCalls: fetchedRequestCalls.length})
       });
   };
+  
   return (
     <View
     display="flex"

@@ -1,8 +1,9 @@
 import { createContext, Dispatch, useEffect, useReducer } from 'react';
 import { CarActionTypes, ICarAction } from './Types';
-import { getCars } from '../../services/Api/cars';
+import { getCars, getCarsByApartmentId } from '../../services/Api/cars';
 import { ICarRow } from '../../consts';
 import { carReducer } from './Reducer';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 export interface ICarState {
   cars: ICarRow[];
@@ -52,18 +53,25 @@ const CarContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(carReducer, initialState);
 
   useEffect(() => {
+    const isApartmentAdmin = getUserIsApartmentAdmin();
+    const apartmentInfo = getApartmentIdForAdmin();
     const fetchCars = async () => {
-      dispatch({ type: CarActionTypes.SET_LOADING, loading: true });
-      const response = await getCars(state.page, state.perPageRows);
-      const data = await response.data;
-      const totalCars = data.totalItems as number;
-      let cars: ICarRow[] = data.resultData;
-      cars = cars.map((car) => ({
-        ...car,
-        isguest: car.isguest ? 'Evet' : 'Hayır',
-        created_at: new Date(car.created_at).toLocaleString(),
-      }));
-      dispatch({ type: CarActionTypes.SET_CARS, cars, totalCars });
+      try {
+        const carsEndpoint = isApartmentAdmin ? getCarsByApartmentId : getCars;
+        dispatch({ type: CarActionTypes.SET_LOADING, loading: true });
+        const response = await carsEndpoint(state.page, state.perPageRows, apartmentInfo?.id);
+        const data = await response.data;
+        const totalCars = data.totalItems as number;
+        let cars: ICarRow[] = data.resultData;
+        cars = cars.map((car) => ({
+          ...car,
+          isguest: car.isguest ? 'Evet' : 'Hayır',
+          created_at: new Date(car.created_at).toLocaleString(),
+        }));
+        dispatch({ type: CarActionTypes.SET_CARS, cars, totalCars });
+      } catch (error) {
+        dispatch({ type: CarActionTypes.SET_LOADING, loading: false })
+      }
     };
 
     fetchCars().catch((_) =>

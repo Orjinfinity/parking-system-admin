@@ -1,20 +1,22 @@
-import { IRoleCard } from '../interfaces';
-
-export const roles: Array<IRoleCard> = [
-//   {
-//     role: 'Administrator',
-//     count: 2,
-//   },
-//   {
-//     role: 'Site Yöneticisi',
-//     count: 4,
-//   },
-//   {
-//     role: 'Kullanıcı',
-//     count: 20,
-//   },
-//   {
-//     role: 'Misafir Kullanıcı',
-//     count: 5,
-//   },
+export const RoleList: Array<{key, value}> = [
+  {
+    key: 'ROLE_USER',
+    value: 'user',
+  },
+  {
+    key: 'ROLE_APARTMENTADMIN',
+    value: 'apartmentadmin',
+  },
+  {
+    key: 'ROLE_FLATOWNER',
+    value: 'flatowner',
+  },
+  {
+    key: 'ROLE_MODERATOR',
+    value: 'moderator',
+  },
+  {
+    key: 'ROLE_ADMIN',
+    value: 'admin',
+  },
 ];

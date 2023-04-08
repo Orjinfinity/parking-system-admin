@@ -3,7 +3,7 @@ import { END_POINTS } from '../../consts';
 import { IRegisterProps } from './auth';
 
 interface IAddUser extends IRegisterProps {
-  brand: string;
+  // brand: string;
 }
 
 interface IUpdateUser extends IRegisterProps {

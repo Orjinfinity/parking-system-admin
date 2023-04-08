@@ -10,8 +10,9 @@ import {
   PhoneInput,
   Select,
   Button,
+  Loader
 } from '../components';
-import { END_POINTS } from '../consts';
+import { END_POINTS, RoleList } from '../consts';
 import { useFetch } from '../hooks/useFetch';
 import {
   IApartment,
@@ -22,6 +23,7 @@ import {
 import { getApartments, getRoles, successMessage, updateUser } from '../services';
 import { Regex } from '../utils';
 import imagePath from '../utils/assetHelper';
+import { getUserApartmentInfo, getUserIsApartmentAdmin } from '../utils/userHelper';
 
 export interface IFormRequiredFields {
   apartments: Array<ISelectOption>;
@@ -29,6 +31,7 @@ export interface IFormRequiredFields {
 }
 
 const StyledView = styled(View)`
+  position: relative;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 6px;
   padding: 20px;
@@ -62,6 +65,7 @@ const Profile = () => {
   });
 
   const userInfo = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
+  const isApartmentAdmin = getUserIsApartmentAdmin();
 
   const [formRequiredValues, setFormRequiredValues] =
     useState<IFormRequiredFields>({
@@ -72,6 +76,7 @@ const Profile = () => {
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
     reset
   } = useForm<IUserFormFields>();
 
@@ -81,7 +86,11 @@ const Profile = () => {
     dataFetchRef,
     {}
   );
-  console.log('data', data, formFieldLoading)
+
+  useEffect(() => {
+    const userRole = RoleList.find(role => userInfo?.roles && userInfo.roles[0] === role.key) || { key: 'ROLE_APARTMENTADMIN', value: 'apartmentadmin'};
+    if (userRole) setValue('roles', { label: userRole.value, value: userRole.value } as any );
+  }, [isApartmentAdmin, userInfo, setValue])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -113,8 +122,11 @@ const Profile = () => {
           phone,
           email,
           password,
+          flats
           // roles: userRoles,
         } = data;
+        // console.log('role', userRole)
+        const apartmentData = flats && flats[0] ? getUserApartmentInfo(flats[0]) : null;
         reset({
           name,
           surname,
@@ -122,7 +134,9 @@ const Profile = () => {
           phone,
           email,
           password,
-          roles: { label: "apartmentadmin", value: 5} as any,
+          apartmentId: apartmentData ? { label: apartmentData.apartment.name, value: apartmentData.apartment.id } as any : "",
+          blockId: apartmentData ? apartmentData.block.name as any : "",
+          flatId: apartmentData ? apartmentData.flat.name as any : "",
         });
         setLoading((loading) => ({ ...loading, formFields: false }));
       } catch (error) {
@@ -137,9 +151,11 @@ const Profile = () => {
   const onSubmit = async (form: IUserFormFields) => {
     try {
       setLoading((loading) => ({...loading, updateUser: true}));
+      console.log('form', form);
+      const { apartmentId, blockId, ...formValues } = form;
       const response = await updateUser(userInfo.id, {
         id: userInfo.id,
-        ...form,
+        ...formValues,
         roles: [(form.roles as any).value],
       });
       if (response.status === 200) {
@@ -228,10 +244,11 @@ const Profile = () => {
         </View>
         <View className="column-1" display="flex" flexDirection="column">
           <Select
-            name="brand"
+            name="apartmentId"
             control={control}
             options={formRequiredValues.apartments}
             isLoading={loading.formFields}
+            isDisabled={true}
             rules={{
               required: {
                 value: true,
@@ -240,9 +257,25 @@ const Profile = () => {
             }}
             placeholder="Kullanıcının sitesini seçiniz"
           />
-          {errors.brand && (
-            <ErrorMessage> {errors.brand?.message}</ErrorMessage>
+          {errors.apartmentId && (
+            <ErrorMessage> {errors.apartmentId?.message}</ErrorMessage>
           )}
+        </View>
+        <View className="column-2" display="flex" flexDirection="column">
+          <TextField
+            name="blockId"
+            control={control}
+            isDisabled={true}
+            placeholder="Kullanıcı Blok Id"
+          />
+        </View>
+        <View className="column-1" display="flex" flexDirection="column">
+          <TextField
+            name="flatId"
+            control={control}
+            isDisabled={true}
+            placeholder="Kullanıcı Daire Id"
+          />
         </View>
         <View className="column-2" display="flex" flexDirection="column">
           <Select
@@ -250,6 +283,7 @@ const Profile = () => {
             control={control}
             options={formRequiredValues.roles}
             isLoading={loading.formFields}
+            isDisabled={isApartmentAdmin}
             rules={{
               required: {
                 value: true,
@@ -325,6 +359,7 @@ const Profile = () => {
               </Button> */}
         </View>
       </StyledForm>
+      {loading.formFields && <Loader />}
     </StyledView>
   );
 };

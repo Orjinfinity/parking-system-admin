@@ -5,6 +5,9 @@ import { ICar } from '../../interfaces';
 const getCars = (page: number, size: number = 10) =>
   axiosInstance.get(`${END_POINTS.CARS.cars}?page=${page}&size=${size}`);
 
+const getCarsByApartmentId = (page: number, size: number = 10, apartmentId: number) =>
+  axiosInstance.get(`${END_POINTS.CARS.cars}?page=${page}&size=${size}&apartmentsId=${apartmentId}`);
+
 const getCarById = (carId: number) =>
   axiosInstance.get(`${END_POINTS.CARS.cars}/${carId}`);
 
@@ -17,4 +20,4 @@ const updateCar = (carId: number, payload: ICar) =>
 const deleteCar = (carId: number) =>
   axiosInstance.delete(`${END_POINTS.CARS.cars}/${carId}`);
 
-export { getCars, getCarById, addCar, updateCar, deleteCar };
+export { getCars, getCarsByApartmentId, getCarById, addCar, updateCar, deleteCar };

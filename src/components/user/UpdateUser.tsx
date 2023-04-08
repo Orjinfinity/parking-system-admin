@@ -488,8 +488,8 @@ const UpdateUser = ({
                 }}
                 placeholder="Kullanıcının sitesini seçiniz"
               />
-              {errors.brand && (
-                <ErrorMessage> {errors.brand?.message}</ErrorMessage>
+              {errors.apartmentId && (
+                <ErrorMessage> {errors.apartmentId?.message}</ErrorMessage>
               )}
             </View>
             {apartmentOptions.options.blocks &&

@@ -32,7 +32,7 @@ import { getUserApartmentInfo } from './utils';
 function App() {
   const authToken = localStorage.getItem(LocalStorageKeys.AuthToken);
   const user = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
-  const isSuperAdmin = user.roles.some(role => role === Types.ROLE_ADMIN);
+  const isSuperAdmin = user?.roles && user.roles.some(role => role === Types.ROLE_ADMIN);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const dispatch = useAppDispatch();
 

@@ -1,8 +1,9 @@
 import { createContext, Dispatch, useEffect, useReducer } from 'react';
 import { IRequestCallAction, RequestCallActionTypes } from './Types';
-import { getRequestCalls } from '../../services';
+import { getRequestCalls, getRequestCallsByApartmentId } from '../../services';
 import { IRequestCallRow } from '../../consts';
 import { requestCallReducer } from './Reducer';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 export interface IRequestCallState {
   requestCalls: IRequestCallRow[];
@@ -52,22 +53,29 @@ const RequestCallContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(requestCallReducer, initialState);
 
   useEffect(() => {
+    const isApartmentAdmin = getUserIsApartmentAdmin();
+    const apartmentInfo = getApartmentIdForAdmin();
     const fetchRequestCalls = async () => {
-      dispatch({ type: RequestCallActionTypes.SET_LOADING, loading: true });
-      const response = await getRequestCalls(state.page, state.perPageRows);
-      const data = await response.data;
-      const totalRequestCalls = data.totalItems as number;
-      let requestCalls: IRequestCallRow[] = data.resultData;
-      requestCalls = requestCalls.map((requestCall) => ({
-        ...requestCall,
-        isdone: requestCall.isdone.toString(),
-        created_at: new Date(requestCall.created_at).toLocaleString(),
-      }));
-      dispatch({
-        type: RequestCallActionTypes.SET_REQUESTCALLS,
-        requestCalls,
-        totalRequestCalls,
-      });
+      try {
+        const requestCallEndpoint = isApartmentAdmin ? getRequestCallsByApartmentId : getRequestCalls;
+        dispatch({ type: RequestCallActionTypes.SET_LOADING, loading: true });
+        const response = await requestCallEndpoint(state.page, state.perPageRows, apartmentInfo?.id);
+        const data = await response.data;
+        const totalRequestCalls = data.totalItems as number;
+        let requestCalls: IRequestCallRow[] = data.resultData;
+        requestCalls = requestCalls.map((requestCall) => ({
+          ...requestCall,
+          isdone: requestCall.isdone.toString(),
+          created_at: new Date(requestCall.created_at).toLocaleString(),
+        }));
+        dispatch({
+          type: RequestCallActionTypes.SET_REQUESTCALLS,
+          requestCalls,
+          totalRequestCalls,
+        });
+      } catch (error) {
+        dispatch({ type: RequestCallActionTypes.SET_LOADING, loading: false });
+      }
     };
 
     fetchRequestCalls().catch((_) =>
