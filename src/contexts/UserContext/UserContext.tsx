@@ -1,7 +1,7 @@
 import { createContext, Dispatch, useEffect, useReducer } from 'react';
 import { IUserRow } from '../../consts';
 import { getUsers, getUsersByApartmentId } from '../../services';
-import { getApartmentIdForAdmin, getUserApartmentInfo, getUserIsApartmentAdmin } from '../../utils/userHelper';
+import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
 import { userReducer } from './Reducer';
 import { IUserAction, UserActionTypes } from './Types';
 

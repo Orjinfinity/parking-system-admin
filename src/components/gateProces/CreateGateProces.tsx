@@ -1,6 +1,6 @@
 import React, {
   Dispatch,
-  useContext,
+  // useContext,
   useEffect,
   useRef,
   useState,
@@ -13,14 +13,14 @@ import {
   TextField,
   ErrorMessage,
   Button,
-  Loader,
+  // Loader,
   Select,
 } from '..';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
-import { GateProcesActionTypes, GateProcesContext } from '../../contexts';
+// import { GateProcesContext } from '../../contexts';
 import { IDoor, IGateProces, ISelectOption } from '../../interfaces';
-import { addGateProces, getDoors, successMessage } from '../../services';
+import { getDoors } from '../../services';
 
 const StyledForm = styled('form')`
   display: grid;
@@ -42,7 +42,7 @@ const CreateGateProces = ({
   modalIsOpen,
   setModalIsOpen,
 }: ICreateGateProces) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
   const [formRequiredData, setFormRequiredData] = useState<IFormRequiredData>({
     loading: true,
     doors: [],
@@ -56,12 +56,12 @@ const CreateGateProces = ({
   const {
     handleSubmit,
     control,
-    reset,
+    // reset,
     formState: { errors },
   } = useForm<IGateProces>({
     defaultValues: { ...defaultValues },
   });
-  const { state, dispatch } = useContext(GateProcesContext);
+  // const { state, dispatch } = useContext(GateProcesContext);
 
   useEffect(() => {
     if (dataFetchRef.current) {
@@ -232,7 +232,7 @@ const CreateGateProces = ({
           </StyledForm>
         </View>
       </View>
-      {loading && <Loader />}
+      {/* {loading && <Loader />} */}
     </Modal>
   );
 };

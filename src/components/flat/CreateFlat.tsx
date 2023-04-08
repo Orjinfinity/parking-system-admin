@@ -61,13 +61,13 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
     handleSubmit,
     control,
     reset,
-    watch,
-    setValue,
+    // watch,
+    // setValue,
     formState: { errors },
   } = useForm<IFlatForm>();
   const { state, dispatch } = useContext(FlatContext);
 
-  const [flatNumber] = watch(['number']);
+  // const [flatNumber] = watch(['number']);
 
   const onSubmit = async (form: IFlatForm) => {
     console.log('form', form);

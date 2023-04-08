@@ -97,10 +97,13 @@ const CreateDoor = ({ modalIsOpen, setModalIsOpen }: ICreateDoor) => {
   };
 
   useEffect(() => {
+    const defaultValue = { label: user.apartment?.apartment?.name, value: user.apartment?.apartment?.id }
+    if (isApartmentAdmin) setValue('apartmentId', defaultValue as any)
+  }, [isApartmentAdmin, setValue, user])
+
+  useEffect(() => {
     if (dataFetchRef.current) {
       dataFetchRef.current = false;
-      const defaultValue = { label: user.apartment?.apartment?.name, value: user.apartment?.apartment?.id }
-      if (isApartmentAdmin) setValue('apartmentId', defaultValue as any)
       const fetchData = async () => {
         try {
           const response = await getApartments(0, 200);

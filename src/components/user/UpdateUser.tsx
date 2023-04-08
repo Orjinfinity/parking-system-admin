@@ -1,4 +1,4 @@
-import { Dispatch, useContext, useEffect, useState, useMemo } from 'react';
+import { Dispatch, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import {
@@ -89,20 +89,20 @@ const UpdateUser = ({
     },
   });
 
-  const userApartmentInfo = useMemo(
-    () =>
-      selectedUser.flats && selectedUser.flats.length
-        ? getUserApartmentInfo(selectedUser.flats[0])
-        : null,
-    [selectedUser]
-  );
+  // const userApartmentInfo = useMemo(
+  //   () =>
+  //     selectedUser.flats && selectedUser.flats.length
+  //       ? getUserApartmentInfo(selectedUser.flats[0])
+  //       : null,
+  //   [selectedUser]
+  // );
 
-  const [apartmentId, setApartmentId] = useState<number>(
-    userApartmentInfo?.apartment?.id || null
-  );
-  const [blockId, setBlockId] = useState<number>(
-    userApartmentInfo?.block?.id || null
-  );
+  // const [apartmentId, setApartmentId] = useState<number>(
+  //   userApartmentInfo?.apartment?.id || null
+  // );
+  // const [blockId, setBlockId] = useState<number>(
+  //   userApartmentInfo?.block?.id || null
+  // );
 
   const isApartmentAdmin = getUserIsApartmentAdmin();
 
@@ -385,7 +385,7 @@ const UpdateUser = ({
     fetchData().catch((_) =>
       setLoading((loading) => ({ ...loading, formFields: false }))
     );
-  }, [reset, selectedUser]);
+  }, [reset, selectedUser, isApartmentAdmin]);
 
   return (
     <Modal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen}>
