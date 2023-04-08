@@ -77,7 +77,7 @@ const UserContextProvider = ({ children }) => {
             created_at: new Date(user.created_at).toLocaleString(),
           }));
         }
-        console.log('users', users)
+        // console.log('users', users)
         dispatch({ type: UserActionTypes.SET_USERS, users, totalUsers });
       } catch (error) {
         dispatch({ type: UserActionTypes.SET_LOADING, loading: false })

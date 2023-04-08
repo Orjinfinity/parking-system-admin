@@ -382,7 +382,7 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
               )}
             </View>
             <View className="column-3" display="flex" flexDirection="column">
-              {/* <Select
+              <Select
                 name="apartmentId"
                 control={control}
                 options={formRequiredValues.apartments}
@@ -396,9 +396,9 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
                 }}
                 placeholder="Kullanıcının sitesini seçiniz"
               />
-              {errors.brand && (
-                <ErrorMessage> {errors.brand?.message}</ErrorMessage>
-              )} */}
+              {errors.apartmentId && (
+                <ErrorMessage> {errors.apartmentId?.message}</ErrorMessage>
+              )}
             </View>
             {blocks.options && blocks.options.length ? (
               <View className="column-3" display="flex" flexDirection="column">
