@@ -62,7 +62,7 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
     control,
     reset,
     // watch,
-    // setValue,
+    setValue,
     formState: { errors },
   } = useForm<IFlatForm>();
   const { state, dispatch } = useContext(FlatContext);
@@ -107,6 +107,13 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
   //     setValue('number', "0")
   //   }
   // }, [flatNumber, setValue])
+
+  useEffect(() => {
+    if (state.selectedBlock && formRequiredData.blocks) {
+      const selectedBlock = formRequiredData.blocks.find(block => block.value === state.selectedBlock);
+      if (!!selectedBlock) setValue('block', selectedBlock as any);
+    }
+  }, [formRequiredData, setValue, state.selectedBlock])
 
   useEffect(() => {
     if (dataFetchRef.current) {
@@ -169,6 +176,7 @@ const CreateFlat = ({ modalIsOpen, setModalIsOpen }: ICreateFlat) => {
                 control={control}
                 options={formRequiredData.blocks}
                 isLoading={formRequiredData.loading}
+                isDisabled={!!state.selectedBlock}
                 rules={{
                   required: {
                     value: true,

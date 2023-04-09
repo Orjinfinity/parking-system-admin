@@ -14,8 +14,8 @@ export interface IUserFormFields {
   phone: string;
   email: string;
   password: string;
-  apartmentId: number;
-  blockId: number;
+  apartmentId?: number;
+  blockId?: number;
   flatId: number;
 }
 

@@ -5,6 +5,7 @@ export { default as Button } from './button/Button';
 export { default as LinkButton } from './button/LinkButton';
 export { default as TextField } from './textfield/TextField';
 export { default as Select } from './select/Select';
+export { default as SingleSelect } from './select/SingleSelect';
 export { default as ErrorMessage } from './text/ErrorMessage';
 export { default as PhoneInput } from './phone/PhoneInput';
 export { default as Image } from './image/Image';
@@ -50,6 +51,7 @@ export { default as DeleteGateProces } from './gateProces/DeleteGateProces';
 export { default as Modal } from './modal/Modal';
 export { BasicTextField } from './textfield/TextField';
 export { default as Skelaton } from './skelaton/Skelaton';
+export { default as Checkbox } from './checkbox/Checkbox';
 
 // Icons
 export { default as ApartmentAdminIcon } from './icons/ApartmentAdminIcon';

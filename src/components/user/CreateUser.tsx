@@ -102,7 +102,7 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
     email: '',
     roles: '',
     password: '',
-    apartmentId: null,
+    apartmentId: isApartmentAdmin ? { label: user.apartment?.apartment?.name, value: user.apartment?.apartment?.id} as any : null,
     blockId: null,
     flatId: null,
   };
@@ -150,6 +150,7 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
           } else {
             setBlocks((prev) => ({ ...prev, options: [], loading: false }));
             setFlats((prev) => ({ ...prev, options: [], loading: false }));
+            setBlockId(null);
             errorMessage('Seçili siteye ait bir blok bulunamadı.');
           }
         } catch (error) {
@@ -421,7 +422,7 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
                 )}
               </View>
             ) : null}
-            {flats.options && flats.options.length ? (
+            {blocks.options?.length && flats.options && flats.options.length ? (
               <View className="column-3" display="flex" flexDirection="column">
                 <Select
                   name="flatId"

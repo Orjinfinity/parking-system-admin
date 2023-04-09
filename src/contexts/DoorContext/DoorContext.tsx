@@ -51,9 +51,9 @@ const DoorContext = createContext<IDoorContext>({
 
 const DoorContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(doorReducer, initialState);
+  const isApartmentAdmin = getUserIsApartmentAdmin();
 
   useEffect(() => {
-    const isApartmentAdmin = getUserIsApartmentAdmin();
     const apartmentInfo = getApartmentIdForAdmin();
     const fetchDoors = async () => {
       try {
@@ -76,7 +76,7 @@ const DoorContextProvider = ({ children }) => {
     fetchDoors().catch((_) =>
       dispatch({ type: DoorActionTypes.SET_LOADING, loading: false })
     );
-  }, [state.page, state.perPageRows]);
+  }, [state.page, state.perPageRows, isApartmentAdmin]);
 
   return (
     <DoorContext.Provider value={{ state, dispatch }}>

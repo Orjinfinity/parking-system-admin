@@ -51,9 +51,9 @@ const RequestCallContext = createContext<IRequestCallContext>({
 
 const RequestCallContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(requestCallReducer, initialState);
+  const isApartmentAdmin = getUserIsApartmentAdmin();
 
   useEffect(() => {
-    const isApartmentAdmin = getUserIsApartmentAdmin();
     const apartmentInfo = getApartmentIdForAdmin();
     const fetchRequestCalls = async () => {
       try {
@@ -81,7 +81,7 @@ const RequestCallContextProvider = ({ children }) => {
     fetchRequestCalls().catch((_) =>
       dispatch({ type: RequestCallActionTypes.SET_LOADING, loading: false })
     );
-  }, [state.page, state.perPageRows]);
+  }, [state.page, state.perPageRows, isApartmentAdmin]);
 
   return (
     <RequestCallContext.Provider value={{ state, dispatch }}>

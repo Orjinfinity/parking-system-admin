@@ -13,7 +13,7 @@ export interface IRegisterProps {
   surname: string;
   phone: string;
   email: string;
-  password: string;
+  password?: string;
   roles?: Array<string>;
   flatId?: number;
 }

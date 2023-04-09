@@ -10,6 +10,7 @@ interface IFlatActionPayload {
   };
   totalFlats: number;
   deleteFlats: Array<IFlatRow>;
+  selectedBlock: number;
   perPageRows: number;
   loading: boolean;
 }
@@ -18,6 +19,7 @@ export enum FlatActionTypes {
   ADD_FLAT = 'ADD_FLAT',
   SET_FLATS = 'SET_FLATS',
   SET_FILTERED_FLATS = 'SET_FILTERED_FLATS',
+  SET_BLOCK = 'SET_BLOCK',
   UPDATE_FLAT = 'UPDATE_FLAT',
   DELETE_FLAT = 'DELETE_FLAT',
   SET_LOADING = 'SET_LOADING',

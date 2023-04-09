@@ -22,7 +22,7 @@ const carColumns: TableColumn<ICarRow>[] = [
     sortable: true,
   },
   {
-    name: 'Created At',
+    name: 'İşlem Tarihi',
     selector: (row) => row.created_at,
     sortable: true,
   },

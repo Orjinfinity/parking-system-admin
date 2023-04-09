@@ -53,20 +53,24 @@ const ApartmentsContextProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchApartments = async () => {
-      dispatch({ type: ApartmentActionTypes.SET_LOADING, loading: true });
-      const response = await getApartments(state.page, state.perPageRows);
-      const data = await response.data;
-      const totalApartments = data.totalItems as number;
-      let apartments: IApartmentRow[] = data.resultData;
-      apartments = apartments.map((apartment) => ({
-        ...apartment,
-        created_at: new Date(apartment.created_at).toLocaleString(),
-      }));
-      dispatch({
-        type: ApartmentActionTypes.SET_APARTMENTS,
-        apartments,
-        totalApartments,
-      });
+      try {
+        dispatch({ type: ApartmentActionTypes.SET_LOADING, loading: true });
+        const response = await getApartments(state.page, state.perPageRows);
+        const data = await response.data;
+        const totalApartments = data.totalItems as number;
+        let apartments: IApartmentRow[] = data.resultData;
+        apartments = apartments.map((apartment) => ({
+          ...apartment,
+          created_at: new Date(apartment.created_at).toLocaleString(),
+        }));
+        dispatch({
+          type: ApartmentActionTypes.SET_APARTMENTS,
+          apartments,
+          totalApartments,
+        });
+      } catch (error) {
+        dispatch({ type: ApartmentActionTypes.SET_LOADING, loading: false });
+      }
     };
 
     fetchApartments().catch((_) =>

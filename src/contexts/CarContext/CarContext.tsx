@@ -51,9 +51,9 @@ const CarContext = createContext<ICarContext>({
 
 const CarContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(carReducer, initialState);
+  const isApartmentAdmin = getUserIsApartmentAdmin();
 
   useEffect(() => {
-    const isApartmentAdmin = getUserIsApartmentAdmin();
     const apartmentInfo = getApartmentIdForAdmin();
     const fetchCars = async () => {
       try {
@@ -77,7 +77,7 @@ const CarContextProvider = ({ children }) => {
     fetchCars().catch((_) =>
       dispatch({ type: CarActionTypes.SET_LOADING, loading: false })
     );
-  }, [state.page, state.perPageRows]);
+  }, [state.page, state.perPageRows, isApartmentAdmin]);
 
   return (
     <CarContext.Provider value={{ state, dispatch }}>

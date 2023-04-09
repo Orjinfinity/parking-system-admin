@@ -5,6 +5,9 @@ import { IFlat } from '../../interfaces';
 const getFlats = (page: number, size: number = 10) =>
   axiosInstance.get(`${END_POINTS.FLATS.flats}?page=${page}&size=${size}`);
 
+const getAllFlatsByBlockId = (page: number, size: number = 10, blockId: number) =>
+  axiosInstance.get(`${END_POINTS.FLATS.flats}?page=${page}&size=${size}&blockId=${blockId}`);
+
 const getFlatsByBlockId = (blockId: number) =>
   axiosInstance.get(`${END_POINTS.FLATS.flats}?blockId=${blockId}`);
 
@@ -20,4 +23,4 @@ const updateFlat = (flatId: number, payload: IFlat) =>
 const deleteFlat = (flatId: number) =>
   axiosInstance.delete(`${END_POINTS.FLATS.flats}/${flatId}`);
 
-export { getFlats, getFlatsByBlockId, getFlatById, addFlat, updateFlat, deleteFlat };
+export { getFlats, getAllFlatsByBlockId, getFlatsByBlockId, getFlatById, addFlat, updateFlat, deleteFlat };
