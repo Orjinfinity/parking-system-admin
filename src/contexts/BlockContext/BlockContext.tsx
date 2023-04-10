@@ -51,11 +51,11 @@ const BlockContext = createContext<IBlockContext>({
 
 const BlockContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(blockReducer, initialState);
-  
+  const isApartmentAdmin = getUserIsApartmentAdmin();
+
   useEffect(() => {
     const fetchBlocks = async () => {
       try {
-        const isApartmentAdmin = getUserIsApartmentAdmin();
         const apartmentInfo = getApartmentIdForAdmin();
         dispatch({ type: BlockActionTypes.SET_LOADING, loading: true });
         const blocksEndpoint = isApartmentAdmin ? getBlocksByApartmentId : getBlocks;
@@ -76,7 +76,7 @@ const BlockContextProvider = ({ children }) => {
     fetchBlocks().catch((_) =>
       dispatch({ type: BlockActionTypes.SET_LOADING, loading: false })
     );
-  }, [state.page, state.perPageRows]);
+  }, [state.page, state.perPageRows, isApartmentAdmin]);
 
   return (
     <BlockContext.Provider value={{ state, dispatch }}>

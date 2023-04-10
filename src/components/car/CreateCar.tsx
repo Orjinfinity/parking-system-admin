@@ -19,10 +19,11 @@ import {
   Loader,
   Select,
 } from '..';
-import { addCar, getFlats, successMessage } from '../../services';
+import { addCar, errorMessage, getAllBlocksByApartmentId, getApartments, getFlatsByBlockId, successMessage } from '../../services';
 import { CarActionTypes, CarContext } from '../../contexts';
-import { ICar, IFlat, ISelectOption } from '../../interfaces';
+import { IApartment, IBlock, ICar, IFlat, ISelectOption, LocalStorageKeys } from '../../interfaces';
 import { Regex } from '../../utils';
+import { getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 export const StyledForm = styled('form')`
   display: grid;
@@ -35,17 +36,37 @@ interface ICreateCar {
   setModalIsOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface ISelectField {
+  loading: boolean;
+  options: Array<ISelectOption>;
+}
+
 export interface IFormRequiredData {
   loading: boolean;
-  flats: Array<ISelectOption>;
+  apartments: Array<ISelectOption>;
 }
 
 const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [formRequiredData, setFormRequiredData] = useState<IFormRequiredData>({
     loading: true,
-    flats: [],
+    apartments: []
   });
+  const [blocks, setBlocks] = useState<ISelectField>({
+    loading: false,
+    options: [],
+  });
+  const [flats, setFlats] = useState<ISelectField>({
+    loading: false,
+    options: [],
+  });
+
+  const [apartmentId, setApartmentId] = useState<number>();
+  const [blockId, setBlockId] = useState<number>();
+
+  const user = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
+  const isApartmentAdmin = getUserIsApartmentAdmin();
+
   const dataFetchRef = useRef<boolean>(true);
   const defaultValues = {
     plate: '',
@@ -56,24 +77,113 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
     model: '',
     color: '',
     isguest: false,
+    apartmentId: isApartmentAdmin ? { label: user.apartment?.apartment?.name, value: user.apartment?.apartment?.id} as any : null,
+    blockId: null,
     flatId: null,
   };
   const {
     handleSubmit,
     control,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ICar>({
     defaultValues: { ...defaultValues },
   });
   const { state, dispatch } = useContext(CarContext);
 
+  const [apartmentChanges, blockChanges] = watch(['apartmentId', 'blockId']);
+  console.log('field', apartmentChanges, blockChanges);
+
+  useEffect(() => {
+    if (
+      (apartmentChanges as any)?.value &&
+      (apartmentChanges as any).value !== apartmentId
+    ) {
+      setBlocks((prev) => ({ ...prev, loading: true }));
+      const fetchBlocks = async () => {
+        try {
+          const response = await getAllBlocksByApartmentId(
+            (apartmentChanges as any)?.value
+          );
+          if (response.data?.totalPages) {
+            const blocks = response.data.resultData || [];
+            const blockFormField = blocks.map(({ id, name }: IBlock) => ({
+              label: name,
+              value: id,
+            }));
+            setBlocks((prev) => ({
+              ...prev,
+              options: blockFormField,
+              loading: false,
+            }));
+            setFlats((prev) => ({ ...prev, options: [], loading: false }));
+            if ((apartmentChanges as any).value !== apartmentId) {
+              setValue('blockId', null);
+            }
+          } else {
+            setBlocks((prev) => ({ ...prev, options: [], loading: false }));
+            setFlats((prev) => ({ ...prev, options: [], loading: false }));
+            errorMessage('Seçili siteye ait bir blok bulunamadı.');
+          }
+        } catch (error) {
+          setBlocks((prev) => ({ ...prev, loading: false }));
+        }
+        setApartmentId((apartmentChanges as any).value);
+      };
+
+      fetchBlocks();
+    }
+  }, [apartmentChanges, setValue, apartmentId]);
+
+  useEffect(() => {
+    if (
+      ((blockChanges as any)?.value &&
+        (blockChanges as any).value !== blockId) ||
+      ((blockChanges as any)?.value &&
+        !(blocks.options && blocks.options.length))
+    ) {
+      setFlats((prev) => ({ ...prev, loading: true }));
+      const fetchFlats = async () => {
+        try {
+          const response = await getFlatsByBlockId(
+            (blockChanges as any)?.value
+          );
+          if (response.data?.totalPages) {
+            const flats = response.data.resultData || [];
+            const flatFormField = flats.map(({ id, number }: IFlat) => ({
+              label: number,
+              value: id,
+            }));
+            setFlats((prev) => ({
+              ...prev,
+              options: flatFormField,
+              loading: false,
+            }));
+            if ((blockChanges as any).value !== blockId) {
+              setValue('flatId', null);
+            }
+          } else {
+            setFlats((prev) => ({ ...prev, options: [], loading: false }));
+            errorMessage('Seçili blok bilgisine ait bir daire bulunamadı.');
+          }
+        } catch (error) {
+          setFlats((prev) => ({ ...prev, loading: false }));
+        }
+        setBlockId((blockChanges as any).value);
+      };
+      fetchFlats();
+    }
+  }, [blockChanges, setValue, blockId, blocks]);
+
   const onSubmit = async (form: ICar) => {
     setLoading(true);
     console.log('form', form);
     try {
+      const {apartmentId, blockId, ...formValues} = form;
       const response = await addCar({
-        ...form,
+        ...formValues,
         flatId: Number((form.flatId as any).value),
         isguest: (form.isguest as any).value,
       });
@@ -88,7 +198,7 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
             created_at,
             id,
             flatId: (form.flatId as any).value,
-            isguest: (form.isguest as any).value,
+            isguest: (form.isguest as any).value ? 'Evet' : 'Hayır',
           },
         });
         reset(defaultValues);
@@ -102,15 +212,19 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
   useEffect(() => {
     if (dataFetchRef.current) {
       dataFetchRef.current = false;
+      const defaultValue = { label: user.apartment?.apartment?.name, value: user.apartment?.apartment?.id}
+      if(isApartmentAdmin) setValue('apartmentId', defaultValue as any)
       const fetchData = async () => {
         try {
-          const response = await getFlats(0, 200);
-          const flats = response.data.resultData;
-          const updatedFlats = flats.map(({ number, id }: IFlat) => ({
-            label: number,
-            value: id,
-          }));
-          setFormRequiredData({ flats: updatedFlats, loading: false });
+          const resApartments = await getApartments(0, 200);
+          const apartments = resApartments.data.resultData;
+          const updatedApartments = apartments.map(
+            ({ id, name }: IApartment) => ({
+              label: name,
+              value: id,
+            })
+          );
+          setFormRequiredData({ apartments: updatedApartments, loading: false });
         } catch (error) {
           setFormRequiredData((data) => ({ ...data, loading: false }));
         }
@@ -119,7 +233,8 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
         setFormRequiredData((data) => ({ ...data, loading: false }))
       );
     }
-  }, []);
+    
+  }, [isApartmentAdmin, setValue, user]);
 
   return (
     <Modal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen}>
@@ -283,21 +398,64 @@ const CreateCar = ({ modalIsOpen, setModalIsOpen }: ICreateCar) => {
             </View>
             <View display="flex" flexDirection="column" gridColumn="1/5">
               <Select
-                name="flatId"
+                name="apartmentId"
                 control={control}
-                options={formRequiredData.flats}
+                options={formRequiredData.apartments}
+                isLoading={formRequiredData.loading}
+                isDisabled={isApartmentAdmin}
                 rules={{
                   required: {
                     value: true,
-                    message: 'Lütfen daire seçiniz.',
+                    message: 'Lütfen hangi siteye eklemek istediğinizi giriniz',
                   },
                 }}
-                placeholder="Daire seçiniz"
+                placeholder="Kullanıcının sitesini seçiniz"
               />
-              {errors.flatId && (
-                <ErrorMessage> {errors.flatId?.message}</ErrorMessage>
+              {errors.apartmentId && (
+                <ErrorMessage> {errors.apartmentId?.message}</ErrorMessage>
               )}
             </View>
+            {blocks.options && blocks.options.length ? (
+              <View display="flex" flexDirection="column" gridColumn="1/5">
+                <Select
+                  name="blockId"
+                  control={control}
+                  options={blocks.options}
+                  isLoading={blocks.loading}
+                  rules={{
+                    required: {
+                      value: true,
+                      message:
+                        'Lütfen hangi bloka eklemek istediğinizi giriniz',
+                    },
+                  }}
+                  placeholder="Kullanıcının blok bilgisini seçiniz"
+                />
+                {errors.blockId && (
+                  <ErrorMessage> {errors.blockId?.message}</ErrorMessage>
+                )}
+              </View>
+            ) : null}
+            {blocks.options?.length && flats.options && flats.options.length ? (
+              <View display="flex" flexDirection="column" gridColumn="1/5">
+                <Select
+                  name="flatId"
+                  control={control}
+                  options={flats.options}
+                  isLoading={flats.loading}
+                  rules={{
+                    required: {
+                      value: true,
+                      message: 'Lütfen kullanıcı daire bilgisini giriniz',
+                    },
+                  }}
+                  placeholder="Kullanıcının daire bilgisini seçiniz"
+                />
+                {errors.flatId && (
+                  <ErrorMessage> {errors.flatId?.message}</ErrorMessage>
+                )}
+              </View>
+            ) : null}
             <View
               display="flex"
               justifyContent="center"

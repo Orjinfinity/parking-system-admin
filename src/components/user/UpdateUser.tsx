@@ -1,4 +1,4 @@
-import { Dispatch, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import {
@@ -12,6 +12,7 @@ import {
   Loader,
   PhoneInput,
   Select,
+  Checkbox,
 } from '..';
 import { UserActionTypes, UserContext } from '../../contexts';
 import {
@@ -29,10 +30,10 @@ import {
   IFlat,
   ISelectOption,
   IUserFormFields,
+  LocalStorageKeys,
 } from '../../interfaces';
 import { IUserRow } from '../../consts';
-import { getUserApartmentInfo, Regex } from '../../utils';
-import { IFormRequiredFields } from './CreateUser';
+import { Regex } from '../../utils';
 import { getUserIsApartmentAdmin } from '../../utils/userHelper';
 
 const StyledForm = styled('form')`
@@ -53,10 +54,7 @@ const StyledForm = styled('form')`
 
 interface ISelectField {
   loading: boolean;
-  options: {
-    blocks: Array<ISelectOption>;
-    flats: Array<ISelectOption>;
-  };
+  options: Array<ISelectOption>;
 }
 interface IUpdateUser {
   modalIsOpen: boolean;
@@ -76,35 +74,30 @@ const UpdateUser = ({
     formFields: true,
     updateUser: false,
   });
-  const [formRequiredValues, setFormRequiredValues] =
-    useState<IFormRequiredFields>({
-      apartments: [] as Array<ISelectOption>,
-      roles: [] as Array<ISelectOption>,
-    });
-  const [apartmentOptions, setApartmentOptions] = useState<ISelectField>({
+
+  const [roles, setRoles] = useState<ISelectField>({
     loading: false,
-    options: {
-      blocks: [],
-      flats: [],
-    },
+    options: [],
+  });
+  const [apartments, setApartments] = useState<ISelectField>({
+    loading: false,
+    options: [],
+  });
+  const [blocks, setBlocks] = useState<ISelectField>({
+    loading: false,
+    options: [],
+  });
+  const [flats, setFlats] = useState<ISelectField>({
+    loading: false,
+    options: [],
   });
 
-  // const userApartmentInfo = useMemo(
-  //   () =>
-  //     selectedUser.flats && selectedUser.flats.length
-  //       ? getUserApartmentInfo(selectedUser.flats[0])
-  //       : null,
-  //   [selectedUser]
-  // );
-
-  // const [apartmentId, setApartmentId] = useState<number>(
-  //   userApartmentInfo?.apartment?.id || null
-  // );
-  // const [blockId, setBlockId] = useState<number>(
-  //   userApartmentInfo?.block?.id || null
-  // );
+  const [apartmentId, setApartmentId] = useState<number>(null);
+  const [blockId, setBlockId] = useState<number>(null);
+  const [checked, setChecked] = useState<boolean>(false);
 
   const isApartmentAdmin = getUserIsApartmentAdmin();
+  const userInfo = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
 
   const {
     handleSubmit,
@@ -121,21 +114,17 @@ const UpdateUser = ({
       phone: selectedUser.phone || '',
       email: selectedUser.email || '',
       password: selectedUser?.password || '',
+      apartmentId: null,
+      blockId: null,
+      flatId: null,
     },
   });
 
-  const [apartmentChanges, blockChanges] = watch(['apartmentId', 'blockId']);
+  const [apartmentChanges, blockChanges, flatChanges] = watch(['apartmentId', 'blockId', 'flatId']);
 
   const { dispatch } = useContext(UserContext);
 
   const onSubmit = async (form: IUserFormFields) => {
-    if (
-      !form.flatId ||
-      !(apartmentOptions.options.flats && apartmentOptions.options.flats.length)
-    ) {
-      errorMessage('Lütfen kullanıcının daire bilgisini seçiniz.');
-      return;
-    }
     try {
       setLoading((loading) => ({ ...loading, updateUser: true }));
       const { apartmentId, blockId, ...res } = form;
@@ -143,7 +132,7 @@ const UpdateUser = ({
         id: selectedUser.id,
         ...res,
         roles: [(form.roles as any).value],
-        flatId: (form?.flatId as any).value,
+        flatId: (form?.flatId as any)?.value ?? selectedUser?.flatId?.id,
       });
       if (response.status === 200) {
         successMessage(
@@ -156,8 +145,8 @@ const UpdateUser = ({
             created_at: selectedUser.created_at,
             ...form,
             flatId: {
-              id: (form?.flatId as any).value,
-              name: (form?.flatId as any).label,
+              id: (form?.flatId as any)?.value || selectedUser?.flatId?.id,
+              name: (form?.flatId as any).label || selectedUser?.flatId?.name,
             },
             roles: [(form.roles as any).value],
           },
@@ -169,14 +158,71 @@ const UpdateUser = ({
     }
   };
 
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    if (event.target.checked) {
+      const fetchApartments = async () => {
+        try {
+          const response = await getApartments(0, 200);
+          if (response.data?.totalPages) {
+            const apartments = response.data.resultData || [];
+            const apartmentsFormField = apartments.map(
+              ({ id, name }: IApartment) => ({
+                label: name,
+                value: id,
+              })
+            );
+            setApartments((prev) => ({
+              ...prev,
+              options: apartmentsFormField,
+              loading: false,
+            }));
+            if (isApartmentAdmin && userInfo?.apartment)
+              setValue('apartmentId', {
+                label: userInfo.apartment?.apartment?.name,
+                value: userInfo?.apartment?.apartment?.id,
+              } as any);
+          } else {
+            setApartments({ loading: false, options: [] });
+            errorMessage(
+              'Kullanıcının eklenebileceği veya düzenlenebileceği bir site bulunamadı.'
+            );
+          }
+        } catch (error) {
+          setApartments((prev) => ({
+            ...prev,
+            options: [],
+            loading: false,
+          }));
+        }
+      };
+
+      fetchApartments().catch(() => {
+        setApartments((prev) => ({
+          ...prev,
+          options: [],
+          loading: false,
+        }));
+      });
+    } else {
+      setApartments({ loading: false, options: [] });
+      setBlocks({ loading: false, options: [] });
+      setFlats({ loading: false, options: [] });
+      setApartmentId(null);
+      setBlockId(null);
+      setValue('apartmentId', null);
+      setValue('blockId', null);
+      setValue('flatId', null);
+    }
+  };
+
   useEffect(() => {
-    console.log('apartment', apartmentChanges);
+    console.log('apartment', apartmentChanges, apartmentId);
     if (
-      (apartmentChanges as any)?.value 
-      // &&
-      // (apartmentChanges as any).value !== apartmentId
+      (apartmentChanges as any)?.value &&
+      (apartmentChanges as any).value !== apartmentId
     ) {
-      setApartmentOptions((prev) => ({ ...prev, loading: true }));
+      setBlocks((prev) => ({ ...prev, loading: true }));
       const fetchBlocks = async () => {
         try {
           const response = await getAllBlocksByApartmentId(
@@ -188,59 +234,55 @@ const UpdateUser = ({
               label: name,
               value: id,
             }));
-            setApartmentOptions((prev) => ({
+            setBlocks((prev) => ({
               ...prev,
-              options: {
-                blocks: blockFormField,
-                flats: prev.options.flats,
-              },
+              options: blockFormField,
               loading: false,
             }));
-            // if ((apartmentChanges as any).value !== apartmentId) {
-            //   setValue('blockId', null);
-            // }
+            setFlats((prev) => ({ ...prev, options: [], loading: false }));
+            if ((apartmentChanges as any).value !== apartmentId) {
+              setValue('blockId', null);
+            }
           } else {
-            setApartmentOptions((prev) => ({
+            setBlocks((prev) => ({
               ...prev,
-              options: { blocks: [], flats: [] },
+              options: [],
               loading: false,
             }));
+            setFlats((prev) => ({ ...prev, options: [], loading: false }));
             errorMessage('Seçili siteye ait bir blok bulunamadı.');
           }
         } catch (error) {
-          setApartmentOptions((prev) => ({
+          setBlocks((prev) => ({
             ...prev,
-            options: { blocks: [], flats: [] },
+            options: [],
             loading: false,
           }));
+          setFlats((prev) => ({ ...prev, options: [], loading: false }));
         }
-        // setApartmentId((apartmentChanges as any).value);
+        setApartmentId((apartmentChanges as any).value);
       };
 
       fetchBlocks().catch(() => {
-        setApartmentOptions((prev) => ({
+        setBlocks((prev) => ({
           ...prev,
-          options: { blocks: [], flats: [] },
+          options: [],
           loading: false,
         }));
+        setFlats((prev) => ({ ...prev, options: [], loading: false }));
       });
     }
-  }, [apartmentChanges, setValue]);
+  }, [apartmentChanges, setValue, apartmentId]);
 
   useEffect(() => {
-    console.log('block', blockChanges);
+    console.log('block', blockChanges, blockId);
     if (
-      ((blockChanges as any)?.value)
-      // &&
-      //   (blockChanges as any).value !== blockId) 
-      //   ||
-      // ((blockChanges as any)?.value &&
-      //   !(
-      //     apartmentOptions.options.blocks &&
-      //     apartmentOptions.options.blocks.length
-      //   ))
+      ((blockChanges as any)?.value &&
+        (blockChanges as any).value !== blockId) ||
+      ((blockChanges as any)?.value &&
+        !(blocks.options && blocks.options.length))
     ) {
-      setApartmentOptions((prev) => ({ ...prev, loading: true }));
+      setFlats((prev) => ({ ...prev, loading: true }));
       const fetchFlats = async () => {
         try {
           const response = await getFlatsByBlockId(
@@ -252,92 +294,54 @@ const UpdateUser = ({
               label: number,
               value: id,
             }));
-            setApartmentOptions((prev) => ({
+            setFlats((prev) => ({
               ...prev,
-              options: {
-                blocks: prev.options.blocks,
-                flats: flatFormField,
-              },
+              options: flatFormField,
               loading: false,
             }));
-            // if ((blockChanges as any).value !== blockId) {
-            //   setValue('flatId', null);
-            // }
+            if ((blockChanges as any).value !== blockId) {
+              setValue('flatId', null);
+            }
           } else {
-            setApartmentOptions((prev) => ({
+            setFlats((prev) => ({
               ...prev,
-              options: { blocks: prev.options.blocks, flats: [] },
+              options: [],
               loading: false,
             }));
             errorMessage('Seçili blok bilgisine ait bir daire bulunamadı.');
           }
         } catch (error) {
-          setApartmentOptions((prev) => ({
+          setFlats((prev) => ({
             ...prev,
-            options: { blocks: [], flats: [] },
+            options: [],
             loading: false,
           }));
         }
-        // setBlockId((blockChanges as any).value);
+        setBlockId((blockChanges as any).value);
       };
       fetchFlats().catch(() => {
-        setApartmentOptions((prev) => ({
+        setFlats((prev) => ({
           ...prev,
-          options: { blocks: prev.options.blocks, flats: [] },
+          options: [],
           loading: false,
         }));
       });
     }
-  }, [blockChanges]);
+  }, [blockChanges, blockId, setValue, blocks]);
 
   useEffect(() => {
-    const apartmentFields =
-      selectedUser.flats && selectedUser.flats.length
-        ? getUserApartmentInfo(selectedUser.flats[0])
-        : null;
-    console.log('selected', selectedUser, apartmentFields);
     const fetchData = async () => {
       try {
         setLoading((loading) => ({ ...loading, formFields: true }));
-        const [resApartments, resRoles, resBlocks, resFlats] =
-          await Promise.all([
-            getApartments(0),
-            getRoles(0),
-            getAllBlocksByApartmentId(apartmentFields.apartment.id),
-            getFlatsByBlockId(apartmentFields.block.id),
-          ]);
-        const [apartments, roles, blocks, flats] = await [
-          resApartments.data.resultData,
-          resRoles.data.resultData,
-          resBlocks.data.resultData,
-          resFlats.data.resultData,
-        ];
-        const updatedApartments = apartments.map(
-          ({ id, name }: IApartment) => ({
-            label: name,
-            value: id,
-          })
-        );
-        const updatedRoles = !isApartmentAdmin ? roles.map(({ name }) => ({
-          label: name,
-          value: name,
-        })) : [{ label: "user", value: "user" }];;
-        const blockFormField = blocks.map(({ id, name }: IBlock) => ({
-          label: name,
-          value: id,
-        }));
-        const flatFormField = flats.map(({ id, number }: IFlat) => ({
-          label: number,
-          value: id,
-        }));
-        setFormRequiredValues({
-          apartments: updatedApartments,
-          roles: updatedRoles,
-        });
-        setApartmentOptions((prev) => ({
-          ...prev,
-          options: { blocks: blockFormField, flats: flatFormField },
-        }));
+        const resRoles = await getRoles(0);
+        const roles = resRoles.data.resultData;
+        const updatedRoles = !isApartmentAdmin
+          ? roles.map(({ name }) => ({
+              label: name,
+              value: name,
+            }))
+          : [{ label: 'user', value: 'user' }];
+        setRoles({ loading: false, options: updatedRoles });
         const {
           name,
           surname,
@@ -356,26 +360,9 @@ const UpdateUser = ({
           email,
           password,
           roles: { label: userRoles, value: userRoles } as any,
-          ...(apartmentFields
-            ? {
-                apartmentId: {
-                  label: apartmentFields.apartment.name,
-                  value: apartmentFields.apartment.id,
-                } as any,
-                blockId: {
-                  label: apartmentFields.block.name,
-                  value: apartmentFields.block.id,
-                } as any,
-                flatId: {
-                  label: apartmentFields.flat.name,
-                  value: apartmentFields.flat.id,
-                } as any,
-              }
-            : {
-                apartmentId: null,
-                blockId: null,
-                flatId: null,
-              }),
+          apartmentId: null,
+          blockId: null,
+          flatId: null,
         });
         setLoading((loading) => ({ ...loading, formFields: false }));
       } catch (error) {
@@ -385,6 +372,9 @@ const UpdateUser = ({
     fetchData().catch((_) =>
       setLoading((loading) => ({ ...loading, formFields: false }))
     );
+    return () => {
+      setChecked(false);
+    };
   }, [reset, selectedUser, isApartmentAdmin]);
 
   return (
@@ -474,73 +464,107 @@ const UpdateUser = ({
               )}
             </View>
             <View className="column-3" display="flex" flexDirection="column">
-              <Select
-                name="apartmentId"
-                control={control}
-                options={formRequiredValues.apartments}
-                isLoading={loading.formFields}
-                isDisabled={isApartmentAdmin}
-                rules={{
-                  required: {
-                    value: true,
-                    message: 'Lütfen hangi siteye eklemek istediğinizi giriniz',
-                  },
-                }}
-                placeholder="Kullanıcının sitesini seçiniz"
-              />
-              {errors.apartmentId && (
-                <ErrorMessage> {errors.apartmentId?.message}</ErrorMessage>
-              )}
+              <View>
+                <Text>
+                  <strong>Seçili Daire:</strong> {(flatChanges as any)?.label || selectedUser.flatId?.name}
+                </Text>
+                <View mt="16px">
+                  <Checkbox
+                    label="Daire bilgisini güncellemek ister misiniz ?"
+                    checked={checked}
+                    handleChange={handleOnChange}
+                  />
+                </View>
+              </View>
             </View>
-            {apartmentOptions.options.blocks &&
-            apartmentOptions.options.blocks.length ? (
-              <View className="column-3" display="flex" flexDirection="column">
-                <Select
-                  name="blockId"
-                  control={control}
-                  options={apartmentOptions.options.blocks}
-                  isLoading={apartmentOptions.loading}
-                  rules={{
-                    required: {
-                      value: true,
-                      message:
-                        'Lütfen hangi bloka eklemek istediğinizi giriniz',
-                    },
-                  }}
-                  placeholder="Kullanıcının blok bilgisini seçiniz"
-                />
-                {errors.blockId && (
-                  <ErrorMessage> {errors.blockId?.message}</ErrorMessage>
-                )}
-              </View>
-            ) : null}
-            {apartmentOptions.options.flats &&
-            apartmentOptions.options.flats.length ? (
-              <View className="column-3" display="flex" flexDirection="column">
-                <Select
-                  name="flatId"
-                  control={control}
-                  options={apartmentOptions.options.flats}
-                  isLoading={apartmentOptions.loading}
-                  rules={{
-                    required: {
-                      value: true,
-                      message: 'Lütfen kullanıcı daire bilgisini giriniz',
-                    },
-                  }}
-                  placeholder="Kullanıcının daire bilgisini seçiniz"
-                />
-                {errors.flatId && (
-                  <ErrorMessage> {errors.flatId?.message}</ErrorMessage>
-                )}
-              </View>
+            {checked ? (
+              <>
+                {apartments.options && apartments.options.length ? (
+                  <View
+                    className="column-3"
+                    display="flex"
+                    flexDirection="column"
+                  >
+                    <Select
+                      name="apartmentId"
+                      control={control}
+                      options={apartments.options}
+                      isLoading={apartments.loading}
+                      isDisabled={isApartmentAdmin}
+                      rules={{
+                        required: {
+                          value: true,
+                          message:
+                            'Lütfen hangi siteye eklemek istediğinizi giriniz',
+                        },
+                      }}
+                      placeholder="Kullanıcının sitesini seçiniz"
+                    />
+                    {errors.apartmentId && (
+                      <ErrorMessage>
+                        {' '}
+                        {errors.apartmentId?.message}
+                      </ErrorMessage>
+                    )}
+                  </View>
+                ) : null}
+                {blocks.options && blocks.options.length ? (
+                  <View
+                    className="column-3"
+                    display="flex"
+                    flexDirection="column"
+                  >
+                    <Select
+                      name="blockId"
+                      control={control}
+                      options={blocks.options}
+                      isLoading={blocks.loading}
+                      rules={{
+                        required: {
+                          value: true,
+                          message:
+                            'Lütfen hangi bloka eklemek istediğinizi giriniz',
+                        },
+                      }}
+                      placeholder="Kullanıcının blok bilgisini seçiniz"
+                    />
+                    {errors.blockId && (
+                      <ErrorMessage> {errors.blockId?.message}</ErrorMessage>
+                    )}
+                  </View>
+                ) : null}
+                {flats.options && flats.options.length ? (
+                  <View
+                    className="column-3"
+                    display="flex"
+                    flexDirection="column"
+                  >
+                    <Select
+                      name="flatId"
+                      control={control}
+                      options={flats.options}
+                      isLoading={flats.loading}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: 'Lütfen kullanıcı daire bilgisini giriniz',
+                        },
+                      }}
+                      placeholder="Kullanıcının daire bilgisini seçiniz"
+                    />
+                    {errors.flatId && (
+                      <ErrorMessage> {errors.flatId?.message}</ErrorMessage>
+                    )}
+                  </View>
+                ) : null}
+              </>
             ) : null}
             <View className="column-3" display="flex" flexDirection="column">
               <Select
                 name="roles"
                 control={control}
-                options={formRequiredValues.roles}
-                isLoading={loading.formFields}
+                options={roles.options}
+                isLoading={roles.loading}
                 rules={{
                   required: {
                     value: true,

@@ -51,9 +51,9 @@ const GateProcesContext = createContext<IGateProcesContext>({
 
 const GateProcesContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(gateProcesReducer, initialState);
-  
+    const isApartmentAdmin = getUserIsApartmentAdmin();
+
     useEffect(() => {
-      const isApartmentAdmin = getUserIsApartmentAdmin();
       const apartmentInfo = getApartmentIdForAdmin();
       const fetchGateProcesses = async () => {
         try {
@@ -81,7 +81,7 @@ const GateProcesContextProvider = ({ children }) => {
       fetchGateProcesses().catch((_) =>
         dispatch({ type: GateProcesActionTypes.SET_LOADING, loading: false })
       );
-    }, [state.page, state.perPageRows]);
+    }, [state.page, state.perPageRows, isApartmentAdmin]);
   
     return (
       <GateProcesContext.Provider value={{ state, dispatch }}>

@@ -12,8 +12,14 @@ export const flatReducer = (
         ...state,
         flats: action.flats || ([] as Array<IFlatRow>),
         ...(action.totalFlats && { totalFlats: action.totalFlats }),
-        loading: false,
+        loading: false
       };
+    }
+    case FlatActionTypes.SET_BLOCK: {
+      return {
+        ...state,
+        selectedBlock: action.selectedBlock
+      }
     }
     case FlatActionTypes.SET_FILTERED_FLATS: {
       return {

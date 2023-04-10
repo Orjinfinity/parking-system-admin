@@ -7,5 +7,7 @@ export interface ICar {
   model: string;
   color: string;
   isguest: boolean;
+  apartmentId?: number;
+  blockId?: number;
   flatId: number;
 }

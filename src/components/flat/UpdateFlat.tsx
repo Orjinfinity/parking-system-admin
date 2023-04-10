@@ -48,7 +48,7 @@ const UpdateFlat = ({
   } = useForm<IFlatForm>({
     defaultValues: { ...defaultValues },
   });
-  const { dispatch } = useContext(FlatContext);
+  const { state, dispatch } = useContext(FlatContext);
   // const [flatNumber] = watch(['number']);
 
   const onSubmit = async (form: IFlatForm) => {
@@ -161,6 +161,7 @@ const UpdateFlat = ({
                 control={control}
                 options={formRequiredData.blocks}
                 isLoading={formRequiredData.loading}
+                isDisabled={!!state.selectedBlock}
                 rules={{
                   required: {
                     value: true,
