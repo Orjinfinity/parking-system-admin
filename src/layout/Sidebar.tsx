@@ -23,13 +23,15 @@ import imagePath from '../utils/assetHelper';
 const StyledView = styled(View)`
   min-width: 260px;
   position: fixed;
-  z-index: 3;
+  z-index: 9999;
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: ${({ theme }) => theme.shadows.secondary};
+
+  
 `;
 
 const Sidebar = () => {

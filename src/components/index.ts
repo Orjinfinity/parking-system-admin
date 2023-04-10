@@ -51,6 +51,7 @@ export { default as DeleteGateProces } from './gateProces/DeleteGateProces';
 export { default as Modal } from './modal/Modal';
 export { BasicTextField } from './textfield/TextField';
 export { default as Skelaton } from './skelaton/Skelaton';
+export { default as MobileHeader } from './mobileheader/MobileHeader';
 export { default as Checkbox } from './checkbox/Checkbox';
 
 // Icons
@@ -78,3 +79,5 @@ export { default as CloseIcon } from './icons/CloseIcon';
 export { default as UrgentIcon } from './icons/UrgentIcon';
 export { default as AdminIcon } from './icons/AdminIcon';
 export { default as ModeratorIcon } from './icons/ModeratorIcon';
+export { default as MenuIcon } from './icons/MenuIcon';
+ 
