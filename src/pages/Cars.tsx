@@ -13,9 +13,9 @@ const Cars = () => {
         Araç Listesi
       </Title>
       <Text
-        fontSize="small"
         color="textSecondaryColor"
         mb={['12px', '16px', '16px', '24px']}
+        fontSize={['0.6rem', '0.8rem', '0.8rem', '1rem', '1rem']}
       >
         Find all of your company’s administrator accounts and their associate
         roles.

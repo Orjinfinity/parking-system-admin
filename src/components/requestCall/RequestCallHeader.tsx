@@ -28,9 +28,9 @@ const RequestCallHeader = ({
   ) => {
     console.log(requestCalls, key);
     const filteredRequestCalls = (requestCalls || fetchedRequestCalls)
-      .filter(({ description }) =>
-        [description].some(
-          (field) => field && field.toLowerCase().includes(key)
+      .filter(({ description, flatId, userId }) =>
+        [description, flatId, userId].some(
+          (field) => field && `${field}`.toLowerCase().includes(key)
         )
       )
       .map((requestCall) => ({
@@ -65,7 +65,7 @@ const RequestCallHeader = ({
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
-    if (key && key.length > 2) {
+    if (key && key.length > 0) {
       if (!(fetchedRequestCalls && fetchedRequestCalls.length))
         fetchRequestCalls(key);
       setFilteredRequestCall(key);

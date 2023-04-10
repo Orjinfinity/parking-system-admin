@@ -21,8 +21,8 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
   const setFilteredCars = (key: string, cars?: Array<ICarRow>) => {
     console.log(cars, key);
     const filteredCars = (cars || fetchedCars)
-      .filter(({ model, brand, ownername, ownersurname }) =>
-        [model, brand, ownername, ownersurname].some((field) =>
+      .filter(({ model, plate, brand, ownername, ownersurname }) =>
+        [model, plate, brand, ownername, ownersurname].some((field) =>
           field.toLowerCase().includes(key)
         )
       )
@@ -56,7 +56,7 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
-    if (key && key.length > 2) {
+    if (key && key.length > 0) {
       if (!(fetchedCars && fetchedCars.length)) fetchCars(key);
       setFilteredCars(key);
     } else

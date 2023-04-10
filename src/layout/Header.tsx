@@ -110,7 +110,7 @@ const Header = () => {
         fontSize={['0.6rem', '0.8rem', '0.8rem', '1rem', '1rem']}
       >
         {!loading && data ? (
-          <View>
+          <View onClick={() => navigate('/request-calls')}>
             Toplam{' '}
             <strong>
               {' '}

@@ -142,7 +142,7 @@ const UpdateRequestCall = ({
             created_at: selectedRequestCall.created_at,
             userId: (form.userId as any).value,
             flatId: (form.flatId as any).value,
-            isdone: (form.isdone as any).value.toString(),
+            isdone: (form.isdone as any).value ? 'Aktif' : 'Aktif değil'
           },
         });
       }

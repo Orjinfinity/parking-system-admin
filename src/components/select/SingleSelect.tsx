@@ -5,6 +5,10 @@ import { ISelectOption } from '../../interfaces';
 
 const SelectStyled = styled(ReactSelect)<SpaceProps>`
   ${space}
+
+  @media screen and (max-width: 376px) {
+    max-width: 80px
+  }
 `;
 
 interface ISingleSelect {
@@ -14,7 +18,7 @@ interface ISingleSelect {
   placeholder?: string;
   isLoading?: boolean;
   isDisabled?: boolean;
-  width?: string;
+  width?: string[] | string;
   height?: string;
   padding?: string;
   value?: any;

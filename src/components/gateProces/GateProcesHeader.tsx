@@ -67,7 +67,7 @@ const GateProcesHeader = ({
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
-    if (key && key.length > 2) {
+    if (key && key.length > 0) {
       if (!(fetchedProcesess && fetchedProcesess.length))
         fetchGateProcesses(key);
       setFilteredProcesess(key);

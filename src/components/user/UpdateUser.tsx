@@ -591,6 +591,10 @@ const UpdateUser = ({
                     value: true,
                     message: 'Lütfen email adresinizi giriniz',
                   },
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: "Girilen değer email formatına uygun değil"
+                  }
                 }}
                 placeholder="Email"
               />

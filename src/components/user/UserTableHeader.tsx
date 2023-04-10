@@ -73,7 +73,7 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
-    if (key && key.length > 2) {
+    if (key && key.length > 0) {
       if (!(fetchedUsers && fetchedUsers.length)) fetchUsers(key);
       setFilteredUsers(key);
     } else

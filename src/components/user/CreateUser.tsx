@@ -470,6 +470,10 @@ const CreateUser = ({ modalIsOpen, setModalIsOpen }: ICreateUser) => {
                     value: true,
                     message: 'Lütfen email adresinizi giriniz',
                   },
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: "Girilen değer email formatına uygun değil"
+                  }
                 }}
                 placeholder="Email"
               />

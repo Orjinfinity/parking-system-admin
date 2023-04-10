@@ -65,7 +65,7 @@ const RequestCallContextProvider = ({ children }) => {
         let requestCalls: IRequestCallRow[] = data.resultData;
         requestCalls = requestCalls.map((requestCall) => ({
           ...requestCall,
-          isdone: requestCall.isdone.toString(),
+          isdone: requestCall.isdone ? 'Aktif' : 'Aktif değil',
           created_at: new Date(requestCall.created_at).toLocaleString(),
         }));
         dispatch({

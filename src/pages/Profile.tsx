@@ -283,7 +283,7 @@ const Profile = () => {
             control={control}
             options={formRequiredValues.roles}
             isLoading={loading.formFields}
-            isDisabled={isApartmentAdmin}
+            isDisabled={true}
             rules={{
               required: {
                 value: true,

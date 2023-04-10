@@ -110,6 +110,14 @@ const UpdateApartment = ({
                     value: true,
                     message: 'Lütfen apartman adını giriniz',
                   },
+                  minLength: {
+                    value: 4,
+                    message: 'Lütfen 4 karakter ve üstü site bilgisi giriniz.'
+                  },
+                  maxLength: {
+                    value: 60,
+                    message: 'Lütfen maximum 60 karakter giriniz.'
+                  }
                 }}
                 placeholder="Apartman Adı"
               />
@@ -126,6 +134,14 @@ const UpdateApartment = ({
                     value: true,
                     message: 'Lütfen adres bilgisini giriniz',
                   },
+                  minLength: {
+                    value: 20,
+                    message: 'Lütfen 20 karakter ve üstü adres bilgisi giriniz.'
+                  },
+                  maxLength: {
+                    value: 200,
+                    message: 'Lütfen maximum 200 karakter giriniz.'
+                  }
                 }}
                 placeholder="Adres Bilgisi"
               />
@@ -142,6 +158,14 @@ const UpdateApartment = ({
                     value: true,
                     message: 'Lütfen şehir bilgisini giriniz',
                   },
+                  minLength: {
+                    value: 3,
+                    message: 'Lütfen 3 karakter ve üstü şehir ismi giriniz.'
+                  },
+                  maxLength: {
+                    value: 40,
+                    message: 'Lütfen maximum 40 karakter giriniz.'
+                  }
                 }}
                 placeholder="Şehir Adı"
               />

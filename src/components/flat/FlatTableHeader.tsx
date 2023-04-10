@@ -151,28 +151,30 @@ const FlatTableHeader = ({ handleFlatFunctions }: IFlatTableHeader) => {
         <ExportIcon size="20px" mr="8px" mb="4px" />
         Export
       </Button> */}
-      <View display="flex" width="240px"> 
-        <BasicTextField
-          name="search"
-          placeholder="Daire Ara"
-          onChange={handleSearchInput}
-        />
-      </View>
-      {isApartmentAdmin ? (
-        <View display="flex" width="200px">
-          <SingleSelect
-            id="blocks"
-            options={blocks.options}
-            isLoading={blocks.loading}
-            placeholder="Blok seçiniz."
-            value={block}
-            padding="12px"
-            height="28px"
-            width="180px"
-            onChange={onChangeBlocks}
+      <View display="flex">
+        {isApartmentAdmin ? (
+          <View display="flex" width="200px" mr="16px">
+            <SingleSelect
+              id="blocks"
+              options={blocks.options}
+              isLoading={blocks.loading}
+              placeholder="Blok seçiniz."
+              value={block}
+              padding="12px"
+              height="28px"
+              width='180px'
+              onChange={onChangeBlocks}
+            />
+          </View>
+        ) : null}
+        <View display="flex" maxWidth="240px">
+          <BasicTextField
+            name="search"
+            placeholder="Daire Ara"
+            onChange={handleSearchInput}
           />
         </View>
-      ) : null}
+      </View>
       <View display="flex">
         <Button
           fontSize="medium"
@@ -185,7 +187,7 @@ const FlatTableHeader = ({ handleFlatFunctions }: IFlatTableHeader) => {
         >
           <FlatIcon size="24px" mb="2px" />
           <View mr="8px">+</View>
-          <View display={['none', 'none', 'block', 'block', 'block']}>
+          <View display={['none', 'none', 'none', 'block', 'block']}>
             Yeni Daire
           </View>
         </Button>

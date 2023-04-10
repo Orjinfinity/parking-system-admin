@@ -23,7 +23,7 @@ import imagePath from '../utils/assetHelper';
 const StyledView = styled(View)`
   min-width: 260px;
   position: fixed;
-  z-index: 9999;
+  z-index: 3;
   height: 100vh;
   display: flex;
   flex-direction: column;

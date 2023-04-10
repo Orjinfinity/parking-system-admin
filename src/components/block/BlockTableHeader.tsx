@@ -56,7 +56,7 @@ const BlockTableHeader = ({ handleBlockFunctions }: IBlockTableHeader) => {
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
-    if (key && key.length > 2) {
+    if (key && key.length > 0) {
       if (!(fetchedBlocks && fetchedBlocks.length)) fetchBlocks(key);
       setFilteredBlocks(key);
     } else

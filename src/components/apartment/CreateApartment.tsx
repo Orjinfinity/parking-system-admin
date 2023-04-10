@@ -84,10 +84,10 @@ const CreateApartment = ({ modalIsOpen, setModalIsOpen }: ICreateApartment) => {
         padding={['10px', '10px', '14px', '20px', '30px']}
       >
         <Title fontWeight="medium" fontSize="24px" color="textColor">
-          Yeni Apartman Oluştur
+          Yeni Site Oluştur
         </Title>
         <Text mt="12px" fontSize="small" color="textSecondaryColor">
-          Sisteme yeni apartman ekle.
+          Sisteme yeni site ekle.
         </Text>
         <View width="100%" marginTop="36px" marginBottom="36px">
           <StyledForm onSubmit={handleSubmit(onSubmit)}>
@@ -100,6 +100,14 @@ const CreateApartment = ({ modalIsOpen, setModalIsOpen }: ICreateApartment) => {
                     value: true,
                     message: 'Lütfen site adını giriniz',
                   },
+                  minLength: {
+                    value: 4,
+                    message: 'Lütfen 4 karakter ve üstü site bilgisi giriniz.'
+                  },
+                  maxLength: {
+                    value: 50,
+                    message: 'Lütfen maximum 50 karakter giriniz.'
+                  }
                 }}
                 placeholder="Site Adı"
               />
@@ -116,6 +124,14 @@ const CreateApartment = ({ modalIsOpen, setModalIsOpen }: ICreateApartment) => {
                     value: true,
                     message: 'Lütfen adres bilgisini giriniz',
                   },
+                  minLength: {
+                    value: 20,
+                    message: 'Lütfen 20 karakter ve üstü adres bilgisi giriniz.'
+                  },
+                  maxLength: {
+                    value: 200,
+                    message: 'Lütfen maximum 200 karakter giriniz.'
+                  }
                 }}
                 placeholder="Adres Bilgisi"
               />
@@ -132,6 +148,14 @@ const CreateApartment = ({ modalIsOpen, setModalIsOpen }: ICreateApartment) => {
                     value: true,
                     message: 'Lütfen şehir bilgisini giriniz',
                   },
+                  minLength: {
+                    value: 3,
+                    message: 'Lütfen 3 karakter ve üstü şehir ismi giriniz.'
+                  },
+                  maxLength: {
+                    value: 40,
+                    message: 'Lütfen maximum 40 karakter giriniz.'
+                  }
                 }}
                 placeholder="Şehir Adı"
               />

@@ -212,7 +212,7 @@ const CreateRequestCall = ({
             id,
             userId: (form.userId as any).value,
             flatId: (form.flatId as any).value,
-            isdone: (form.isdone as any).value.toString(),
+            isdone: (form.isdone as any).value ? 'Aktif' : 'Aktif değil'
           },
         });
         reset({ isdone: null, description: '', flatId: null, userId: null, apartmentId: isApartmentAdmin ? { label: user.apartment?.apartment?.name, value: user.apartment?.apartment?.id} as any : null, blockId: null });
