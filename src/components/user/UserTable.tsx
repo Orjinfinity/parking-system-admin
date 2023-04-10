@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { customTableStyles, IUserRow, userColumns } from '../../consts';
 import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
@@ -22,7 +22,7 @@ interface ISelectedUser {
 const UserTable = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<ISelectedUser>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<IUserRow>>([]);
+  // const [selectedRows, setSelectedRows] = useState<Array<IUserRow>>([]);
 
   const { state, dispatch } = useContext(UserContext);
 
@@ -50,11 +50,11 @@ const UserTable = () => {
     );
   };
 
-  const handleRowSelected = useCallback((state) => {
-    const selectedRows = state?.selectedRows || [];
-    setSelectedRows(selectedRows);
-    console.log('rowselected', state);
-  }, []);
+  // const handleRowSelected = useCallback((state) => {
+  //   const selectedRows = state?.selectedRows || [];
+  //   setSelectedRows(selectedRows);
+  //   console.log('rowselected', state);
+  // }, []);
 
   const handlePageChange = (page: number) =>
     dispatch({ type: UserActionTypes.UPDATE_PAGE_COUNT, page: page - 1 });
@@ -64,7 +64,7 @@ const UserTable = () => {
   return (
     <View boxShadow="primary">
       <DataTable
-        title={selectedRows.length ? 'Show Title' : ''}
+        title={''}
         selectableRows
         responsive
         className="table"
@@ -125,19 +125,7 @@ const UserTable = () => {
             <Loader position="relative" />
           </View>
         }
-        contextActions={
-          <Button
-            fontSize="medium"
-            letterSpacing=".46px"
-            variant="contained"
-            color="error"
-            size="md"
-          >
-            <DeleteIcon size="20px" mr="8px" mb="2px" />
-            Delete
-          </Button>
-        }
-        onSelectedRowsChange={handleRowSelected}
+        // onSelectedRowsChange={handleRowSelected}
       />
       {selectedUser ? getModalComponent() : null}
     </View>

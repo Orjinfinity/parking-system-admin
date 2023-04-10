@@ -135,7 +135,7 @@ const FlatTableHeader = ({ handleFlatFunctions }: IFlatTableHeader) => {
     <View
       display="flex"
       width="100%"
-      justifyContent={isApartmentAdmin ? 'space-between' : 'flex-end'}
+      justifyContent="space-between"
       mt="20px"
       mb="20px"
       height="38px"
@@ -151,6 +151,13 @@ const FlatTableHeader = ({ handleFlatFunctions }: IFlatTableHeader) => {
         <ExportIcon size="20px" mr="8px" mb="4px" />
         Export
       </Button> */}
+      <View display="flex" width="240px"> 
+        <BasicTextField
+          name="search"
+          placeholder="Daire Ara"
+          onChange={handleSearchInput}
+        />
+      </View>
       {isApartmentAdmin ? (
         <View display="flex" width="200px">
           <SingleSelect
@@ -167,11 +174,6 @@ const FlatTableHeader = ({ handleFlatFunctions }: IFlatTableHeader) => {
         </View>
       ) : null}
       <View display="flex">
-        <BasicTextField
-          name="search"
-          placeholder="Daire Ara"
-          onChange={handleSearchInput}
-        />
         <Button
           fontSize="medium"
           letterSpacing=".46px"
@@ -183,7 +185,9 @@ const FlatTableHeader = ({ handleFlatFunctions }: IFlatTableHeader) => {
         >
           <FlatIcon size="24px" mb="2px" />
           <View mr="8px">+</View>
-          Yeni Daire
+          <View display={['none', 'none', 'block', 'block', 'block']}>
+            Yeni Daire
+          </View>
         </Button>
       </View>
     </View>

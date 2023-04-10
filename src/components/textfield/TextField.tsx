@@ -86,6 +86,7 @@ const TextField = <
 };
 
 const TextFieldRef = styled('input')<StyledProps>`
+  width: 100%;
   outline: 0;
   padding: 12px;
   font-weight: 400;

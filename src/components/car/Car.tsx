@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import styled from 'styled-components';
 import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
@@ -20,10 +20,10 @@ const StyledView = styled(View)`
     max-width: 1086px
   }
   @media screen and (max-width: 992px) {
-    max-width: 656px
+    max-width: 992px
   }
   @media screen and (max-width: 768px) {
-    max-width: 520px
+    max-width: 768px
   }
 
 `
@@ -42,10 +42,9 @@ interface ISelectedCar {
 const Car = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedCar, setSelectedCar] = useState<ISelectedCar>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<ICarRow>>([]);
+  // const [selectedRows, setSelectedRows] = useState<Array<ICarRow>>([]);
 
   const { state, dispatch } = useContext(CarContext);
-  console.log('stat', state);
   const handleCarFunctions = (
     type: CarTableModalTypes,
     car = {} as ICarRow
@@ -70,11 +69,11 @@ const Car = () => {
     );
   };
 
-  const handleRowSelected = useCallback((state) => {
-    const selectedRows = state?.selectedRows || [];
-    setSelectedRows(selectedRows);
-    console.log('rowselected', state);
-  }, []);
+  // const handleRowSelected = useCallback((state) => {
+  //   const selectedRows = state?.selectedRows || [];
+  //   setSelectedRows(selectedRows);
+  //   console.log('rowselected', state);
+  // }, []);
 
   const handlePageChange = (page: number) =>
     dispatch({ type: CarActionTypes.UPDATE_PAGE_COUNT, page: page - 1 });
@@ -84,7 +83,7 @@ const Car = () => {
   return (
     <StyledView boxShadow="primary" maxWidth="calc(100% - 500px)">
       <DataTable
-        title={selectedRows.length ? 'Show Title' : ''}
+        title={''}
         selectableRows
         responsive
         className="table"
@@ -158,7 +157,7 @@ const Car = () => {
             Delete
           </Button>
         }
-        onSelectedRowsChange={handleRowSelected}
+        // onSelectedRowsChange={handleRowSelected}
       />
       {selectedCar ? getModalComponent() : null}
     </StyledView>

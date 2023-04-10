@@ -30,8 +30,6 @@ const StyledView = styled(View)`
   align-items: flex-start;
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: ${({ theme }) => theme.shadows.secondary};
-
-  
 `;
 
 const Sidebar = () => {

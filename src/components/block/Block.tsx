@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
 import { blockColumns, customTableStyles, IBlockRow } from '../../consts';
@@ -22,7 +22,7 @@ interface ISelectedBlock {
 const Block = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedBlock, setSelectedBlock] = useState<ISelectedBlock>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<IBlockRow>>([]);
+  // const [selectedRows, setSelectedRows] = useState<Array<IBlockRow>>([]);
 
   const { state, dispatch } = useContext(BlockContext);
 
@@ -50,11 +50,11 @@ const Block = () => {
     );
   };
 
-  const handleRowSelected = useCallback((state) => {
-    const selectedRows = state?.selectedRows || [];
-    setSelectedRows(selectedRows);
-    console.log('rowselected', state);
-  }, []);
+  // const handleRowSelected = useCallback((state) => {
+  //   const selectedRows = state?.selectedRows || [];
+  //   setSelectedRows(selectedRows);
+  //   console.log('rowselected', state);
+  // }, []);
 
   const handlePageChange = (page: number) =>
     dispatch({ type: BlockActionTypes.UPDATE_PAGE_COUNT, page: page - 1 });
@@ -64,7 +64,7 @@ const Block = () => {
   return (
     <View boxShadow="primary">
       <DataTable
-        title={selectedRows.length ? 'Show Title' : ''}
+        title={''}
         selectableRows
         responsive
         className="table"
@@ -138,7 +138,7 @@ const Block = () => {
             Delete
           </Button>
         }
-        onSelectedRowsChange={handleRowSelected}
+        // onSelectedRowsChange={handleRowSelected}
       />
       {selectedBlock ? getModalComponent() : null}
     </View>

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import { Button, DeleteIcon, EditIcon, Loader, View } from '..';
 import { customTableStyles, doorColumns, IDoorRow } from '../../consts';
@@ -17,7 +17,7 @@ interface ISelectedDoor {
 const Door = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedDoor, setSelectedDoor] = useState<ISelectedDoor>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<IDoorRow>>([]);
+  // const [selectedRows, setSelectedRows] = useState<Array<IDoorRow>>([]);
 
   const { state, dispatch } = useContext(DoorContext);
 
@@ -45,11 +45,11 @@ const Door = () => {
     );
   };
 
-  const handleRowSelected = useCallback((state) => {
-    const selectedRows = state?.selectedRows || [];
-    setSelectedRows(selectedRows);
-    console.log('rowselected', state);
-  }, []);
+  // const handleRowSelected = useCallback((state) => {
+  //   const selectedRows = state?.selectedRows || [];
+  //   setSelectedRows(selectedRows);
+  //   console.log('rowselected', state);
+  // }, []);
 
   const handlePageChange = (page: number) =>
     dispatch({ type: DoorActionTypes.UPDATE_PAGE_COUNT, page: page - 1 });
@@ -58,7 +58,7 @@ const Door = () => {
   return (
     <View boxShadow="primary">
     <DataTable
-      title={selectedRows.length ? 'Show Title' : ''}
+      title={''}
       selectableRows
       responsive
       className="table"
@@ -132,7 +132,7 @@ const Door = () => {
           Delete
         </Button>
       }
-      onSelectedRowsChange={handleRowSelected}
+      // onSelectedRowsChange={handleRowSelected}
     />
     {selectedDoor ? getModalComponent() : null}
   </View>

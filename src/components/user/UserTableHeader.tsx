@@ -1,6 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { View, Button, ExportIcon, BasicTextField, UserPlusIcon } from '..';
-import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
+import { View, Button, BasicTextField, UserPlusIcon } from '..';
+import {
+  getApartmentIdForAdmin,
+  getUserIsApartmentAdmin,
+} from '../../utils/userHelper';
 import { getUsers, getUsersByApartmentId } from '../../services';
 import { UserActionTypes, UserContext } from '../../contexts';
 import { IUserRow } from '../../consts';
@@ -23,27 +26,29 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
           (field) => field && field.toLowerCase().includes(key)
         )
       )
-      .map(user => {
+      .map((user) => {
         if (!isApartmentAdmin) {
           return {
             ...user,
-            roles: user?.roles[0]?.name || "user",
-            ...(user.flats.length && {flatId: { id: user.flats[0]?.id, name: user.flats[0]?.number }}),
+            roles: user?.roles[0]?.name || 'user',
+            ...(user.flats.length && {
+              flatId: { id: user.flats[0]?.id, name: user.flats[0]?.number },
+            }),
             created_at: new Date(user.created_at).toLocaleString(),
-          }
+          };
         } else {
           return {
             ...user,
-            roles: "user",
-            flatId: { id: user?.FlatId, name: user?.FlatNumber} as any,
+            roles: 'user',
+            flatId: { id: user?.FlatId, name: user?.FlatNumber } as any,
             created_at: new Date(user.created_at).toLocaleString(),
-          }
+          };
         }
-      })
+      });
     dispatch({
       type: UserActionTypes.SET_FILTERED_USERS,
-      filter: { key, result: filteredUsers, },
-      totalUsers: filteredUsers?.length || 0
+      filter: { key, result: filteredUsers },
+      totalUsers: filteredUsers?.length || 0,
     });
   };
 
@@ -51,10 +56,14 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
     try {
       const usersEndpoint = isApartmentAdmin ? getUsersByApartmentId : getUsers;
       dispatch({ type: UserActionTypes.SET_LOADING, loading: true });
-      const response = await usersEndpoint(state.page, state.totalUsers || 200, { apartmentId: apartmentInfo?.id });
+      const response = await usersEndpoint(
+        state.page,
+        state.totalUsers || 200,
+        { apartmentId: apartmentInfo?.id }
+      );
       const data = await response.data;
       const users: IUserRow[] = data.resultData;
-      setFilteredUsers(key, users)
+      setFilteredUsers(key, users);
       setFetchedUsers(users);
     } catch (error) {
       console.log(error);
@@ -70,8 +79,8 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
     } else
       dispatch({
         type: UserActionTypes.SET_FILTERED_USERS,
-        filter: { key: '', result: [] as IUserRow[]},
-        ...(fetchedUsers?.length && { totalUsers: fetchedUsers.length})
+        filter: { key: '', result: [] as IUserRow[] },
+        ...(fetchedUsers?.length && { totalUsers: fetchedUsers.length }),
       });
   };
 
@@ -84,7 +93,7 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
       mb="20px"
       height="38px"
     >
-      <Button
+      {/* <Button
         fontSize="medium"
         letterSpacing=".46px"
         variant="dashed"
@@ -94,15 +103,17 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
       >
         <ExportIcon size="20px" mr="8px" mb="4px" />
         Export
-      </Button>
-      <View display="flex">
+      </Button> */}
+      <View display="flex" width="240px">
         <BasicTextField
           name="search"
           placeholder="Kullanıcı Ara"
           onChange={handleSearchInput}
         />
+      </View>
+      <View display="flex">
         <Button
-          fontSize="medium"
+          fontSize={['small', 'small', 'small', 'medium', 'medium']}
           letterSpacing=".46px"
           variant="contained"
           color="primary"
@@ -111,7 +122,9 @@ const UserTableHeader = ({ handleUserFunctions }: IUserTableHeader) => {
           onClick={() => handleUserFunctions('add')}
         >
           <UserPlusIcon size="24px" mr="8px" mb="2px" />
-          Yeni Kullanıcı
+          <View display={['none', 'none', 'block', 'block', 'block']}>
+            Yeni Kullanıcı
+          </View>
         </Button>
       </View>
     </View>

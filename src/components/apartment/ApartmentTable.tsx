@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Button, DeleteIcon, EditIcon, Loader, View } from '..';
 import {
@@ -30,7 +30,7 @@ const ApartmentTable = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedApartment, setSelectedApartment] =
     useState<ISelectedApartment>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<IApartmentRow>>([]);
+  // const [selectedRows, setSelectedRows] = useState<Array<IApartmentRow>>([]);
 
   const { state, dispatch } = useContext(ApartmentContext);
 
@@ -58,11 +58,11 @@ const ApartmentTable = () => {
     );
   };
 
-  const handleRowSelected = useCallback((state) => {
-    const selectedRows = state?.selectedRows || [];
-    setSelectedRows(selectedRows);
-    console.log('rowselected', state);
-  }, []);
+  // const handleRowSelected = useCallback((state) => {
+  //   const selectedRows = state?.selectedRows || [];
+  //   setSelectedRows(selectedRows);
+  //   console.log('rowselected', state);
+  // }, []);
 
   const handlePageChange = (page: number) =>
     dispatch({ type: ApartmentActionTypes.UPDATE_PAGE_COUNT, page: page - 1 });
@@ -72,7 +72,7 @@ const ApartmentTable = () => {
   return (
     <View boxShadow="primary">
       <DataTable
-        title={selectedRows.length ? 'Show Title' : ''}
+        title={''}
         selectableRows
         responsive
         className="table"
@@ -154,7 +154,7 @@ const ApartmentTable = () => {
             Delete
           </Button>
         }
-        onSelectedRowsChange={handleRowSelected}
+        // onSelectedRowsChange={handleRowSelected}
       />
       {selectedApartment ? getModalComponent() : null}
     </View>

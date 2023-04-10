@@ -1,25 +1,37 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react';
 import { IRequestCallRow } from '../../consts';
-import { BasicTextField, Button, ExportIcon, UrgentIcon, View } from '..';
+import { BasicTextField, Button, UrgentIcon, View } from '..';
 import { RequestCallActionTypes, RequestCallContext } from '../../contexts';
 import { getRequestCalls, getRequestCallsByApartmentId } from '../../services';
-import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
+import {
+  getApartmentIdForAdmin,
+  getUserIsApartmentAdmin,
+} from '../../utils/userHelper';
 
 interface IRequestCallTableHeader {
   handleRequestCallFunctions: (type: string) => void;
 }
 
-const RequestCallHeader = ({ handleRequestCallFunctions }: IRequestCallTableHeader) => {
-  const [fetchedRequestCalls, setFetchedRequestCalls] = useState<Array<IRequestCallRow>>([]);
+const RequestCallHeader = ({
+  handleRequestCallFunctions,
+}: IRequestCallTableHeader) => {
+  const [fetchedRequestCalls, setFetchedRequestCalls] = useState<
+    Array<IRequestCallRow>
+  >([]);
   const { state, dispatch } = useContext(RequestCallContext);
   const isApartmentAdmin = getUserIsApartmentAdmin();
   const apartmentInfo = getApartmentIdForAdmin();
 
-  const setFilteredRequestCall = (key: string, requestCalls?: Array<IRequestCallRow>) => {
+  const setFilteredRequestCall = (
+    key: string,
+    requestCalls?: Array<IRequestCallRow>
+  ) => {
     console.log(requestCalls, key);
     const filteredRequestCalls = (requestCalls || fetchedRequestCalls)
       .filter(({ description }) =>
-        [description].some((field) => field && field.toLowerCase().includes(key))
+        [description].some(
+          (field) => field && field.toLowerCase().includes(key)
+        )
       )
       .map((requestCall) => ({
         ...requestCall,
@@ -35,8 +47,14 @@ const RequestCallHeader = ({ handleRequestCallFunctions }: IRequestCallTableHead
   const fetchRequestCalls = async (key: string) => {
     try {
       dispatch({ type: RequestCallActionTypes.SET_LOADING, loading: true });
-      const requestCallsEndpoint = isApartmentAdmin ? getRequestCallsByApartmentId : getRequestCalls;
-      const response = await requestCallsEndpoint(0, state.totalRequestCalls || 200, apartmentInfo?.id);
+      const requestCallsEndpoint = isApartmentAdmin
+        ? getRequestCallsByApartmentId
+        : getRequestCalls;
+      const response = await requestCallsEndpoint(
+        0,
+        state.totalRequestCalls || 200,
+        apartmentInfo?.id
+      );
       const requestCalls: IRequestCallRow[] = await response.data.resultData;
       setFilteredRequestCall(key, requestCalls);
       setFetchedRequestCalls(requestCalls);
@@ -48,26 +66,29 @@ const RequestCallHeader = ({ handleRequestCallFunctions }: IRequestCallTableHead
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      if(!(fetchedRequestCalls && fetchedRequestCalls.length)) fetchRequestCalls(key);
-      setFilteredRequestCall(key)
+      if (!(fetchedRequestCalls && fetchedRequestCalls.length))
+        fetchRequestCalls(key);
+      setFilteredRequestCall(key);
     } else
       dispatch({
         type: RequestCallActionTypes.SET_FILTERED_REQUESTCALLS,
         filter: { key: '', result: [] as IRequestCallRow[] },
-        ...(fetchedRequestCalls?.length && { totalRequestCalls: fetchedRequestCalls.length})
+        ...(fetchedRequestCalls?.length && {
+          totalRequestCalls: fetchedRequestCalls.length,
+        }),
       });
   };
-  
+
   return (
     <View
-    display="flex"
-    width="100%"
-    justifyContent="space-between"
-    mt="20px"
-    mb="20px"
-    height="38px"
-  >
-    <Button
+      display="flex"
+      width="100%"
+      justifyContent="space-between"
+      mt="20px"
+      mb="20px"
+      height="38px"
+    >
+      {/* <Button
       fontSize="medium"
       letterSpacing=".46px"
       variant="dashed"
@@ -77,29 +98,33 @@ const RequestCallHeader = ({ handleRequestCallFunctions }: IRequestCallTableHead
     >
       <ExportIcon size="20px" mr="8px" mb="4px" />
       Export
-    </Button>
-    <View display="flex">
-      <BasicTextField
-        name="search"
-        placeholder="Acil Durum Ara"
-        onChange={handleSearchInput}
-      />
-      <Button
-        fontSize="medium"
-        letterSpacing=".46px"
-        variant="contained"
-        color="primary"
-        ml="16px"
-        size="md"
-        onClick={() => handleRequestCallFunctions('add')}
-      >
-        <UrgentIcon size="24px" mb="2px" />
-        <View mr="8px">+</View>
-        Yeni Acil Durum
-      </Button>
+    </Button> */}
+      <View display="flex" width="240px">
+        <BasicTextField
+          name="search"
+          placeholder="Acil Durum Ara"
+          onChange={handleSearchInput}
+        />
+      </View>
+      <View display="flex">
+        <Button
+          fontSize="medium"
+          letterSpacing=".46px"
+          variant="contained"
+          color="primary"
+          ml="16px"
+          size="md"
+          onClick={() => handleRequestCallFunctions('add')}
+        >
+          <UrgentIcon size="24px" mb="2px" />
+          <View mr="8px">+</View>
+          <View display={['none', 'none', 'block', 'block', 'block']}>
+            Yeni Acil Durum
+          </View>
+        </Button>
+      </View>
     </View>
-  </View>
-  )
-}
+  );
+};
 
-export default RequestCallHeader
+export default RequestCallHeader;

@@ -1,9 +1,12 @@
-import React, { useContext, useState } from 'react'
-import { BasicTextField, Button, ExportIcon, GateIcon, View } from '..';
+import React, { useContext, useState } from 'react';
+import { BasicTextField, Button, GateIcon, View } from '..';
 import { IDoorRow } from '../../consts';
 import { DoorActionTypes, DoorContext } from '../../contexts';
 import { getDoors, getDoorsByApartmentId } from '../../services';
-import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
+import {
+  getApartmentIdForAdmin,
+  getUserIsApartmentAdmin,
+} from '../../utils/userHelper';
 
 interface IDoorTableHeader {
   handleDoorFunctions: (type: string) => void;
@@ -18,13 +21,13 @@ const DoorTableHeader = ({ handleDoorFunctions }: IDoorTableHeader) => {
   const setFilteredDoors = (key: string, doors?: Array<IDoorRow>) => {
     console.log(fetchedDoors, key);
     const filteredDoors = (doors || fetchedDoors)
-    .filter(({ name, camiplink }) =>
-    [name, camiplink].some((field) => field.toLowerCase().includes(key))
-  )
-  .map((door) => ({
-    ...door,
-    created_at: new Date(door.created_at).toLocaleString(),
-  }));
+      .filter(({ name, camiplink }) =>
+        [name, camiplink].some((field) => field.toLowerCase().includes(key))
+      )
+      .map((door) => ({
+        ...door,
+        created_at: new Date(door.created_at).toLocaleString(),
+      }));
     dispatch({
       type: DoorActionTypes.SET_FILTERED_DOORS,
       filter: { key, result: filteredDoors },
@@ -34,12 +37,16 @@ const DoorTableHeader = ({ handleDoorFunctions }: IDoorTableHeader) => {
   const fetchDoors = async (key: string) => {
     try {
       const doorsEndpoint = isApartmentAdmin ? getDoorsByApartmentId : getDoors;
-      const response = await doorsEndpoint(0, state.totalDoors || 200, apartmentInfo?.id);
+      const response = await doorsEndpoint(
+        0,
+        state.totalDoors || 200,
+        apartmentInfo?.id
+      );
       const doors: IDoorRow[] = await response.data.resultData;
       setFilteredDoors(key, doors);
       setFetchedDoors(doors);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setFetchedDoors([]);
     }
   };
@@ -48,12 +55,12 @@ const DoorTableHeader = ({ handleDoorFunctions }: IDoorTableHeader) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
       if (!(fetchedDoors && fetchedDoors.length)) fetchDoors(key);
-      setFilteredDoors(key)
+      setFilteredDoors(key);
     } else
       dispatch({
         type: DoorActionTypes.SET_FILTERED_DOORS,
         filter: { key: '', result: [] as IDoorRow[] },
-        ...(fetchedDoors?.length && { totalDoors: fetchedDoors.length})
+        ...(fetchedDoors?.length && { totalDoors: fetchedDoors.length }),
       });
   };
   return (
@@ -65,7 +72,7 @@ const DoorTableHeader = ({ handleDoorFunctions }: IDoorTableHeader) => {
       mb="20px"
       height="38px"
     >
-      <Button
+      {/* <Button
         fontSize="medium"
         letterSpacing=".46px"
         variant="dashed"
@@ -75,13 +82,15 @@ const DoorTableHeader = ({ handleDoorFunctions }: IDoorTableHeader) => {
       >
         <ExportIcon size="20px" mr="8px" mb="4px" />
         Export
-      </Button>
-      <View display="flex">
+      </Button> */}
+      <View display="flex" width="240px">
         <BasicTextField
-          name="search"
-          placeholder="Kapı Ara"
-          onChange={handleSearchInput}
-        />
+        name="search"
+        placeholder="Kapı Ara"
+        onChange={handleSearchInput}
+      />
+      </View>
+      <View display="flex">
         <Button
           fontSize="medium"
           letterSpacing=".46px"
@@ -93,11 +102,13 @@ const DoorTableHeader = ({ handleDoorFunctions }: IDoorTableHeader) => {
         >
           <GateIcon size="24px" mb="2px" />
           <View mr="8px">+</View>
-          Yeni Kapı
+          <View display={['none', 'none', 'block', 'block', 'block']}>
+            Yeni Kapı
+          </View>
         </Button>
       </View>
     </View>
   );
-}
+};
 
-export default DoorTableHeader
+export default DoorTableHeader;

@@ -1,9 +1,15 @@
 import React, { useContext, useState } from 'react';
-import { BasicTextField, Button, ExportIcon, View } from '..';
+import { BasicTextField, View } from '..';
 import { GateProcesActionTypes, GateProcesContext } from '../../contexts';
-import { getGateProcesses, getGateProcessesByApartmentId } from '../../services';
+import {
+  getGateProcesses,
+  getGateProcessesByApartmentId,
+} from '../../services';
 import { IGateProcesRow } from '../../consts';
-import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
+import {
+  getApartmentIdForAdmin,
+  getUserIsApartmentAdmin,
+} from '../../utils/userHelper';
 
 interface IGateProcesTableHeader {
   handleGateProcesFunctions: (type: string) => void;
@@ -12,12 +18,17 @@ interface IGateProcesTableHeader {
 const GateProcesHeader = ({
   handleGateProcesFunctions,
 }: IGateProcesTableHeader) => {
-  const [fetchedProcesess, setFetchedProcesess] = useState<Array<IGateProcesRow>>([]);
+  const [fetchedProcesess, setFetchedProcesess] = useState<
+    Array<IGateProcesRow>
+  >([]);
   const { state, dispatch } = useContext(GateProcesContext);
   const isApartmentAdmin = getUserIsApartmentAdmin();
   const apartmentInfo = getApartmentIdForAdmin();
 
-  const setFilteredProcesess = (key: string, procesess?: Array<IGateProcesRow>) => {
+  const setFilteredProcesess = (
+    key: string,
+    procesess?: Array<IGateProcesRow>
+  ) => {
     console.log(procesess, key);
     const filteredGateProcesses = (procesess || fetchedProcesess)
       .filter(({ doorId }) =>
@@ -37,8 +48,14 @@ const GateProcesHeader = ({
   const fetchGateProcesses = async (key: string) => {
     try {
       dispatch({ type: GateProcesActionTypes.SET_LOADING, loading: true });
-      const procesessEndpoint = isApartmentAdmin ? getGateProcessesByApartmentId : getGateProcesses;
-      const response = await procesessEndpoint(0, state.totalGateProcesses || 200, apartmentInfo?.id);
+      const procesessEndpoint = isApartmentAdmin
+        ? getGateProcessesByApartmentId
+        : getGateProcesses;
+      const response = await procesessEndpoint(
+        0,
+        state.totalGateProcesses || 200,
+        apartmentInfo?.id
+      );
       const gateProcesses: IGateProcesRow[] = await response.data.resultData;
       setFilteredProcesess(key, gateProcesses);
       setFetchedProcesess(gateProcesses);
@@ -51,13 +68,16 @@ const GateProcesHeader = ({
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      if (!(fetchedProcesess && fetchedProcesess.length)) fetchGateProcesses(key);
+      if (!(fetchedProcesess && fetchedProcesess.length))
+        fetchGateProcesses(key);
       setFilteredProcesess(key);
     } else
       dispatch({
         type: GateProcesActionTypes.SET_FILTERED_GATEPROCESSES,
         filter: { key: '', result: [] as IGateProcesRow[] },
-        ...(fetchedProcesess?.length && { totalGateProcesses: fetchedProcesess.length})
+        ...(fetchedProcesess?.length && {
+          totalGateProcesses: fetchedProcesess.length,
+        }),
       });
   };
   return (
@@ -69,7 +89,7 @@ const GateProcesHeader = ({
       mb="20px"
       height="38px"
     >
-      <Button
+      {/* <Button
         fontSize="medium"
         letterSpacing=".46px"
         variant="dashed"
@@ -79,13 +99,15 @@ const GateProcesHeader = ({
       >
         <ExportIcon size="20px" mr="8px" mb="4px" />
         Export
-      </Button>
-      <View display="flex">
+      </Button> */}
+      <View display="flex" width="240px">
         <BasicTextField
-          name="search"
-          placeholder="İşlem Ara"
-          onChange={handleSearchInput}
-        />
+        name="search"
+        placeholder="İşlem Ara"
+        onChange={handleSearchInput}
+      />
+      </View>
+      <View display="flex">
         {/* <Button
           fontSize="medium"
           letterSpacing=".46px"

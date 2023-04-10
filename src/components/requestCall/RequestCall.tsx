@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { RequestCallActionTypes, RequestCallContext } from '../../contexts';
 import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
@@ -27,7 +27,7 @@ const RequestCall = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedRequestCall, setSelectedRequestCall] =
     useState<ISelectedRequestCall>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<IRequestCallRow>>([]);
+  // const [selectedRows, setSelectedRows] = useState<Array<IRequestCallRow>>([]);
 
   const { state, dispatch } = useContext(RequestCallContext);
   
@@ -55,11 +55,11 @@ const RequestCall = () => {
     );
   };
 
-  const handleRowSelected = useCallback((state) => {
-    const selectedRows = state?.selectedRows || [];
-    setSelectedRows(selectedRows);
-    console.log('rowselected', state);
-  }, []);
+  // const handleRowSelected = useCallback((state) => {
+  //   const selectedRows = state?.selectedRows || [];
+  //   setSelectedRows(selectedRows);
+  //   console.log('rowselected', state);
+  // }, []);
 
   const handlePageChange = (page: number) =>
     dispatch({
@@ -75,7 +75,7 @@ const RequestCall = () => {
   return (
     <View boxShadow="primary">
       <DataTable
-        title={selectedRows.length ? 'Show Title' : ''}
+        title={''}
         selectableRows
         responsive
         className="table"
@@ -159,7 +159,7 @@ const RequestCall = () => {
             Delete
           </Button>
         }
-        onSelectedRowsChange={handleRowSelected}
+        // onSelectedRowsChange={handleRowSelected}
       />
       {selectedRequestCall ? getModalComponent() : null}
     </View>

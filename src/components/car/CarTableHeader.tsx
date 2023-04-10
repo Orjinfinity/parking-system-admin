@@ -1,9 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { View, Button, ExportIcon, BasicTextField, CarIcon } from '..';
+import { View, Button, BasicTextField, CarIcon } from '..';
 import { CarActionTypes, CarContext } from '../../contexts';
 import { getCars, getCarsByApartmentId } from '../../services';
 import { ICarRow } from '../../consts';
-import { getApartmentIdForAdmin, getUserIsApartmentAdmin } from '../../utils/userHelper';
+import {
+  getApartmentIdForAdmin,
+  getUserIsApartmentAdmin,
+} from '../../utils/userHelper';
 
 interface ICarTableHeader {
   handleCarFunctions: (type: string) => void;
@@ -27,17 +30,21 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
         ...car,
         created_at: new Date(car.created_at).toLocaleString(),
       }));
-      dispatch({
-        type: CarActionTypes.SET_FILTERED_CARS,
-        filter: { key, result: filteredCars },
-      });
+    dispatch({
+      type: CarActionTypes.SET_FILTERED_CARS,
+      filter: { key, result: filteredCars },
+    });
   };
 
   const fetchCars = async (key: string) => {
     try {
       dispatch({ type: CarActionTypes.SET_LOADING, loading: true });
       const carsEndpoint = isApartmentAdmin ? getCarsByApartmentId : getCars;
-      const response = await carsEndpoint(0, state.totalCars || 200, apartmentInfo?.id);
+      const response = await carsEndpoint(
+        0,
+        state.totalCars || 200,
+        apartmentInfo?.id
+      );
       const cars: ICarRow[] = await response.data.resultData;
       setFilteredCars(key, cars);
       setFetchedCars(cars);
@@ -50,13 +57,13 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
     if (key && key.length > 2) {
-      if(!(fetchedCars && fetchedCars.length)) fetchCars(key);
+      if (!(fetchedCars && fetchedCars.length)) fetchCars(key);
       setFilteredCars(key);
     } else
       dispatch({
         type: CarActionTypes.SET_FILTERED_CARS,
         filter: { key: '', result: [] as ICarRow[] },
-        ...(fetchedCars?.length && { totalCars: fetchedCars.length})
+        ...(fetchedCars?.length && { totalCars: fetchedCars.length }),
       });
   };
   return (
@@ -68,7 +75,7 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
       mb="20px"
       height="38px"
     >
-      <Button
+      {/* <Button
         fontSize="medium"
         letterSpacing=".46px"
         variant="dashed"
@@ -78,13 +85,15 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
       >
         <ExportIcon size="20px" mr="8px" mb="4px" />
         Export
-      </Button>
-      <View display="flex">
+      </Button> */}
+      <View display="flex" width="240px">
         <BasicTextField
           name="search"
           placeholder="Araç Ara"
           onChange={handleSearchInput}
         />
+      </View>
+      <View display="flex">
         <Button
           fontSize="medium"
           letterSpacing=".46px"
@@ -96,7 +105,9 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
         >
           <CarIcon size="24px" mb="2px" />
           <View mr="8px">+</View>
-          Yeni Araç
+          <View display={['none', 'none', 'block', 'block', 'block']}>
+            Yeni Araç
+          </View>
         </Button>
       </View>
     </View>

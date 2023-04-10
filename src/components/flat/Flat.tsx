@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
 import { FlatActionTypes, FlatContext } from '../../contexts';
@@ -22,7 +22,7 @@ interface ISelectedFlat {
 const Flat = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedFlat, setSelectedFlat] = useState<ISelectedFlat>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<IFlatRow>>([]);
+  // const [selectedRows, setSelectedRows] = useState<Array<IFlatRow>>([]);
 
   const { state, dispatch } = useContext(FlatContext);
 
@@ -50,11 +50,11 @@ const Flat = () => {
     );
   };
 
-  const handleRowSelected = useCallback((state) => {
-    const selectedRows = state?.selectedRows || [];
-    setSelectedRows(selectedRows);
-    console.log('rowselected', state);
-  }, []);
+  // const handleRowSelected = useCallback((state) => {
+  //   const selectedRows = state?.selectedRows || [];
+  //   setSelectedRows(selectedRows);
+  //   console.log('rowselected', state);
+  // }, []);
 
   const handlePageChange = (page: number) =>
     dispatch({ type: FlatActionTypes.UPDATE_PAGE_COUNT, page: page - 1 });
@@ -63,7 +63,7 @@ const Flat = () => {
   return (
     <View boxShadow="primary">
       <DataTable
-        title={selectedRows.length ? 'Show Title' : ''}
+        title={''}
         selectableRows
         responsive
         className="table"
@@ -137,7 +137,7 @@ const Flat = () => {
             Delete
           </Button>
         }
-        onSelectedRowsChange={handleRowSelected}
+        // onSelectedRowsChange={handleRowSelected}
       />
       {selectedFlat ? getModalComponent() : null}
     </View>

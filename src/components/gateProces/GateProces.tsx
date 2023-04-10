@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { GateProcesActionTypes, GateProcesContext } from '../../contexts';
 import { View, Button, Loader, DeleteIcon, Image } from '..';
 import {
@@ -27,7 +27,7 @@ const GateProces = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedGateProces, setSelectedGateProces] =
     useState<ISelectedGateProces>(null);
-  const [selectedRows, setSelectedRows] = useState<Array<IGateProcesRow>>([]);
+  // const [selectedRows, setSelectedRows] = useState<Array<IGateProcesRow>>([]);
 
   const { state, dispatch } = useContext(GateProcesContext);
   const defaultProcessImageUrl = "http://i0.shbdn.com/photos/47/63/80/x5_10854763805tx.jpg";
@@ -57,11 +57,11 @@ const GateProces = () => {
     );
   };
 
-  const handleRowSelected = useCallback((state) => {
-    const selectedRows = state?.selectedRows || [];
-    setSelectedRows(selectedRows);
-    console.log('rowselected', state);
-  }, []);
+  // const handleRowSelected = useCallback((state) => {
+  //   const selectedRows = state?.selectedRows || [];
+  //   setSelectedRows(selectedRows);
+  //   console.log('rowselected', state);
+  // }, []);
 
   const handlePageChange = (page: number) =>
     dispatch({
@@ -76,7 +76,7 @@ const GateProces = () => {
   return (
     <View boxShadow="primary">
       <DataTable
-        title={selectedRows.length ? 'Show Title' : ''}
+        title={''}
         selectableRows
         responsive
         className="table"
@@ -174,7 +174,7 @@ const GateProces = () => {
             Delete
           </Button>
         }
-        onSelectedRowsChange={handleRowSelected}
+        // onSelectedRowsChange={handleRowSelected}
       />
       {selectedGateProces ? getModalComponent() : null}
     </View>
