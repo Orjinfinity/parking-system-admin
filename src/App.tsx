@@ -26,8 +26,8 @@ import { useAppDispatch, useAppSelector } from './store/hooks';
 import ThemeProviderWrapper from './theme';
 import { RequireAuth } from './components';
 import { checkUser } from './store/auth';
-import { getUserById } from './services';
-import { getUserApartmentInfo } from './utils';
+import { addSubscribe, getUserById } from './services';
+import { getUserApartmentInfo, webPush } from './utils';
 
 function App() {
   const authToken = localStorage.getItem(LocalStorageKeys.AuthToken);
@@ -41,11 +41,19 @@ function App() {
       const fetchUser = async () => {
         const response = await getUserById(user?.id);
         const data = await response.data;
-        const flats = data?.flats ? data.flats[0] : null;
-        if(flats) {
-          const apartment = getUserApartmentInfo(data?.flats[0]);
+        const flat = data?.flat 
+        if(flat) {
+          const apartment = getUserApartmentInfo(flat);
           const userInfo = {...user, apartment};
           localStorage.setItem(LocalStorageKeys.User, JSON.stringify(userInfo));
+          const subscriptionData = await webPush()
+          addSubscribe({
+            subscriptionData,
+            payload: {
+              userId: user?.id,
+              apartmentId: apartment?.apartment?.id
+            }
+          })
           dispatch(checkUser(userInfo));
         }
       }

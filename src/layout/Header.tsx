@@ -47,7 +47,7 @@ const roleIcons: {
 } = {
   ROLE_APARTMENTADMIN: ApartmentAdminIcon,
   ROLE_ADMIN: AdminIcon,
-  ROLE_MODERATOR: ModeratorIcon
+  ROLE_MODERATOR: ModeratorIcon,
 };
 
 const Header = () => {
@@ -56,6 +56,7 @@ const Header = () => {
   const dataFetchRef = useRef(true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [pushNotificationCount, setPushNotificationCount] = useState(0);
 
   const { data, loading } = useFetch(
     END_POINTS.REQUEST_CALLS.requestCalls,
@@ -86,6 +87,15 @@ const Header = () => {
     };
   }, [isOpenModal]);
 
+  useEffect(() => {
+    // Service Worker üzerinden gelen push mesajlarını dinleyen event listener
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      setPushNotificationCount((current) => current + 1);
+    });
+  }, []);
+
+  const requestCallCount = (data?.totalItems ?? 0) + pushNotificationCount;
+
   return (
     <View
       width="100%"
@@ -115,7 +125,7 @@ const Header = () => {
             <strong>
               {' '}
               <UrgentIcon mb="6px" mr="1px" size="20px" color="error" />{' '}
-              {data?.totalItems || 0} acil durum çağrısı
+              {requestCallCount} acil durum çağrısı
             </strong>{' '}
             bulunmaktadır.
           </View>
