@@ -8,3 +8,4 @@ export * from './cars';
 export * from './doors';
 export * from './requestCalls';
 export * from './gateProcesses';
+export * from './subscription';

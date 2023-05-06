@@ -63,4 +63,7 @@ export const END_POINTS = {
     /** Get, Put and Delete */
     gateProcessById: '/gateProcesses/:id',
   },
+  SUBSCRIBE: {
+    subscription: '/subscription',
+  },
 };
