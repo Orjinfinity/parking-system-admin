@@ -16,42 +16,25 @@ import {
   RequestCalls,
   ResetPassword,
   Profile,
-  Register
+  Register,
 } from './pages';
 import ProtectedRoute from './components/routes/ProtectedRoute';
+import { useAppDispatch, useAppSelector } from './store/hooks';
+import { LocalStorageKeys, Types } from './interfaces';
 import PrivateLayout from './layout/PrivateLayout';
 import PublicLayout from './layout/PublicLayout';
-import { LocalStorageKeys, Types } from './interfaces';
-import { useAppDispatch, useAppSelector } from './store/hooks';
 import ThemeProviderWrapper from './theme';
 import { RequireAuth } from './components';
 import { checkUser } from './store/auth';
-import { getUserById } from './services';
-import { getUserApartmentInfo } from './utils';
 
 function App() {
   const authToken = localStorage.getItem(LocalStorageKeys.AuthToken);
   const user = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
-  const isSuperAdmin = user?.roles && user.roles.some(role => role === Types.ROLE_ADMIN);
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const isSuperAdmin =
+    user?.roles && user.roles.some((role) => role === Types.ROLE_ADMIN);
   const dispatch = useAppDispatch();
+  const isModerator = useAppSelector((state) => state.auth.isModerator);
 
-  useEffect(() => {
-    if (user && isAuthenticated) {
-      const fetchUser = async () => {
-        const response = await getUserById(user?.id);
-        const data = await response.data;
-        const flats = data?.flats ? data.flats[0] : null;
-        if(flats) {
-          const apartment = getUserApartmentInfo(data?.flats[0]);
-          const userInfo = {...user, apartment};
-          localStorage.setItem(LocalStorageKeys.User, JSON.stringify(userInfo));
-          dispatch(checkUser(userInfo));
-        }
-      }
-      fetchUser();
-    }
-  }, [user, dispatch, isAuthenticated])
 
   useEffect(() => {
     if (authToken && user) dispatch(checkUser(user));
@@ -71,13 +54,19 @@ function App() {
           >
             <Route index element={<Dashboard />} />
             <Route path="/users" element={<Users />} />
-            {isSuperAdmin ? <Route path="/apartments" element={<Apartments />} /> : null}
-            <Route path="/blocks" element={<Blocks />} />
-            <Route path="/flats" element={<Flats />} />
-            <Route path="/gates" element={<Gates />} />
-            <Route path="/cars" element={<Cars />} />
+            {isSuperAdmin ? (
+              <Route path="/apartments" element={<Apartments />} />
+            ) : null}
+            {!isModerator ? (
+              <>
+                <Route path="/blocks" element={<Blocks />} />
+                <Route path="/flats" element={<Flats />} />
+                <Route path="/gates" element={<Gates />} />
+                <Route path="/cars" element={<Cars />} />
+                <Route path="/gate-processes" element={<GateProcesses />} />
+              </>
+            ) : null}
             <Route path="/request-calls" element={<RequestCalls />} />
-            <Route path="/gate-processes" element={<GateProcesses />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
           <Route

@@ -1,10 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser, LocalStorageKeys } from '../../interfaces';
 import { errorMessage, ILoginProps, login } from '../../services';
+import { getUserApartmentInfo } from '../../utils';
 
 interface InitialState {
   loading: boolean;
   isAuthenticated: boolean;
+  isModerator: boolean;
+  apartment: {[key: string] : {
+    id: number;
+    name: string;
+  }}
   user: IUser;
   error: string;
 }
@@ -12,6 +18,8 @@ interface InitialState {
 const initialState: InitialState = {
   loading: false,
   isAuthenticated: false,
+  isModerator: false,
+  apartment: {},
   user: {} as IUser,
   error: '',
 };
@@ -31,6 +39,7 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = true;
       state.loading = false;
+      state.isModerator = action.payload.roles.some(role => role.includes("ROLE_MODERATOR"));
       state.error = '';
     },
     logout: () => {
@@ -53,20 +62,25 @@ const authSlice = createSlice({
           id: number;
           roles: Array<string>;
           username: string;
+          flat: any;
         }>
       ) => {
-        const { accessToken, email, id, username, roles } = action.payload;
-        const user = { email, id, username, roles };
+        const { accessToken, email, id, username, roles, flat } = action.payload;
+        const apartment = getUserApartmentInfo(flat);
+        const user = { email, id, username, roles, apartment };
         const isIncludeRole = roles.some(role => LoginRoles.includes(role));
         state.loading = false;
         state.error = '';
         if(isIncludeRole) {
           state.user = user;
           state.isAuthenticated = true;
+          state.apartment = apartment;
+          state.isModerator = action.payload.roles.some(role => role.includes("ROLE_MODERATOR"));
           localStorage.setItem(LocalStorageKeys.AuthToken, accessToken);
           localStorage.setItem(LocalStorageKeys.User, JSON.stringify(user));
         } else {
           state.isAuthenticated = false;
+          state.isModerator = false;
           errorMessage(`${roles[0].replace('ROLE_', '')} rolünün giriş yetkisi bulunmamaktadır.`)
         }
       }

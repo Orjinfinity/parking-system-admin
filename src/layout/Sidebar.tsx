@@ -18,6 +18,7 @@ import {
 } from '../components';
 import ApartmentIcon from '../components/icons/ApartmentIcon';
 import { LocalStorageKeys, Types } from '../interfaces';
+import { useAppSelector } from '../store/hooks';
 import imagePath from '../utils/assetHelper';
 
 const StyledView = styled(View)`
@@ -36,6 +37,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem(LocalStorageKeys.User));
   const isSuperAdmin = user.roles.some((role) => role === Types.ROLE_ADMIN);
+  const isModerator = useAppSelector((state) => state.auth.isModerator);
   return (
     <StyledView p={[12, 12, 12, 16, 16]}>
       <View display="flex" onClick={() => navigate('/')}>
@@ -87,76 +89,80 @@ const Sidebar = () => {
               </LinkButton>
             </ListItem>
           ) : null}
-          <ListItem height="42px" borderRadius="6px" mb="10px">
-            <LinkButton
-              to="/blocks"
-              color="linkPrimary"
-              fontSize="medium"
-              padding="12px"
-              variant="link"
-              display="flex"
-              width="100%"
-            >
-              <BuildingIcon mr="12px" size="20px" color="textColor" />
-              Bloklar
-            </LinkButton>
-          </ListItem>
-          <ListItem height="42px" borderRadius="6px" mb="10px">
-            <LinkButton
-              to="/flats"
-              color="linkPrimary"
-              fontSize="medium"
-              padding="12px"
-              variant="link"
-              display="flex"
-              width="100%"
-            >
-              <FlatIcon mr="12px" size="20px" color="textColor" />
-              Daireler
-            </LinkButton>
-          </ListItem>
-          <ListItem height="42px" borderRadius="6px" mb="10px">
-            <LinkButton
-              to="/gates"
-              color="linkPrimary"
-              fontSize="medium"
-              padding="12px"
-              variant="link"
-              display="flex"
-              width="100%"
-            >
-              <GateIcon mr="12px" size="20px" color="textColor" />
-              Giriş Kapıları
-            </LinkButton>
-          </ListItem>
-          <ListItem height="42px" borderRadius="6px" mb="10px">
-            <LinkButton
-              to="/gate-processes"
-              color="linkPrimary"
-              fontSize="medium"
-              padding="12px"
-              variant="link"
-              display="flex"
-              width="100%"
-            >
-              <GateProcesesIcon mr="12px" size="20px" color="textColor" />
-              Giriş Çıkış İşlemleri
-            </LinkButton>
-          </ListItem>
-          <ListItem height="42px" borderRadius="6px" mb="10px">
-            <LinkButton
-              to="/cars"
-              color="linkPrimary"
-              fontSize="medium"
-              padding="12px"
-              variant="link"
-              display="flex"
-              width="100%"
-            >
-              <CarIcon mr="12px" size="20px" color="textColor" />
-              Araçlar
-            </LinkButton>
-          </ListItem>
+          {!isModerator ? (
+            <>
+              <ListItem height="42px" borderRadius="6px" mb="10px">
+                <LinkButton
+                  to="/blocks"
+                  color="linkPrimary"
+                  fontSize="medium"
+                  padding="12px"
+                  variant="link"
+                  display="flex"
+                  width="100%"
+                >
+                  <BuildingIcon mr="12px" size="20px" color="textColor" />
+                  Bloklar
+                </LinkButton>
+              </ListItem>
+              <ListItem height="42px" borderRadius="6px" mb="10px">
+                <LinkButton
+                  to="/flats"
+                  color="linkPrimary"
+                  fontSize="medium"
+                  padding="12px"
+                  variant="link"
+                  display="flex"
+                  width="100%"
+                >
+                  <FlatIcon mr="12px" size="20px" color="textColor" />
+                  Daireler
+                </LinkButton>
+              </ListItem>
+              <ListItem height="42px" borderRadius="6px" mb="10px">
+                <LinkButton
+                  to="/gates"
+                  color="linkPrimary"
+                  fontSize="medium"
+                  padding="12px"
+                  variant="link"
+                  display="flex"
+                  width="100%"
+                >
+                  <GateIcon mr="12px" size="20px" color="textColor" />
+                  Giriş Kapıları
+                </LinkButton>
+              </ListItem>
+              <ListItem height="42px" borderRadius="6px" mb="10px">
+                <LinkButton
+                  to="/gate-processes"
+                  color="linkPrimary"
+                  fontSize="medium"
+                  padding="12px"
+                  variant="link"
+                  display="flex"
+                  width="100%"
+                >
+                  <GateProcesesIcon mr="12px" size="20px" color="textColor" />
+                  Giriş Çıkış İşlemleri
+                </LinkButton>
+              </ListItem>
+              <ListItem height="42px" borderRadius="6px" mb="10px">
+                <LinkButton
+                  to="/cars"
+                  color="linkPrimary"
+                  fontSize="medium"
+                  padding="12px"
+                  variant="link"
+                  display="flex"
+                  width="100%"
+                >
+                  <CarIcon mr="12px" size="20px" color="textColor" />
+                  Araçlar
+                </LinkButton>
+              </ListItem>
+            </>
+          ) : null}
           <ListItem height="42px" borderRadius="6px" mb="10px">
             <LinkButton
               to="/request-calls"

@@ -66,14 +66,14 @@ const UserContextProvider = ({ children }) => {
           users = users.map((user) => ({
             ...user,
             roles: user?.roles[0]?.name || "user",
-            ...(user.flats.length && {flatId: { id: user.flats[0]?.id, name: user.flats[0]?.number }}),
+            ...(user.flat && {flatId: { id: user.flat?.id, name: user.flat?.number }}),
             created_at: new Date(user.created_at).toLocaleString(),
           }));
         } else {
           users = users.map((user: any) => ({
             ...user,
             roles: "user",
-            flatId: { id: user?.FlatId, name: user?.FlatNumber},
+            flatId: { id: user?.flat?.id, name: user.flat?.number},
             created_at: new Date(user.created_at).toLocaleString(),
           }));
         }

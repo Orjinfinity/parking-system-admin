@@ -127,10 +127,11 @@ const UpdateUser = ({
   const onSubmit = async (form: IUserFormFields) => {
     try {
       setLoading((loading) => ({ ...loading, updateUser: true }));
-      const { apartmentId, blockId, ...res } = form;
+      const { apartmentId, blockId, password, ...res } = form;
       const response = await updateUser(selectedUser.id, {
         id: selectedUser.id,
         ...res,
+        ...(Boolean(selectedUser.password !== password) && { password }),
         roles: [(form.roles as any).value],
         flatId: (form?.flatId as any)?.value ?? selectedUser?.flatId?.id,
       });
