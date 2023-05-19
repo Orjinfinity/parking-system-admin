@@ -41,7 +41,7 @@ export const DummyUsers: IUserRow[] = [
 
 const userColumns: TableColumn<IUserRow>[] = [
   {
-    name: '# Id',
+    name: '# Numara',
     selector: (row) => row.id,
     sortable: true,
   },

@@ -27,7 +27,7 @@ const Countrys: Array<ICountryOption> = [
 
 const apartmentColumns: TableColumn<IApartmentRow>[] = [
   {
-    name: '# Id',
+    name: '# Numara',
     selector: (row) => row.id,
     sortable: true,
   },
