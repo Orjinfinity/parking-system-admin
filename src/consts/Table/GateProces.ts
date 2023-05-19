@@ -11,7 +11,7 @@ interface IGateProcesRow {
 
 const gateProcesColumns: TableColumn<IGateProcesRow>[] = [
   {
-    name: '# Id',
+    name: '# Numara',
     selector: (row) => row.id,
     sortable: true,
   },

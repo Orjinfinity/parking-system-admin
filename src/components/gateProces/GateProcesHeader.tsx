@@ -50,7 +50,7 @@ const GateProcesHeader = ({
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
-    if (key && key.length > 2) {
+    if (key && key.length > 0) {
       if (!(fetchedProcesess && fetchedProcesess.length)) fetchGateProcesses(key);
       setFilteredProcesess(key);
     } else
@@ -66,8 +66,10 @@ const GateProcesHeader = ({
       width="100%"
       justifyContent="space-between"
       mt="20px"
+      flexDirection={['column','column','row']}
       mb="20px"
-      height="38px"
+      gridRowGap={['25px','25px','0px']}
+      height={['auto','auto','38px']}
     >
       <Button
         fontSize="medium"

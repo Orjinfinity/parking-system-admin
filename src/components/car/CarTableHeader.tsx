@@ -49,7 +49,7 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const key = event.target.value.toLowerCase() || '';
-    if (key && key.length > 2) {
+    if (key && key.length > 0) {
       if(!(fetchedCars && fetchedCars.length)) fetchCars(key);
       setFilteredCars(key);
     } else
@@ -64,9 +64,11 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
       display="flex"
       width="100%"
       justifyContent="space-between"
+      flexDirection={['column','column','row']}
       mt="20px"
+      gridRowGap={['25px','25px','0px']}
       mb="20px"
-      height="38px"
+      height={['auto','auto','38px']}
     >
       <Button
         fontSize="medium"
@@ -79,7 +81,7 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
         <ExportIcon size="20px" mr="8px" mb="4px" />
         Export
       </Button>
-      <View display="flex">
+      <View display="flex" flexDirection={['column','row','row']} gridRowGap={['25px','25px','0px']}>
         <BasicTextField
           name="search"
           placeholder="Araç Ara"
@@ -90,7 +92,7 @@ const CarTableHeader = ({ handleCarFunctions }: ICarTableHeader) => {
           letterSpacing=".46px"
           variant="contained"
           color="primary"
-          ml="16px"
+          ml={['0px','0px','16px']}
           size="md"
           onClick={() => handleCarFunctions('add')}
         >

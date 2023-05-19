@@ -17,7 +17,7 @@ interface ICarRow {
 
 const carColumns: TableColumn<ICarRow>[] = [
   {
-    name: '# Id',
+    name: '# Numara',
     selector: (row) => row.id,
     sortable: true,
   },
@@ -32,15 +32,11 @@ const carColumns: TableColumn<ICarRow>[] = [
     sortable: true,
   },
   {
-    name: 'Araç Sahibi Adı',
-    selector: (row) => row.ownername,
+    name: 'Araç Sahibi Adı Soyadı',
+    selector: (row) => row.ownername + " " + row.ownersurname,
     sortable: true,
   },
-  {
-    name: 'Araç Sahibi Soyadı',
-    selector: (row) => row.ownersurname,
-    sortable: true,
-  },
+  
   {
     name: 'Telefon Numarası',
     selector: (row) => row.ownerphone,

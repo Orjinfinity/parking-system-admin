@@ -136,9 +136,11 @@ const FlatTableHeader = ({ handleFlatFunctions }: IFlatTableHeader) => {
       display="flex"
       width="100%"
       justifyContent={isApartmentAdmin ? 'space-between' : 'flex-end'}
+      flexDirection={['column','column','row']}
       mt="20px"
+      gridRowGap={['25px','25px','0px']}
       mb="20px"
-      height="38px"
+      height={['auto','auto','38px']}
     >
       {/* <Button
         fontSize="medium"
@@ -166,7 +168,7 @@ const FlatTableHeader = ({ handleFlatFunctions }: IFlatTableHeader) => {
           />
         </View>
       ) : null}
-      <View display="flex">
+     <View display="flex" flexDirection={['column','row','row']} gridRowGap={['25px','25px','0px']}> 
         <BasicTextField
           name="search"
           placeholder="Daire Ara"
@@ -177,7 +179,7 @@ const FlatTableHeader = ({ handleFlatFunctions }: IFlatTableHeader) => {
           letterSpacing=".46px"
           variant="contained"
           color="primary"
-          ml="16px"
+          ml={['0px','0px','16px']}
           size="md"
           onClick={() => handleFlatFunctions('add')}
         >

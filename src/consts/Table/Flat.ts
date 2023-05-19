@@ -11,7 +11,7 @@ interface IFlatRow {
 
 const flatColumns: TableColumn<IFlatRow>[] = [
   {
-    name: '# Id',
+    name: '# Numara',
     selector: (row) => row.id,
     sortable: true,
   },

@@ -41,7 +41,7 @@ const Sidebar = () => {
   return (
     <StyledView p={[12, 12, 12, 16, 16]}>
       <View display="flex" onClick={() => navigate('/')}>
-        <Image height="36px" src={imagePath('logo.png')} alt="logo" />
+        <Image height="100px" src={imagePath('logo.png')} alt="logo" />
       </View>
       <View width="100%">
         <List mt="25px">

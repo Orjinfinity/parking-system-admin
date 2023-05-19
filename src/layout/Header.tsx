@@ -64,6 +64,7 @@ const Header = () => {
     []
   );
   const user = useAppSelector((state) => state.auth.user);
+  console.log(user)
   const type = user.roles[0] || 'ROLE_USER';
   const AdminIcon = useMemo(() => roleIcons[type], [type]);
   const userRole = UserTypes[type as keyof typeof Types];

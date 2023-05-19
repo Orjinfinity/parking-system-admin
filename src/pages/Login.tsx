@@ -56,7 +56,7 @@ const Login = () => {
   return (
     <StyledView boxShadow="primary" height={['100vh', '100vh', 'auto']}>
       <View display="flex" justifyContent="center" mb="32px">
-        <Image height="42px" src={imagePath('logo.png')} alt="logo" />
+        <Image height="100px" src={imagePath('logo.png')} alt="logo" />
       </View>
       <Title
         mb="32px"

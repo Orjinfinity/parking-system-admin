@@ -9,7 +9,7 @@ interface IBlockRow {
 
 const blockColumns: TableColumn<IBlockRow>[] = [
   {
-    name: '# Id',
+    name: '# Numara',
     selector: (row) => row.id,
     sortable: true,
   },
