@@ -11,7 +11,7 @@ interface IDoorRow {
 
 const doorColumns: TableColumn<IDoorRow>[] = [
   {
-    name: '# Id',
+    name: '# Numara',
     selector: (row) => row.id,
     sortable: true,
   },

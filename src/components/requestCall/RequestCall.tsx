@@ -3,6 +3,7 @@ import DataTable from 'react-data-table-component';
 import { RequestCallActionTypes, RequestCallContext } from '../../contexts';
 import { View, Button, Loader, EditIcon, DeleteIcon } from '..';
 import CreateRequestCall from './CreateRequestCall';
+import { useAppSelector } from '../../store/hooks';
 import DeleteRequestCall from './DeleteRequestCall';
 import UpdateRequestCall from './UpdateRequestCall';
 import {
@@ -24,6 +25,8 @@ interface ISelectedRequestCall {
 }
 
 const RequestCall = () => {
+  const user = useAppSelector((state) => state.auth.user);
+
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedRequestCall, setSelectedRequestCall] =
     useState<ISelectedRequestCall>(null);
@@ -80,9 +83,9 @@ const RequestCall = () => {
         responsive
         className="table"
         columns={[
-          ...requestCallColumns,
+          ...requestCallColumns(user.roles),
           {
-            cell: (row) => (
+            cell: (row) => (                
               <View
                 display="flex"
                 justifyContent="space-between"
