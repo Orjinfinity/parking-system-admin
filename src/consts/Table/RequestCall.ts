@@ -1,5 +1,4 @@
 import { TableColumn } from 'react-data-table-component';
-import {useAppSelector } from '../../store/hooks';
 
 interface IRequestCallRow {
   id?: number;
@@ -12,19 +11,14 @@ interface IRequestCallRow {
     block: {
       name: string;
 
-      apartment:{
-         name:string;
-      }
+      apartment: {
+        name: string;
+      };
     };
-    number:string;
-
-
-};
+    number: string;
+  };
 }
-// TableColumn<IRequestCallRow>[]
-const requestCallColumns = (roles) => 
-
-[
+const requestCallColumns = (roles): TableColumn<IRequestCallRow>[] => [
   {
     name: '# Numara',
     selector: (row) => row.id,
@@ -55,17 +49,17 @@ const requestCallColumns = (roles) =>
     selector: (row) => row.flatId,
     sortable: true,
   },
-  roles.includes("ROLE_ADMIN") &&  {
+  roles.includes('ROLE_ADMIN') && {
     name: 'Daire No',
     selector: (row) => row.flat.number,
     sortable: true,
   },
-  roles.includes("ROLE_ADMIN") &&  {
+  roles.includes('ROLE_ADMIN') && {
     name: 'Daire Blok',
     selector: (row) => row.flat.block.name,
     sortable: true,
   },
-  roles.includes("ROLE_ADMIN") &&  {
+  roles.includes('ROLE_ADMIN') && {
     name: 'Site Bilgisi',
     selector: (row) => row.flat.block.apartment.name,
     sortable: true,

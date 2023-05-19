@@ -15,8 +15,16 @@ const StyledView = styled(View)`
 const Footer = () => {
   return (
     <StyledView fontSize={['0.6rem', '0.8rem', '0.8rem', '1rem', '1rem']}>
-      Copyright © 2023 | Designed With by <a style={{color:"red"}} target="_blank" href="https://www.orjinfinity.com/">Orjinfinity</a>. All
-      Rights Reserved
+      Copyright © 2023 | Designed With by{' '}
+      <a
+        style={{ color: 'red' }}
+        target="_blank"
+        href="https://www.orjinfinity.com/"
+        rel="noreferrer"
+      >
+        Orjinfinity
+      </a>
+      . All Rights Reserved
     </StyledView>
   );
 };
