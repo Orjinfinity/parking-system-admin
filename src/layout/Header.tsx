@@ -60,7 +60,7 @@ const Header = () => {
 
   const { data, loading } = useFetch(
     END_POINTS.REQUEST_CALLS.requestCalls,
-    { page: 0, size: 10 },
+    { page: 0, size: 10, isDone: false },
     dataFetchRef,
     []
   );
