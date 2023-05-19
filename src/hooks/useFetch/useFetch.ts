@@ -5,6 +5,7 @@ interface IFetchConfig {
   page: number;
   size: number;
   single: boolean;
+  isDone?: boolean;
 }
 
 export const useFetch = (
@@ -20,7 +21,9 @@ export const useFetch = (
   useEffect(() => {
     if (ref.current) {
       (async () => {
-        const fullUrl = config.single ? `${url}` : `${url}?page=${config.page}&size=${config.size}`;
+        const fullUrl = config.single
+          ? `${url}`
+          : `${url}?page=${config.page}&size=${config.size}`;
         try {
           const res = await axiosInstance.get(fullUrl);
           const data = await res.data;
