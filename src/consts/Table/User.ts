@@ -51,26 +51,26 @@ const userColumns: TableColumn<IUserRow>[] = [
     sortable: true,
   },
   {
-    name: 'Username',
+    name: 'Kullanıcı Adı',
     selector: (row) => row.username,
     sortable: true,
   },
   {
-    name: 'Name',
+    name: 'Ad',
     selector: (row) => row.name,
     sortable: true,
   },
   {
-    name: 'Surname',
+    name: 'Soyad',
     selector: (row) => row.surname,
     sortable: true,
   },
   {
-    name: 'Phone',
+    name: 'Telefon',
     selector: (row) => row.phone,
   },
   {
-    name: 'Role',
+    name: 'Rol',
     selector: (row) => row.roles,
   },
   {

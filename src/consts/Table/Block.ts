@@ -19,7 +19,7 @@ const blockColumns: TableColumn<IBlockRow>[] = [
     sortable: true,
   },
   {
-    name: 'Name',
+    name: 'Ad',
     selector: (row) => row.name,
     sortable: true,
   },

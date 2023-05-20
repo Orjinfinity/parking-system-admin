@@ -37,22 +37,22 @@ const apartmentColumns: TableColumn<IApartmentRow>[] = [
     sortable: true,
   },
   {
-    name: 'Name',
+    name: 'Ad',
     selector: (row) => row.name,
     sortable: true,
   },
   {
-    name: 'Address',
+    name: 'Adres',
     selector: (row) => row.address,
     sortable: true,
   },
   {
-    name: 'City',
+    name: 'İlçe',
     selector: (row) => row.city,
     sortable: true,
   },
   {
-    name: 'Country',
+    name: 'Ülke',
     selector: (row) => row.country,
     sortable: true,
   },
